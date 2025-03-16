@@ -4,6 +4,7 @@ services:
   name: flask-postgres-api
   env: python
   repo: https://github.com/uwidcit/flaskmvc.git
+  #repo: https://github.com/PredictBigDataProj/Predict-Athlete.git check to see if this neededs to be changed to point to this url instead.
   plan: free
   branch: main
   healthCheckPath: /healthcheck
