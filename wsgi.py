@@ -22,7 +22,7 @@ def init():
 
 @app.cli.command("csv", help="Load CSV")
 def Load_csv():
-    df = pd.read_csv('/workspace/Predict-Athlete/App/data/Single_Record_test.csv')
+    df = pd.read_csv('App/data/Single_Record_test.csv')
     print('Csv loaded correctly')
 
 '''
