@@ -262,10 +262,33 @@
             border-radius: 5px;
         }
 
+        .scrollable{
+            display:flex;
+            flex-grow: 4;
+            max-height: 80vh;
+            }
+
         /* Hide scrollbar for Webkit browsers */
-        ::-webkit-scrollbar {
+        /* ::-webkit-scrollbar {
             display: none;
-        }
+        } */
+
+        ::-webkit-scrollbar {
+            width: 7px;
+            border-radius: 20px;
+            }
+
+            ::-webkit-scrollbar-track {
+            background: #474139; 
+            }
+            
+            ::-webkit-scrollbar-thumb {
+            background: #625b50; 
+            }
+
+            *:hover::-webkit-scrollbar-thumb{
+            background: #70685c;
+            }
 
 
         /* Dropdown Menu for Profile */
@@ -564,22 +587,24 @@
         
         <div id="reviewsList" style="margin-top: 30px;">
             
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>Index</th>
-                        <th>Full Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for name in data %}
+            <section class="scrollable">
+                <table border="1">
+                    <thead>
                         <tr>
-                            <td>{{ loop.index }}</td>  <!-- Index of the row -->
-                            <td>{{ name }}</td>  <!-- Full name -->
+                            <th>Index</th>
+                            <th>Full Name</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for name in data %}
+                            <tr>
+                                <td>{{ loop.index }}</td>  <!-- Index of the row -->
+                                <td>{{ name }}</td>  <!-- Full name -->
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
 
 
 
