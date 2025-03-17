@@ -1,4 +1,5 @@
 import click, pytest, sys
+import pandas as pd
 from flask import Flask
 from flask.cli import with_appcontext, AppGroup
 
@@ -18,6 +19,11 @@ migrate = get_migrate(app)
 def init():
     initialize()
     print('database intialized')
+
+@app.cli.command("csv", help="Load CSV")
+def Load_csv():
+    df = pd.read_csv('/workspace/Predict-Athlete/App/data/Single_Record_test.csv')
+    print('Csv loaded correctly')
 
 '''
 User Commands
