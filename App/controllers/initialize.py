@@ -1,8 +1,90 @@
 from .user import create_user
 from App.database import db
-
+import csv
+from datetime import datetime
+from App.models import Player
 
 def initialize():
     db.drop_all()
     db.create_all()
     create_user('bob', 'bobpass')
+    import_csv_player('App/data/player_data_for_model.csv')
+
+
+def import_csv_player(csv_path):
+    with open(csv_path, newline='', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+
+            player = Player(
+                player_id=int(row['player_id']),
+                name=row['name'],
+                full_name=row['full_name'],
+                height_cm=int(row['height_cm']),
+                weight_kg=int(row['weight_kg']),
+                dob=datetime.strptime(row['dob'], '%Y-%m-%d'),  # Convert DOB to date object
+                preferred_foot=row['preferred_foot'],
+                body_type=row['body_type'],
+                club_id=int(row['club_id']),
+                club_name=row['club_name'],
+                club_league_id=int(row['club_league_id']),
+                club_league_name=row['club_league_name'],
+                crossing=int(row['crossing']),
+                finishing=int(row['finishing']),
+                heading_accuracy=int(row['heading_accuracy']),
+                short_passing=int(row['short_passing']),
+                volleys=int(row['volleys']),
+                dribbling=int(row['dribbling']),
+                curve=int(row['curve']),
+                fk_accuracy=int(row['fk_accuracy']),
+                long_passing=int(row['long_passing']),
+                ball_control=int(row['ball_control']),
+                acceleration=int(row['acceleration']),
+                sprint_speed=int(row['sprint_speed']),
+                agility=int(row['agility']),
+                reactions=int(row['reactions']),
+                balance=int(row['balance']),
+                shot_power=int(row['shot_power']),
+                jumping=int(row['jumping']),
+                stamina=int(row['stamina']),
+                strength=int(row['strength']),
+                long_shots=int(row['long_shots']),
+                aggression=int(row['aggression']),
+                interceptions=int(row['interceptions']),
+                positioning=int(row['positioning']),
+                vision=int(row['vision']),
+                penalties=int(row['penalties']),
+                composure=int(row['composure']),
+                defensive_awareness=int(row['defensive_awareness']),
+                standing_tackle=int(row['standing_tackle']),
+                sliding_tackle=int(row['sliding_tackle']),
+                gk_diving=int(row['gk_diving']),
+                gk_handling=int(row['gk_handling']),
+                gk_kicking=int(row['gk_kicking']),
+                gk_positioning=int(row['gk_positioning']),
+                gk_reflexes=int(row['gk_reflexes']),
+                season=row['Season'],
+                club_nation=row['Club/Nation'],
+                career_length=int(row['Career_length']),
+                start_year_final=int(row['Start_year_final']),
+                end_recent_year_final=int(row['End/Recent_year_final']),
+                cam=int(row['CAM']),
+                cb=int(row['CB']),
+                cdm=int(row['CDM']),
+                cf=int(row['CF']),
+                cm=int(row['CM']),
+                gk=int(row['GK']),
+                lb=int(row['LB']),
+                lm=int(row['LM']),
+                lw=int(row['LW']),
+                lwb=int(row['LWB']),
+                rb=int(row['RB']),
+                rm=int(row['RM']),
+                rw=int(row['RW']),
+                rwb=int(row['RWB']),
+                st=int(row['ST']),
+                age=int(row['age'])
+            )
+            db.session.add(player)  
+        db.session.commit() 
+    print("CSV data imported successfully!")
