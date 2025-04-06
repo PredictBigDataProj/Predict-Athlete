@@ -12,6 +12,8 @@ def index_page():
     df = pd.read_csv('App/data/Single_Record_test.csv')
 
     data = df['Name Alternative'].tolist()
+
+    #This should go to log in, but for right now it does to this index page.
     return render_template('index.html', data=data)
 
 @index_views.route('/init', methods=['GET'])

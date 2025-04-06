@@ -17,6 +17,16 @@ def get_user_page():
     users = get_all_users()
     return render_template('users.html', users=users)
 
+
+@user_views.route('/data_entry', methods=['GET'])
+def get_data_entry_page():
+
+    flash(f"On data entry page!")
+    
+    return render_template('data_entry.html')
+
+
+
 @user_views.route('/users', methods=['POST'])
 def create_user_action():
     data = request.form
@@ -38,3 +48,5 @@ def create_user_endpoint():
 @user_views.route('/static/users', methods=['GET'])
 def static_user_page():
   return send_from_directory('static', 'static-user.html')
+
+
