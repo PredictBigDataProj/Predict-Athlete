@@ -587,8 +587,38 @@
 
         
         <div id="reviewsList" style="margin-top: 30px;">
+
+
+            <form method="POST" action="/submit">
+
+                {% for attr in attributes %}
+
+                <div>
+                    <label for="{{attr}}"> {{attr}}: </label>
+                    <input 
+                        type="range" 
+                        id="{{attr}}" 
+                        name="{{attr}}" 
+                        min="1" 
+                        max="99" 
+                        value="50" 
+                        oninput="{{attr}}_val.value = {{attr}}.value">
+                    <output id="{{attr}}_val">50</output>
+                </div>
+
+
+
+                {% endfor %}               
+                <button type="submit">Submit</button>
+              </form>
+
             
             <p>Place the form to entry data metrics here</p>
+
+            {%for player in players%}
+
+                <p>Player name: {{player.name}}</p>
+            {%endfor%}
 
 
 

@@ -7,8 +7,20 @@ from App.controllers import (
     create_user,
     get_all_users,
     get_all_users_json,
-    jwt_required
+    jwt_required,
+    get_all_players
 )
+
+player_attributes = [
+    "height_cm", "weight_kg", "age", "crossing", "finishing", "heading_accuracy", 
+    "short_passing", "volleys", "dribbling", "curve", "fk_accuracy", 
+    "long_passing", "ball_control", "acceleration", "sprint_speed", "agility", 
+    "reactions", "balance", "shot_power", "jumping", "stamina", "strength", 
+    "long_shots", "aggression", "interceptions", "positioning", "vision", 
+    "penalties", "composure", "defensive_awareness", "standing_tackle", 
+    "sliding_tackle", "gk_diving", "gk_handling", "gk_kicking", 
+    "gk_positioning", "gk_reflexes"
+]
 
 user_views = Blueprint('user_views', __name__, template_folder='../templates')
 
@@ -21,9 +33,23 @@ def get_user_page():
 @user_views.route('/data_entry', methods=['GET'])
 def get_data_entry_page():
 
-    flash(f"On data entry page!")
+    players = get_all_players()
     
-    return render_template('data_entry.html')
+    return render_template('data_entry.html', players=players, attributes=player_attributes)
+
+@user_views.route('/data_entry', methods=['POST'])
+def get_user_attr():
+
+    players = get_all_players()
+
+    for attr in player_attributes:
+        
+        attr = request.form.get(f'{attr}')
+        User.attr = attr
+
+    
+    return redirect(url_for('user_views.get_data_entry_page'))
+
 
 
 
