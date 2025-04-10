@@ -587,8 +587,49 @@
 
         
         <div id="reviewsList" style="margin-top: 30px;">
+
+
+            <form method="POST" action="/data_entry">
+
+
+                {% for attr in attributes %}
+
+                <div>
+                    <label for="{{attr}}"> {{attr}}: </label>
+                    <input 
+                        type="range" 
+                        id="{{attr}}" 
+                        name="{{attr}}" 
+                        {% if attr == 'age' %} 
+                            min="17" max="99" 
+                            {% set mid_value = (17 + 99) / 2 | int %}
+                        {% elif attr == 'height_cm' %} 
+                            min="54" max="272" 
+                            {% set mid_value = (54 + 272) / 2 | int %}
+                        {% elif attr == 'weight_kg' %} 
+                            min="30" max="300" 
+                            {% set mid_value = (30 + 300) / 2 | int %}
+                        {% else %} 
+                            min="1" max="99" 
+                            {% set mid_value = (1 + 99) / 2 | int %}
+                        {% endif %} 
+                        oninput="{{attr}}_val.value = {{attr}}.value" required>
+                    <output id="{{attr}}_val">{{ '%.0f' % mid_value}}</output>
+                </div>
+
+
+
+                {% endfor %}               
+                <button type="submit">Submit</button>
+              </form>
+
             
             <p>Place the form to entry data metrics here</p>
+
+            {%for player in players%}
+
+                <p>Player name: {{player.name}}</p>
+            {%endfor%}
 
 
 

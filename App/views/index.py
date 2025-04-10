@@ -2,6 +2,14 @@ from flask import Blueprint, redirect, render_template, request, send_from_direc
 from App.controllers import create_user, initialize
 import pandas as pd
 
+from App.controllers import (
+    create_user,
+    get_all_users,
+    get_all_users_json,
+    jwt_required,
+    get_all_players
+)
+
 index_views = Blueprint('index_views', __name__, template_folder='../templates')
 
 df = pd.read_csv('App/data/Single_Record_test.csv')
@@ -14,7 +22,10 @@ def index_page():
     data = df['Name Alternative'].tolist()
 
     #This should go to log in, but for right now it does to this index page.
-    return render_template('index.html', data=data)
+
+    players = get_all_players()
+
+    return render_template('index.html', data=data, players=players)
 
 @index_views.route('/init', methods=['GET'])
 def init():

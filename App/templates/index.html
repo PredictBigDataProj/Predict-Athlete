@@ -597,12 +597,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for name in data %}
-                            <tr>
-                                <td>{{ loop.index }}</td>  <!-- Index of the row -->
-                                <td>{{ name }}</td>  <!-- Full name -->
-                            </tr>
-                        {% endfor %}
+                        {%for player in players%}
+
+                                <tr>
+                                    <td>{{ loop.index }}</td>  <!-- Index of the row -->
+                                    <td>{{player.name}}</td>  <!-- Full name -->
+                                </tr>
+
+                            
+                        {%endfor%}
+                        
                     </tbody>
                 </table>
             </section>

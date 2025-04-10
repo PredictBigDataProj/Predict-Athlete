@@ -1,0 +1,10 @@
+<h2>Best Position Recommendation</h2>
+<p><strong>Top Position:</strong> {{ most_likely_position }}</p>
+<p><strong>Probability of Success:</strong> {{ top_probability }}%</p>
+
+<h3>Ranked Probabilities:</h3>
+<ul>
+  {% for pos, prob in predictions %}
+    <li>{{ pos }}: {{ prob }}%</li>
+  {% endfor %}
+</ul>

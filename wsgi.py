@@ -1,4 +1,6 @@
 import click, pytest, sys
+import joblib
+import os
 import pandas as pd
 from flask import Flask
 from flask.cli import with_appcontext, AppGroup

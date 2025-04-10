@@ -1,5 +1,9 @@
 from flask import Blueprint, render_template, jsonify, request, send_from_directory, flash, redirect, url_for
 from flask_jwt_extended import jwt_required, current_user as jwt_current_user
+import numpy as np
+import pandas as pd
+import ast
+from sklearn.preprocessing import StandardScaler
 
 from.index import index_views
 
@@ -7,8 +11,24 @@ from App.controllers import (
     create_user,
     get_all_users,
     get_all_users_json,
-    jwt_required
+    jwt_required,
+    get_all_players,
+    load_models
 )
+
+
+player_attributes = [
+    "height_cm", "weight_kg", "age", "crossing", "finishing", "heading_accuracy", 
+    "short_passing", "volleys", "dribbling", "curve", "fk_accuracy", 
+    "long_passing", "ball_control", "acceleration", "sprint_speed", "agility", 
+    "reactions", "balance", "shot_power", "jumping", "stamina", "strength", 
+    "long_shots", "aggression", "interceptions", "positioning", "vision", 
+    "penalties", "composure", "defensive_awareness", "standing_tackle", 
+    "sliding_tackle", "gk_diving", "gk_handling", "gk_kicking", 
+    "gk_positioning", "gk_reflexes"
+]
+
+models_dict, selected_features_dict, pca_dict, scaler = load_models()
 
 user_views = Blueprint('user_views', __name__, template_folder='../templates')
 
@@ -21,9 +41,60 @@ def get_user_page():
 @user_views.route('/data_entry', methods=['GET'])
 def get_data_entry_page():
 
-    flash(f"On data entry page!")
+    players = get_all_players()
     
-    return render_template('data_entry.html')
+    return render_template('data_entry.html', players=players, attributes=player_attributes)
+
+@user_views.route('/data_entry', methods=['POST'])
+def get_user_attr():
+
+    players = get_all_players()
+
+    try:
+        
+        input_data = {}
+        for attr in player_attributes:
+            value = request.form.get(attr, type=int)
+            input_data[attr] = value if value is not None else 50
+
+        
+        test_player_df = pd.DataFrame([input_data])
+
+        
+        test_player_scaled = scaler.transform(test_player_df)
+        test_player_scaled_df = pd.DataFrame(test_player_scaled, columns=test_player_df.columns)
+
+        
+        predictions = {}
+
+        for pos in models_dict:
+            model = models_dict[pos]
+            selected_features = selected_features_dict[pos]
+            pca = pca_dict.get(pos)
+
+            
+            if pca is not None:
+                test_player_pca = pca.transform(test_player_scaled)
+                pca_features = [f'PCA_{i+1}' for i in range(test_player_pca.shape[1])]
+                test_player_data_input = pd.DataFrame(test_player_pca, columns=pca_features)[selected_features]
+            else:
+                test_player_data_input = test_player_scaled_df[selected_features]
+
+            
+            prob = model.predict_proba(test_player_data_input)[0][1]
+            predictions[pos] = prob
+
+        
+        sorted_predictions = sorted(predictions.items(), key=lambda x: x[1], reverse=True)
+        most_likely_position = sorted_predictions[0][0]
+        top_probability = round(sorted_predictions[0][1] * 100, 2)
+
+        return render_template('result.html', most_likely_position=most_likely_position, top_probability=top_probability, predictions=[(pos, round(prob * 100, 2)) for pos, prob in sorted_predictions]
+        )
+
+    except Exception as e:
+        return f"An error occurred: {e}", 500
+
 
 
 

@@ -1,15 +1,47 @@
 from .user import create_user
+import joblib 
+import os
 from App.database import db
 import csv
 from datetime import datetime
 from App.models import Player
+from App.default_config import DATA_PATH
 
 def initialize():
     db.drop_all()
     db.create_all()
     create_user('bob', 'bobpass')
     import_csv_player('App/data/player_data_for_model.csv')
+    load_models()
 
+
+def load_models():
+    
+    #DATA_PATH = current_app.config['DATA_PATH']
+
+    
+    positions = ["ST", "RWB", "RW", "RM", "RB", "LWB", "LW", "LM", "LB", "GK", "CM", "CF", "CDM", "CB", "CAM"]
+
+    models_dict = {}
+    selected_features_dict = {}
+    pca_dict = {}
+
+    for pos in positions:
+        models_dict[pos] = joblib.load(os.path.join(DATA_PATH, f"{pos}_model.pkl"))
+        selected_features_dict[pos] = joblib.load(os.path.join(DATA_PATH, f"{pos}_features.pkl"))
+        
+
+        pca_path = os.path.join(DATA_PATH, f"{pos}_pca.pkl")
+        if os.path.exists(pca_path):
+            pca_dict[pos] = joblib.load(pca_path)
+        else:
+            pca_dict[pos] = None
+
+        print (f'{pos} was loaded successfully!')
+
+
+    scaler = joblib.load(os.path.join(DATA_PATH, "scaler.pkl"))
+    return models_dict, selected_features_dict, pca_dict, scaler
 
 def import_csv_player(csv_path):
     with open(csv_path, newline='', encoding='utf-8') as f:
