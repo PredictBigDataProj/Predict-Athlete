@@ -589,7 +589,8 @@
         <div id="reviewsList" style="margin-top: 30px;">
 
 
-            <form method="POST" action="/submit">
+            <form method="POST" action="/data_entry">
+
 
                 {% for attr in attributes %}
 
@@ -599,11 +600,21 @@
                         type="range" 
                         id="{{attr}}" 
                         name="{{attr}}" 
-                        min="1" 
-                        max="99" 
-                        value="50" 
-                        oninput="{{attr}}_val.value = {{attr}}.value">
-                    <output id="{{attr}}_val">50</output>
+                        {% if attr == 'age' %} 
+                            min="17" max="99" 
+                            {% set mid_value = (17 + 99) / 2 | int %}
+                        {% elif attr == 'height_cm' %} 
+                            min="54" max="272" 
+                            {% set mid_value = (54 + 272) / 2 | int %}
+                        {% elif attr == 'weight_kg' %} 
+                            min="30" max="300" 
+                            {% set mid_value = (30 + 300) / 2 | int %}
+                        {% else %} 
+                            min="1" max="99" 
+                            {% set mid_value = (1 + 99) / 2 | int %}
+                        {% endif %} 
+                        oninput="{{attr}}_val.value = {{attr}}.value" required>
+                    <output id="{{attr}}_val">{{ '%.0f' % mid_value}}</output>
                 </div>
 
 
