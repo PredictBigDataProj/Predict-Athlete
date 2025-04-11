@@ -233,6 +233,7 @@
         .review-details p {
             margin: 2px 0;
             font-size: 14px;
+            white-space: pre-wrap;
         }
 
         /* Review Content */
@@ -262,33 +263,10 @@
             border-radius: 5px;
         }
 
-        .scrollable{
-            display:flex;
-            flex-grow: 4;
-            max-height: 80vh;
-            }
-
         /* Hide scrollbar for Webkit browsers */
-        /* ::-webkit-scrollbar {
-            display: none;
-        } */
-
         ::-webkit-scrollbar {
-            width: 7px;
-            border-radius: 20px;
-            }
-
-            ::-webkit-scrollbar-track {
-            background: #474139; 
-            }
-            
-            ::-webkit-scrollbar-thumb {
-            background: #625b50; 
-            }
-
-            *:hover::-webkit-scrollbar-thumb{
-            background: #70685c;
-            }
+            display: none;
+        }
 
 
         /* Dropdown Menu for Profile */
@@ -523,6 +501,109 @@
         #myUL li a:hover:not(.header) {
              background-color: #eee;
         }
+
+        /* Flash Messages */
+        .flash-messages {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            z-index: 1000;
+        }
+
+        .flash-message {
+            padding: 12px 18px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Success Messages */
+        .flash-message.success {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        /* Error Messages */
+        .flash-message.error {
+            background-color: #f44336;
+            color: white;
+        }
+
+        /* Warning Messages */
+        .flash-message.warning {
+            background-color: #ff9800;
+            color: white;
+        }
+
+        /* Info Messages */
+        .flash-message.info {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .likes form button:hover i,
+.likes form button:focus i {
+    color: #355834;
+}
+
+.likes i {
+    font-size: 18px;
+}
+
+.likes span {
+    margin-left: 4px;
+    font-weight: bold;
+}
+
+.reviews-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /*center, or start */
+    gap: 20px;
+}
+
+.review-card {
+    flex: 1 1 calc(33.333% - 20px); /* 3 per row with spacing */
+    max-width: calc(33.333% - 20px);
+    box-sizing: border-box;
+}
+
+.review-card {
+    flex: 1 1 300px;
+
+    box-sizing: border-box;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.review-card:hover {
+    transform: translateY(-5px); /* lift the card slightly */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* add shadow for depth */
+    background-color: #f3f3f3; 
+}
+
+
+
+
+
+@media (max-width: 900px) {
+    .review-card {
+        max-width: 48%;
+    }
+}
+
+@media (max-width: 600px) {
+    .review-card {
+        max-width: 100%;
+    }
+}
+
+
     </style>
 </head>
 <body>
@@ -531,7 +612,7 @@
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a href="/data_entry">Data Entry</a>
-        <a href="/">Home</a>
+        <a href="/Home">Home</a>
     </div>
 
     <!-- Navbar -->
@@ -573,6 +654,19 @@
             </div>
         </div>
     </nav>
+
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="flash-message {{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}  
 
 
     <!-- Search Section -->
@@ -823,6 +917,18 @@
             document.getElementById("mySidenav").style.width = "0";
             document.getElementById("main-content").style.marginLeft = "0";
         }
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            setTimeout(function () {
+                let flashMessages = document.querySelectorAll(".flash-message");
+                flashMessages.forEach(function (msg) {
+                    msg.style.opacity = "0";
+                    setTimeout(() => msg.style.display = "none", 500);
+                });
+            }, 3000); // Messages disappear after 3 seconds
+        });
     </script>
 </body>
 </html>

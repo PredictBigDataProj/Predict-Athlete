@@ -1,9 +1,10 @@
 from werkzeug.security import check_password_hash, generate_password_hash
+from flask_login import UserMixin
 from App.database import db
 
 #Just testing that commits work
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username =  db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(120), nullable=False)
@@ -43,16 +44,39 @@ class User(db.Model):
     gk_positioning = db.Column(db.Integer)
     gk_reflexes = db.Column(db.Integer)
 
+
+    height_cm = db.Column(db.Integer)
+    weight_kg = db.Column(db.Integer)
+    age = db.Column(db.Integer)
+
+    # Add fields for storing prediction results
+    most_likely_position = db.Column(db.String(50))
+    top_probability = db.Column(db.Float)
+    predictions = db.Column(db.JSON)  # To store all position probabilities as a JSON list
+
+
     
 
-    def __init__(self, username, password):
+    def __init__(self, username, password, input_data=None, most_likely_position=None, top_probability=None, predictions=None):
         self.username = username
         self.set_password(password)
+
+        # Store user attributes
+        if input_data:
+            for key, value in input_data.items():
+                setattr(self, key, value)
+        
+        self.most_likely_position = most_likely_position
+        self.top_probability = top_probability
+        self.predictions = predictions
 
     def get_json(self):
         return{
             'id': self.id,
-            'username': self.username
+            'username': self.username,
+            'most_likely_position': self.most_likely_position,
+            'top_probability': self.top_probability,
+            'predictions': self.predictions
         }
 
     def set_password(self, password):

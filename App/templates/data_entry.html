@@ -531,7 +531,7 @@
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a href="/data_entry">Data Entry</a>
-        <a href="/">Home</a>
+        <a href="/Home">Home</a>
     </div>
 
     <!-- Navbar -->
@@ -589,7 +589,7 @@
         <div id="reviewsList" style="margin-top: 30px;">
 
 
-            <form method="POST" action="/data_entry">
+            <form id="data-entry-form" method="POST" action="/data_entry">
 
 
                 {% for attr in attributes %}
@@ -619,17 +619,16 @@
 
 
 
-                {% endfor %}               
+                {% endfor %}    
+                
+                <div id="similar-player">
+                    <h3>Most Similar Player: <span id="similar-player-name">Loading...</span></h3>
+                </div>
+
                 <button type="submit">Submit</button>
               </form>
 
-            
-            <p>Place the form to entry data metrics here</p>
 
-            {%for player in players%}
-
-                <p>Player name: {{player.name}}</p>
-            {%endfor%}
 
 
 
@@ -844,5 +843,7 @@
             document.getElementById("main-content").style.marginLeft = "0";
         }
     </script>
+
+
 </body>
 </html>
