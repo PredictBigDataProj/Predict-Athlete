@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import ast
 from sklearn.preprocessing import StandardScaler
+from App.database import db
 
 
 from.index import index_views

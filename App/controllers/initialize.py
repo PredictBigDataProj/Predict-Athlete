@@ -11,7 +11,7 @@ def initialize():
     db.drop_all()
     db.create_all()
     create_user('bob', 'bobpass')
-    import_csv_player('App/data/player_data_for_model.csv')
+    import_csv_player('App/data/players_with_groups.csv')
     load_models()
 
 
@@ -115,7 +115,8 @@ def import_csv_player(csv_path):
                 rw=int(row['RW']),
                 rwb=int(row['RWB']),
                 st=int(row['ST']),
-                age=int(row['age'])
+                age=int(row['age']),
+                position_groups=row['position_groups']
             )
             db.session.add(player)  
         db.session.commit() 

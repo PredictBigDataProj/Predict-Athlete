@@ -61,6 +61,8 @@ class Player(db.Model):
     start_year_final = db.Column(db.Integer)
     end_recent_year_final = db.Column(db.Integer)
 
+    position_groups = db.Column(db.String(1000))
+
 
     cam = db.Column(db.Integer)
     cb = db.Column(db.Integer)
