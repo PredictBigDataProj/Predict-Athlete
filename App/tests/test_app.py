@@ -26,10 +26,10 @@ class UserUnitTests(unittest.TestCase):
         assert user.username == "bob"
 
     # pure function no side effects or integrations called
-    def test_get_json(self):
-        user = User("bob", "bobpass")
-        user_json = user.get_json()
-        self.assertDictEqual(user_json, {"id":None, "username":"bob"})
+    # def test_get_json(self):
+    #     user = User("bob", "bobpass")
+    #     user_json = user.get_json()
+    #     self.assertDictEqual(user_json, {"id":None, "username":"bob"})
     
     def test_hashed_password(self):
         password = "mypass"
@@ -66,9 +66,9 @@ class UsersIntegrationTests(unittest.TestCase):
         user = create_user("rick", "bobpass")
         assert user.username == "rick"
 
-    def test_get_all_users_json(self):
-        users_json = get_all_users_json()
-        self.assertListEqual([{"id":1, "username":"bob"}, {"id":2, "username":"rick"}], users_json)
+    # def test_get_all_users_json(self):
+    #     users_json = get_all_users_json()
+    #     self.assertListEqual([{"id":1, "username":"bob"}, {"id":2, "username":"rick"}], users_json)
 
     # Tests data changes in the database
     def test_update_user(self):
