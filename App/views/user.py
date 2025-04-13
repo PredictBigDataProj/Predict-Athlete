@@ -1,9 +1,12 @@
 from flask import Blueprint, render_template, jsonify, request, send_from_directory, flash, redirect, url_for
 from flask_jwt_extended import jwt_required, current_user as jwt_current_user
+from flask_login import login_required, current_user
 import numpy as np
 import pandas as pd
 import ast
 from sklearn.preprocessing import StandardScaler
+from App.database import db
+
 
 from.index import index_views
 
@@ -13,7 +16,7 @@ from App.controllers import (
     get_all_users_json,
     jwt_required,
     get_all_players,
-    load_models
+    load_models, get_user, get_user_by_username
 )
 
 
@@ -30,6 +33,7 @@ player_attributes = [
 
 models_dict, selected_features_dict, pca_dict, scaler = load_models()
 
+
 user_views = Blueprint('user_views', __name__, template_folder='../templates')
 
 @user_views.route('/users', methods=['GET'])
@@ -38,12 +42,56 @@ def get_user_page():
     return render_template('users.html', users=users)
 
 
+@user_views.route('/Home', methods=['GET'])
+def index_page():
+
+    #df = pd.read_csv('App/data/Single_Record_test.csv')
+
+    #data = df['Name Alternative'].tolist()
+
+    #This should go to log in, but for right now it does to this index page.
+
+    players = get_all_players()
+
+    return render_template('index.html', players=players)
+
+
 @user_views.route('/data_entry', methods=['GET'])
 def get_data_entry_page():
 
     players = get_all_players()
     
     return render_template('data_entry.html', players=players, attributes=player_attributes)
+
+
+
+@user_views.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        # firstname = request.form['firstname']
+        # lastname = request.form['lastname']
+        # faculty = request.form['faculty']
+        username = request.form['username']
+        # email = request.form['email']
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+
+        temp_user = get_user_by_username(username)
+
+        if temp_user:
+          return render_template('SignUp.html', message="Username is already taken!")
+
+        if password != confirm_password:
+            return render_template('SignUp.html', message="Passwords do not match!")
+
+        # Save user to the database
+        create_user(username=username, password=password)
+
+        #flash(f"Home", "success")
+
+        return redirect("/Home") # Redirect to login after signup
+
+    return render_template('SignUp.html')
 
 @user_views.route('/data_entry', methods=['POST'])
 def get_user_attr():
@@ -89,11 +137,27 @@ def get_user_attr():
         most_likely_position = sorted_predictions[0][0]
         top_probability = round(sorted_predictions[0][1] * 100, 2)
 
-        return render_template('result.html', most_likely_position=most_likely_position, top_probability=top_probability, predictions=[(pos, round(prob * 100, 2)) for pos, prob in sorted_predictions]
-        )
+        user = get_user(current_user.id)
+
+
+        # Update the user's attributes and prediction results
+        #Make this a controller once it works
+        if user:
+            for key, value in input_data.items():
+                setattr(user, key, value)  # Update player attributes
+            user.most_likely_position = most_likely_position
+            user.top_probability = top_probability
+            user.predictions = predictions
+
+            # Commit the changes to the database
+            db.session.commit()
+
+        return render_template('result.html', most_likely_position=most_likely_position, top_probability=top_probability, predictions=[(pos, round(prob * 100, 2)) for pos, prob in sorted_predictions])
 
     except Exception as e:
         return f"An error occurred: {e}", 500
+
+
 
 
 
