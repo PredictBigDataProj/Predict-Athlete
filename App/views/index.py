@@ -12,11 +12,11 @@ from App.controllers import (
 
 index_views = Blueprint('index_views', __name__, template_folder='../templates')
 
-df = pd.read_csv('App/data/Single_Record_test.csv')
+# df = pd.read_csv('App/data/Single_Record_test.csv')
 
 @index_views.route('/', methods=['GET'])
 def index_page():
-  return render_template('login.html')
+  return render_template('index.html')
 
 @index_views.route('/init', methods=['GET'])
 def init():

@@ -11,7 +11,7 @@ def initialize():
     db.drop_all()
     db.create_all()
     create_user('bob', 'bobpass')
-    import_csv_player('App/data/players_with_groups.csv')
+    import_csv_player('App/data/semi-finished-proj.csv')
     load_models()
 
 
@@ -95,11 +95,11 @@ def import_csv_player(csv_path):
                 gk_kicking=int(row['gk_kicking']),
                 gk_positioning=int(row['gk_positioning']),
                 gk_reflexes=int(row['gk_reflexes']),
-                season=row['Season'],
-                club_nation=row['Club/Nation'],
-                career_length=int(row['Career_length']),
-                start_year_final=int(row['Start_year_final']),
-                end_recent_year_final=int(row['End/Recent_year_final']),
+                # season=row['Season'], #These ones i have to figure out how to use them and which ones to take when i finish get nations of players.
+                # club_nation=row['Club/Nation'],
+                # career_length=int(row['Career_length']),
+                # start_year_final=int(row['Start_year_final']),
+                # end_recent_year_final=int(row['End/Recent_year_final']),
                 cam=int(row['CAM']),
                 cb=int(row['CB']),
                 cdm=int(row['CDM']),
