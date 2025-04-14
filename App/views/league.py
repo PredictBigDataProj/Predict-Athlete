@@ -36,10 +36,6 @@ models_dict, selected_features_dict, pca_dict, scaler = load_models()
 
 league_views = Blueprint('league_views', __name__, template_folder='../templates')
 
-@league_views.route('/league/eng1-england', methods=['GET'])
-def get_eng1_page():
-    #Go to the page for that league
-    return render_template('users.html', users=users)
 
 @league_views.route('/league/<league_id>-<country>', methods=['GET'])
 def get_league_page(league_id, country):
