@@ -632,7 +632,7 @@
         </div>
         <div class="navbar-title">Navbar title</div>
         <!-- Profile Options -->
-        <div class="container">
+        <!-- <div class="container">
             <div class="more">
                 <div class="profile-pic more-btn">
                     <img src="https://i.ibb.co/KS9VcFr/profile-pic.jpg" alt="Profile">
@@ -653,7 +653,7 @@
                     </ul>
                 </div>
             </div>
-        </div>
+        </div> -->
     </nav>
 
 
@@ -694,6 +694,15 @@
                     <li>{{ pos }}: {{ prob }}%</li>
                   {% endfor %}
                 </ul>
+
+                
+                <h3>Most Similar Players:</h3>
+                <ul>
+                    {% for player in similar_players %}
+                        <li>{{ player.name }} (Similarity Score: {{ player.similarity_score }})</li>
+                    {% endfor %}
+                </ul>
+
             </section>
 
 

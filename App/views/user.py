@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import ast
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics.pairwise import euclidean_distances
 from App.database import db
 
 
@@ -32,6 +33,8 @@ player_attributes = [
 ]
 
 models_dict, selected_features_dict, pca_dict, scaler = load_models()
+
+df = pd.read_csv('App/data/Finished_final_proj_2.csv')  # index=False avoids saving row indices
 
 
 user_views = Blueprint('user_views', __name__, template_folder='../templates')
@@ -137,22 +140,95 @@ def get_user_attr():
         most_likely_position = sorted_predictions[0][0]
         top_probability = round(sorted_predictions[0][1] * 100, 2)
 
-        user = get_user(current_user.id)
+        # user = get_user(current_user.id)
 
 
-        # Update the user's attributes and prediction results
-        #Make this a controller once it works
-        if user:
-            for key, value in input_data.items():
-                setattr(user, key, value)  # Update player attributes
-            user.most_likely_position = most_likely_position
-            user.top_probability = top_probability
-            user.predictions = predictions
+        # # Update the user's attributes and prediction results
+        # #Make this a controller once it works
+        # if user:
+        #     for key, value in input_data.items():
+        #         setattr(user, key, value)  
+        #     user.most_likely_position = most_likely_position
+        #     user.top_probability = top_probability
+        #     user.predictions = predictions
 
-            # Commit the changes to the database
-            db.session.commit()
+            
+        #     db.session.commit()
 
-        return render_template('result.html', most_likely_position=most_likely_position, top_probability=top_probability, predictions=[(pos, round(prob * 100, 2)) for pos, prob in sorted_predictions])
+
+        combined_dict = {}
+
+
+        for pos in models_dict.keys():
+            combined_dict[pos] = {
+                'model': models_dict[pos],                    
+                'selected_features': selected_features_dict[pos],  
+                'pca': pca_dict.get(pos, None)                 
+            }
+
+
+
+        #Here and bellow calcualtes simialr players to the data entered in the form.
+        selected_features = combined_dict[most_likely_position]['selected_features']
+        pca = combined_dict[most_likely_position].get('pca')  
+
+
+        df_input = df[player_attributes]
+
+        
+        df_scaled = scaler.transform(df_input)  
+        df_scaled_df = pd.DataFrame(df_scaled, columns=player_attributes)  
+
+
+        
+
+        test_player_df = pd.DataFrame([input_data])
+
+        
+        test_player_scaled = scaler.transform(test_player_df)
+        test_player_scaled_df = pd.DataFrame(test_player_scaled, columns=test_player_df.columns)
+
+        # test_player_input = test_player_df[player_attributes]  # Numeric data for test player
+        # test_player_scaled = scaler.transform(test_player_input)  # Transform test player data
+        # test_player_scaled_df = pd.DataFrame(test_player_scaled, columns=player_attributes)
+
+
+
+        
+        if pca is not None:
+            
+
+
+            df_pca = pca.transform(df_scaled_df)
+            df_pca_df = pd.DataFrame(df_pca, columns=[f'PCA_{i+1}' for i in range(df_pca.shape[1])])
+            
+            
+            selected_features_pca = [f'PCA_{i+1}' for i in range(df_pca.shape[1])]
+            df_for_similarity = df_pca_df[selected_features_pca]
+            
+            
+            test_player_pca = pca.transform(test_player_scaled_df)  
+            test_player_pca_df = pd.DataFrame(test_player_pca, columns=[f'PCA_{i+1}' for i in range(df_pca.shape[1])])
+            
+            
+            test_vector = test_player_pca_df[selected_features_pca]
+        else:
+            
+            df_for_similarity = df_scaled_df[selected_features]
+            test_vector = test_player_scaled_df[selected_features]
+
+
+        
+       #Using euclidean distance for the similarity, the loewr the distance is the better it works. right now it shows the distance as well. take out after just for testin as of now.
+        distances = euclidean_distances(df_for_similarity, test_vector)
+        df['similarity_score'] = distances  
+
+        
+        similar_players = df.sort_values(by='similarity_score').head(5) #Change the head number to give how much ever players you want to display when doing it.
+
+
+
+        return render_template('result.html', most_likely_position=most_likely_position, top_probability=top_probability, predictions=[(pos, round(prob * 100, 2)) for pos, prob in sorted_predictions], similar_players=similar_players[['name', 'similarity_score']].to_dict(orient='records'))
 
     except Exception as e:
         return f"An error occurred: {e}", 500

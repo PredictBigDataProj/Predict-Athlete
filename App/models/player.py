@@ -81,3 +81,9 @@ class Player(db.Model):
     st = db.Column(db.Integer)
     
     age = db.Column(db.Integer)
+
+
+    nation = db.Column(db.String(1000))
+    league = db.Column(db.String(1000))
+    preferred_foot_left = db.Column(db.Integer)
+    preferred_foot_right = db.Column(db.Integer)
