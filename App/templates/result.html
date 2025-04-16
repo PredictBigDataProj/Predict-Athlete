@@ -694,6 +694,15 @@
                     <li>{{ pos }}: {{ prob }}%</li>
                   {% endfor %}
                 </ul>
+
+                
+                <h3>Most Similar Players:</h3>
+                <ul>
+                    {% for player in similar_players %}
+                        <li>{{ player.name }} (Similarity Score: {{ player.similarity_score }})</li>
+                    {% endfor %}
+                </ul>
+
             </section>
 
 
