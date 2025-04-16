@@ -11,7 +11,7 @@ def initialize():
     db.drop_all()
     db.create_all()
     create_user('bob', 'bobpass')
-    import_csv_player('App/data/semi-finished-proj.csv')
+    import_csv_player('App/data/Finished_final_proj_2.csv')
     load_models()
 
 
@@ -116,7 +116,11 @@ def import_csv_player(csv_path):
                 rwb=int(row['RWB']),
                 st=int(row['ST']),
                 age=int(row['age']),
-                position_groups=row['position_groups']
+                position_groups=row['position_groups'],
+                nation=row['nation_Nation'],
+                league=row['league_name'],
+                preferred_foot_left=int(row['preferred_foot_Left']),
+                preferred_foot_right=int(row['preferred_foot_Right'])
             )
             db.session.add(player)  
         db.session.commit() 
