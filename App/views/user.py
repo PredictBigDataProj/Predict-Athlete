@@ -17,19 +17,64 @@ from App.controllers import (
     get_all_users_json,
     jwt_required,
     get_all_players,
-    load_models, get_user, get_user_by_username
+    load_models, get_user, get_user_by_username,
+    create_derived_features
 )
 
 
 player_attributes = [
-    "height_cm", "weight_kg", "age", "crossing", "finishing", "heading_accuracy", 
-    "short_passing", "volleys", "dribbling", "curve", "fk_accuracy", 
-    "long_passing", "ball_control", "acceleration", "sprint_speed", "agility", 
-    "reactions", "balance", "shot_power", "jumping", "stamina", "strength", 
-    "long_shots", "aggression", "interceptions", "positioning", "vision", 
-    "penalties", "composure", "defensive_awareness", "standing_tackle", 
-    "sliding_tackle", "gk_diving", "gk_handling", "gk_kicking", 
-    "gk_positioning", "gk_reflexes"
+    "height_cm",
+    "weight_kg",
+    "crossing",
+    "finishing",
+    "heading_accuracy",
+    "short_passing",
+    "volleys",
+    "dribbling",
+    "curve",
+    "fk_accuracy",
+    "long_passing",
+    "ball_control",
+    "acceleration",
+    "sprint_speed",
+    "agility",
+    "reactions",
+    "balance",
+    "shot_power",
+    "jumping",
+    "stamina",
+    "strength",
+    "long_shots",
+    "aggression",
+    "interceptions",
+    "positioning",
+    "vision",
+    "penalties",
+    "composure",
+    "defensive_awareness",
+    "standing_tackle",
+    "sliding_tackle",
+    "gk_diving",
+    "gk_handling",
+    "gk_kicking",
+    "gk_positioning",
+    "gk_reflexes",
+    "age",
+    "speed_strength_ratio",
+    "agility_height_ratio",
+    "jumping_height_ratio",
+    "stamina_weight_ratio",
+    "offensive_skills",
+    "defensive_skills",
+    "playmaking_skills",
+    "physical_dominance",
+    "technical_ability",
+    "speed_composite",
+    "goalkeeper_skills",
+    "offensive_defensive_diff",
+    "offensive_defensive_ratio",
+    "technical_physical_ratio",
+    "pressure_handling"
 ]
 
 models_dict, selected_features_dict, pca_dict, scaler = load_models()
@@ -111,6 +156,7 @@ def get_user_attr():
         
         test_player_df = pd.DataFrame([input_data])
 
+        test_player_df = create_derived_features(test_player_df)
         
         test_player_scaled = scaler.transform(test_player_df)
         test_player_scaled_df = pd.DataFrame(test_player_scaled, columns=test_player_df.columns)
@@ -183,6 +229,8 @@ def get_user_attr():
         
 
         test_player_df = pd.DataFrame([input_data])
+
+        test_player_df = create_derived_features(test_player_df)
 
         
         test_player_scaled = scaler.transform(test_player_df)
