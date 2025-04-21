@@ -59,27 +59,27 @@ player_attributes = [
     "gk_kicking",
     "gk_positioning",
     "gk_reflexes",
-    "age",
-    "speed_strength_ratio",
-    "agility_height_ratio",
-    "jumping_height_ratio",
-    "stamina_weight_ratio",
-    "offensive_skills",
-    "defensive_skills",
-    "playmaking_skills",
-    "physical_dominance",
-    "technical_ability",
-    "speed_composite",
-    "goalkeeper_skills",
-    "offensive_defensive_diff",
-    "offensive_defensive_ratio",
-    "technical_physical_ratio",
-    "pressure_handling"
+    "age"
+    # "speed_strength_ratio",
+    # "agility_height_ratio",
+    # "jumping_height_ratio",
+    # "stamina_weight_ratio",
+    # "offensive_skills",
+    # "defensive_skills",
+    # "playmaking_skills",
+    # "physical_dominance",
+    # "technical_ability",
+    # "speed_composite",
+    # "goalkeeper_skills",
+    # "offensive_defensive_diff",
+    # "offensive_defensive_ratio",
+    # "technical_physical_ratio",
+    # "pressure_handling"
 ]
 
 models_dict, selected_features_dict, pca_dict, scaler = load_models()
 
-df = pd.read_csv('App/data/Finished_final_proj_2.csv')  # index=False avoids saving row indices
+df = pd.read_csv('App/data/Finished_final_proj_3.csv')  # index=False avoids saving row indices
 
 
 user_views = Blueprint('user_views', __name__, template_folder='../templates')
@@ -217,28 +217,84 @@ def get_user_attr():
         #Here and bellow calcualtes simialr players to the data entered in the form.
         selected_features = combined_dict[most_likely_position]['selected_features']
         pca = combined_dict[most_likely_position].get('pca')  
+        
 
 
-        df_input = df[player_attributes]
+        numerical_cols = [
+            "height_cm",
+            "weight_kg",
+            "crossing",
+            "finishing",
+            "heading_accuracy",
+            "short_passing",
+            "volleys",
+            "dribbling",
+            "curve",
+            "fk_accuracy",
+            "long_passing",
+            "ball_control",
+            "acceleration",
+            "sprint_speed",
+            "agility",
+            "reactions",
+            "balance",
+            "shot_power",
+            "jumping",
+            "stamina",
+            "strength",
+            "long_shots",
+            "aggression",
+            "interceptions",
+            "positioning",
+            "vision",
+            "penalties",
+            "composure",
+            "defensive_awareness",
+            "standing_tackle",
+            "sliding_tackle",
+            "gk_diving",
+            "gk_handling",
+            "gk_kicking",
+            "gk_positioning",
+            "gk_reflexes",
+            "age",
+            "speed_strength_ratio",
+            "agility_height_ratio",
+            "jumping_height_ratio",
+            "stamina_weight_ratio",
+            "offensive_skills",
+            "defensive_skills",
+            "playmaking_skills",
+            "physical_dominance",
+            "technical_ability",
+            "speed_composite",
+            "goalkeeper_skills",
+            "offensive_defensive_diff",
+            "offensive_defensive_ratio",
+            "technical_physical_ratio",
+            "pressure_handling"
+        ]
+
+        df_input = df[numerical_cols]
 
         
         df_scaled = scaler.transform(df_input)  
-        df_scaled_df = pd.DataFrame(df_scaled, columns=player_attributes)  
+        df_scaled_df = pd.DataFrame(df_scaled, columns=numerical_cols)  
 
 
         
 
-        test_player_df = pd.DataFrame([input_data])
+        # test_player_df = pd.DataFrame([input_data])
 
-        test_player_df = create_derived_features(test_player_df)
+        # test_player_df = create_derived_features(test_player_df)
 
         
-        test_player_scaled = scaler.transform(test_player_df)
-        test_player_scaled_df = pd.DataFrame(test_player_scaled, columns=test_player_df.columns)
+        # test_player_scaled = scaler.transform(test_player_df)
+        # test_player_scaled_df = pd.DataFrame(test_player_scaled, columns=test_player_df.columns)
 
-        # test_player_input = test_player_df[player_attributes]  # Numeric data for test player
-        # test_player_scaled = scaler.transform(test_player_input)  # Transform test player data
-        # test_player_scaled_df = pd.DataFrame(test_player_scaled, columns=player_attributes)
+        test_player_input = test_player_df[numerical_cols]  # Numeric data for test player
+        test_player_scaled = scaler.transform(test_player_input)  # Transform test player data
+        test_player_scaled_df = pd.DataFrame(test_player_scaled, columns=numerical_cols)
 
 
 
