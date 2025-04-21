@@ -684,11 +684,12 @@
         <div id="reviewsList" style="margin-top: 30px;">
             
             <section class="scrollable">
+               
                 <h2>Best Position Recommendation</h2>
                 <p><strong>Top Position:</strong> {{ most_likely_position }}</p>
-                <p><strong>Probability of Success:</strong> {{ top_probability }}%</p>
+                <p><strong>Position Compatability:</strong> {{ top_probability }}%</p>
                 
-                <h3>Ranked Probabilities:</h3>
+                <h3>Ranked Compatability Probabilities:</h3>
                 <ul>
                   {% for pos, prob in predictions %}
                     <li>{{ pos }}: {{ prob }}%</li>
@@ -699,7 +700,7 @@
                 <h3>Most Similar Players:</h3>
                 <ul>
                     {% for player in similar_players %}
-                        <li>{{ player.name }} (Similarity Score: {{ player.similarity_score }})</li>
+                        <li>{{ player.full_name }} (Similarity Score: {{ player.similarity_score }})</li>
                     {% endfor %}
                 </ul>
 

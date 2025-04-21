@@ -332,7 +332,7 @@ def get_user_attr():
 
 
 
-        return render_template('result.html', most_likely_position=most_likely_position, top_probability=top_probability, predictions=[(pos, round(prob * 100, 2)) for pos, prob in sorted_predictions], similar_players=similar_players[['name', 'similarity_score']].to_dict(orient='records'))
+        return render_template('result.html', most_likely_position=most_likely_position, top_probability=top_probability, predictions=[(pos, round(prob * 100, 2)) for pos, prob in sorted_predictions], similar_players=similar_players[['full_name', 'similarity_score']].to_dict(orient='records'))
 
     except Exception as e:
         return f"An error occurred: {e}", 500
