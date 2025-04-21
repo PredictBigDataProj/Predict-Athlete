@@ -75,3 +75,4 @@ def get_league_page(league_id, country):
 #   return send_from_directory('static', 'static-user.html')
 
 
+#just for backup
