@@ -67,6 +67,20 @@
     <!-- Search Section -->
 
 
+
+    <!-- <div class="form-group">
+        <label for="{{attr}}">{{attr | replace('_', ' ') | title}}</label>
+        <div class="range-container">
+            <input type="range" id="{{attr}}" name="{{attr}}" {% if attr=='age' %} min="17" max="50" {% set
+                mid_value=(17 + 50) / 2 | int %} {% elif attr=='height_cm' %} min="54" max="272" {% set
+                mid_value=(54 + 272) / 2 | int %} {% elif attr=='weight_kg' %} min="30" max="300" {% set
+                mid_value=(30 + 300) / 2 | int %} {% else %} min="1" max="99" {% set mid_value=(1 + 99) / 2
+                | int %} {% endif %} oninput="{{attr}}_val.value = {{attr}}.value" required>
+            <output id="{{attr}}_val" class="range-value">{{ '%.0f' % mid_value}}</output>
+        </div>
+    </div> -->
+
+
     <!-- Reviews Section -->
     <div class="form-container">
         <form id="data-entry-form" method="POST" action="/data_entry">
@@ -75,12 +89,22 @@
                 <div class="form-group">
                     <label for="{{attr}}">{{attr | replace('_', ' ') | title}}</label>
                     <div class="range-container">
-                        <input type="range" id="{{attr}}" name="{{attr}}" {% if attr=='age' %} min="17" max="50" {% set
-                            mid_value=(17 + 50) / 2 | int %} {% elif attr=='height_cm' %} min="54" max="272" {% set
-                            mid_value=(54 + 272) / 2 | int %} {% elif attr=='weight_kg' %} min="30" max="300" {% set
-                            mid_value=(30 + 300) / 2 | int %} {% else %} min="1" max="99" {% set mid_value=(1 + 99) / 2
-                            | int %} {% endif %} oninput="{{attr}}_val.value = {{attr}}.value" required>
-                        <output id="{{attr}}_val" class="range-value">{{ '%.0f' % mid_value}}</output>
+                        <input type="range" id="{{attr}}" name="{{attr}}" 
+                            {% if attr=='age' %} min="17" max="50"
+                            {% set mid_value=(17 + 50) / 2 | int %}
+                            {% elif attr=='height_cm' %} min="54" max="272"
+                            {% set mid_value=(54 + 272) / 2 | int %}
+                            {% elif attr=='weight_kg' %} min="30" max="300"
+                            {% set mid_value=(30 + 300) / 2 | int %}
+                            {% else %} min="1" max="99"
+                            {% set mid_value=(1 + 99) / 2 | int %}
+                            {% endif %}
+                            value="{{ mid_value }}"
+                            oninput="document.getElementById('{{attr}}_val').value = this.value" 
+                            onchange="document.getElementById('{{attr}}_val').value = this.value" required>
+                        <input type="number" id="{{attr}}_val" class="range-value" value="{{ '%.0f' % mid_value }}" 
+                            min="{{ 17 if attr == 'age' else 54 if attr == 'height_cm' else 30 if attr == 'weight_kg' else 1 }}" 
+                            max="{{ 50 if attr == 'age' else 272 if attr == 'height_cm' else 300 if attr == 'weight_kg' else 99 }}">
                     </div>
                 </div>
                 {% endfor %}
@@ -90,6 +114,19 @@
         </form>
     </div>
 
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            {% for attr in attributes %}
+            const slider_{{attr}} = document.getElementById("{{attr}}");
+            const input_{{attr}} = document.getElementById("{{attr}}_val");
+    
+            input_{{attr}}.addEventListener("input", () => {
+                slider_{{attr}}.value = input_{{attr}}.value;
+            });
+            {% endfor %}
+        });
+    </script>
 
 </body>
 
