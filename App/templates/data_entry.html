@@ -67,20 +67,52 @@
     <!-- Search Section -->
 
 
+
+    <!-- <div class="form-group">
+        <label for="{{attr}}">{{attr | replace('_', ' ') | title}}</label>
+        <div class="range-container">
+            <input type="range" id="{{attr}}" name="{{attr}}" {% if attr=='age' %} min="17" max="50" {% set
+                mid_value=(17 + 50) / 2 | int %} {% elif attr=='height_cm' %} min="54" max="272" {% set
+                mid_value=(54 + 272) / 2 | int %} {% elif attr=='weight_kg' %} min="30" max="300" {% set
+                mid_value=(30 + 300) / 2 | int %} {% else %} min="1" max="99" {% set mid_value=(1 + 99) / 2
+                | int %} {% endif %} oninput="{{attr}}_val.value = {{attr}}.value" required>
+            <output id="{{attr}}_val" class="range-value">{{ '%.0f' % mid_value}}</output>
+        </div>
+    </div> -->
+
+
     <!-- Reviews Section -->
     <div class="form-container">
+        <h1>ADD THE LOGIC AND FUNCTIONS TO ANALYZE AND FIND THE MAX TOTAL POINTS FOR PHYSICAL ATTRIBUTES OF THE PLAYERS IN THE DATASET.
+            <br>
+            WHEN YOU DO THE SUM/CALCULATION AND FIND THE PLAYER WITH THE MAXIMUM STATS GIVE A SMALL AMOUNT OF LEEWAY UPWARDS AND IF THE USER ENTERS THE FORM WITH AN UNREALISTIC GOAL, 
+
+            <br>
+
+            GIVE THEM A WARNING ON THE FORM TO REDISTRIBUTE THE POINTS. CAN ALSO DISPLAY THE POINTS OR STATS AVAILABLE ONT HE SCREEN SO THEYH KNOW. MAYBE ALSO DO IT FOR LOWEST AMOUNT OF STATS AS WELL.
+        </h1>
         <form id="data-entry-form" method="POST" action="/data_entry">
             <div class="form-grid">
                 {% for attr in attributes %}
                 <div class="form-group">
                     <label for="{{attr}}">{{attr | replace('_', ' ') | title}}</label>
                     <div class="range-container">
-                        <input type="range" id="{{attr}}" name="{{attr}}" {% if attr=='age' %} min="17" max="50" {% set
-                            mid_value=(17 + 50) / 2 | int %} {% elif attr=='height_cm' %} min="54" max="272" {% set
-                            mid_value=(54 + 272) / 2 | int %} {% elif attr=='weight_kg' %} min="30" max="300" {% set
-                            mid_value=(30 + 300) / 2 | int %} {% else %} min="1" max="99" {% set mid_value=(1 + 99) / 2
-                            | int %} {% endif %} oninput="{{attr}}_val.value = {{attr}}.value" required>
-                        <output id="{{attr}}_val" class="range-value">{{ '%.0f' % mid_value}}</output>
+                        <input type="range" id="{{attr}}" name="{{attr}}" 
+                            {% if attr=='age' %} min="17" max="50"
+                            {% set mid_value=(17 + 50) / 2 | int %}
+                            {% elif attr=='height_cm' %} min="54" max="272"
+                            {% set mid_value=(54 + 272) / 2 | int %}
+                            {% elif attr=='weight_kg' %} min="30" max="300"
+                            {% set mid_value=(30 + 300) / 2 | int %}
+                            {% else %} min="1" max="99"
+                            {% set mid_value=(1 + 99) / 2 | int %}
+                            {% endif %}
+                            value="{{ mid_value }}"
+                            oninput="document.getElementById('{{attr}}_val').value = this.value" 
+                            onchange="document.getElementById('{{attr}}_val').value = this.value" required>
+                        <input type="number" id="{{attr}}_val" class="range-value" value="{{ '%.0f' % mid_value }}" 
+                            min="{{ 17 if attr == 'age' else 54 if attr == 'height_cm' else 30 if attr == 'weight_kg' else 1 }}" 
+                            max="{{ 50 if attr == 'age' else 272 if attr == 'height_cm' else 300 if attr == 'weight_kg' else 99 }}">
                     </div>
                 </div>
                 {% endfor %}
@@ -90,6 +122,19 @@
         </form>
     </div>
 
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            {% for attr in attributes %}
+            const slider_{{attr}} = document.getElementById("{{attr}}");
+            const input_{{attr}} = document.getElementById("{{attr}}_val");
+    
+            input_{{attr}}.addEventListener("input", () => {
+                slider_{{attr}}.value = input_{{attr}}.value;
+            });
+            {% endfor %}
+        });
+    </script>
 
 </body>
 
