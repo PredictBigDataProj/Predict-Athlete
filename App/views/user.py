@@ -77,7 +77,7 @@ player_attributes = [
     # "pressure_handling"
 ]
 
-models_dict, selected_features_dict, pca_dict, scaler = load_models()
+
 
 df = pd.read_csv('App/data/Finished_final_proj_3.csv')  # index=False avoids saving row indices
 
@@ -106,7 +106,7 @@ def index_page():
 
 @user_views.route('/data_entry', methods=['GET'])
 def get_data_entry_page():
-
+    
     players = get_all_players()
     
     return render_template('data_entry.html', players=players, attributes=player_attributes)
@@ -144,6 +144,8 @@ def signup():
 @user_views.route('/data_entry', methods=['POST'])
 def get_user_attr():
 
+    models_dict, selected_features_dict, pca_dict, scaler = load_models()
+    
     players = get_all_players()
 
     try:

@@ -32,28 +32,17 @@ def get_player_by_position(position):
 
 
 def create_derived_features(df):
-    """
-    Create derived features that might be more predictive of player positions.
     
-    Parameters:
-    -----------
-    df : pandas DataFrame
-        The dataset containing player attributes
-        
-    Returns:
-    --------
-    pandas DataFrame : Original dataframe with added derived features
-    """
-    # Create a copy to avoid modifying the original
+    
     df_new = df.copy()
     
-    # Physical attribute ratios
-    df_new['speed_strength_ratio'] = df_new['sprint_speed'] / (df_new['strength'] + 0.1)  # Add small constant to avoid division by zero
+    
+    df_new['speed_strength_ratio'] = df_new['sprint_speed'] / (df_new['strength'] + 0.1)  
     df_new['agility_height_ratio'] = df_new['agility'] / (df_new['height_cm'] + 0.1)
     df_new['jumping_height_ratio'] = df_new['jumping'] / (df_new['height_cm'] + 0.1)
     df_new['stamina_weight_ratio'] = df_new['stamina'] / (df_new['weight_kg'] + 0.1)
     
-    # Skill composites
+    
     df_new['offensive_skills'] = (df_new['finishing'] + df_new['shot_power'] + 
                                   df_new['long_shots'] + df_new['positioning'] + 
                                   df_new['volleys']) / 5
@@ -73,17 +62,18 @@ def create_derived_features(df):
     df_new['speed_composite'] = (df_new['acceleration'] + df_new['sprint_speed'] + 
                                 df_new['agility']) / 3
     
-    # Goalkeeper specific composite
+    
     df_new['goalkeeper_skills'] = (df_new['gk_diving'] + df_new['gk_handling'] + 
                                   df_new['gk_kicking'] + df_new['gk_positioning'] + 
                                   df_new['gk_reflexes']) / 5
     
-    # Differences and ratios between skills
+    
     df_new['offensive_defensive_diff'] = df_new['offensive_skills'] - df_new['defensive_skills']
     df_new['offensive_defensive_ratio'] = df_new['offensive_skills'] / (df_new['defensive_skills'] + 0.1)
     df_new['technical_physical_ratio'] = df_new['technical_ability'] / (df_new['physical_dominance'] + 0.1)
     
-    # Handling pressure
+    
     df_new['pressure_handling'] = (df_new['composure'] + df_new['reactions'] + df_new['balance']) / 3
     
     return df_new
+

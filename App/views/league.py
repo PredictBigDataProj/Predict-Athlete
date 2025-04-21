@@ -16,7 +16,7 @@ from App.controllers import (
     get_all_users_json,
     jwt_required,
     get_all_players,
-    load_models, get_user, get_user_by_username
+    load_models, get_user, get_user_by_username, get_league_name_id
 )
 
 
@@ -89,7 +89,9 @@ player_attributes = [
 
 
 
-models_dict, selected_features_dict, pca_dict, scaler = load_models()
+#models_dict, selected_features_dict, pca_dict, scaler = load_models()
+
+df = pd.read_csv('App/data/Finished_final_proj_3.csv')  # index=False avoids saving row indices
 
 
 league_views = Blueprint('league_views', __name__, template_folder='../templates')
@@ -98,11 +100,27 @@ league_views = Blueprint('league_views', __name__, template_folder='../templates
 @league_views.route('/league/<league_id>-<country>', methods=['GET'])
 def get_league_page(league_id, country):
 
-    print(f"League ID: {league_id}, Country: {country}")
+    #print(f"League ID: {league_id}, Country: {country}")
+
+    df['league_name_id'] = df['league_name'].apply(get_league_name_id)
+
+
+    league_info = df[df['league_name_id'] == league_id]
+
+
+    avg_age = df[df['league_name_id'] == league_id]['age'].mean() #This is the same analysis as what is in the notebook, just use the df transformations in here and send the data as information tot he template.
+
+
+
+    nav_name = df[df['league_name_id'] == league_id]['league_name'].unique()
+    #league_info = df
+
+    #print(df[['league_name', 'league_name_id']])
     
     #PUT THE VISUALIZATIONS AND ANALYISIS IN THIS FUNCTION/ RENDERED TEMPLATE PAGE 
 
-    return render_template('league.html', league_id=league_id, country=country)
+    return render_template('league.html', league_id=league_id, country=country, league_info=league_info.to_dict(orient='records'),
+                            avg_age = avg_age, nav_name=nav_name)
 
 
 
