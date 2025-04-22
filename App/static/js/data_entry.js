@@ -127,21 +127,47 @@ function closeNav() {
 document.addEventListener("DOMContentLoaded", function () {
   // Define physical attributes
   const physicalAttrs = [
+    "crossing",
+    "finishing",
+    "heading_accuracy",
+    "short_passing",
+    "volleys",
+    "dribbling",
+    "curve",
+    "fk_accuracy",
+    "long_passing",
+    "ball_control",
     "acceleration",
     "sprint_speed",
     "agility",
+    "reactions",
     "balance",
+    "shot_power",
     "jumping",
     "stamina",
     "strength",
+    "long_shots",
     "aggression",
+    "interceptions",
+    "positioning",
+    "vision",
+    "penalties",
+    "composure",
+    "defensive_awareness",
+    "standing_tackle",
+    "sliding_tackle",
+    "gk_diving",
+    "gk_handling",
+    "gk_kicking",
+    "gk_positioning",
+    "gk_reflexes",
   ];
 
   // Get reasonable max from server (this value is passed from the template)
   const reasonableMax =
     parseInt(
       document.querySelector(".stats-container").dataset.reasonableMax
-    ) || 600;
+    ) || 2660;
 
   // Function to update total
   function updatePhysicalTotal() {

@@ -158,9 +158,41 @@ def get_user_attr():
         
         # Validate physical attributes total
         physical_attrs = [
-            "acceleration", "sprint_speed", "agility", "balance", 
-            "jumping", "stamina", "strength", "aggression"
-        ]
+            "crossing",
+            "finishing",
+            "heading_accuracy",
+            "short_passing",
+            "volleys",
+            "dribbling",
+            "curve",
+            "fk_accuracy",
+            "long_passing",
+            "ball_control",
+            "acceleration",
+            "sprint_speed",
+            "agility",
+            "reactions",
+            "balance",
+            "shot_power",
+            "jumping",
+            "stamina",
+            "strength",
+            "long_shots",
+            "aggression",
+            "interceptions",
+            "positioning",
+            "vision",
+            "penalties",
+            "composure",
+            "defensive_awareness",
+            "standing_tackle",
+            "sliding_tackle",
+            "gk_diving",
+            "gk_handling",
+            "gk_kicking",
+            "gk_positioning",
+            "gk_reflexes",
+            ]
         physical_total = sum(input_data.get(attr, 0) for attr in physical_attrs)
         
         if physical_total > physical_stats["reasonable_max"]:

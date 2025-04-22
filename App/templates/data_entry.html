@@ -150,5 +150,20 @@
         </div>
       </div>
     </div>
+
+
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+          {% for attr in attributes %}
+          const slider_{{attr}} = document.getElementById("{{attr}}");
+          const input_{{attr}} = document.getElementById("{{attr}}_val");
+
+          input_{{attr}}.addEventListener("input", () => {
+              slider_{{attr}}.value = input_{{attr}}.value;
+          });
+          {% endfor %}
+      });
+  </script>
   </body>
 </html>

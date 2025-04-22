@@ -84,8 +84,40 @@ def get_physical_attribute_stats():
     
     # Define physical attributes
     physical_attrs = [
-        "acceleration", "sprint_speed", "agility", "balance", 
-        "jumping", "stamina", "strength", "aggression"
+        "crossing",
+    "finishing",
+    "heading_accuracy",
+    "short_passing",
+    "volleys",
+    "dribbling",
+    "curve",
+    "fk_accuracy",
+    "long_passing",
+    "ball_control",
+    "acceleration",
+    "sprint_speed",
+    "agility",
+    "reactions",
+    "balance",
+    "shot_power",
+    "jumping",
+    "stamina",
+    "strength",
+    "long_shots",
+    "aggression",
+    "interceptions",
+    "positioning",
+    "vision",
+    "penalties",
+    "composure",
+    "defensive_awareness",
+    "standing_tackle",
+    "sliding_tackle",
+    "gk_diving",
+    "gk_handling",
+    "gk_kicking",
+    "gk_positioning",
+    "gk_reflexes",
     ]
     
     # Initialize stats dictionary
