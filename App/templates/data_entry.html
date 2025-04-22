@@ -1,141 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Title for WebPage</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/data_entry.css') }}">
-    <script src="{{ url_for('static', filename='js/data_entry.js') }}" defer></script>
-</head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"
+    />
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/data_entry.css') }}"
+    />
+    <script
+      src="{{ url_for('static', filename='js/data_entry.js') }}"
+      defer
+    ></script>
+  </head>
 
-<body>
-
+  <body>
     <!-- Sidenav -->
     <div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="/data_entry">Data Entry</a>
-        <a href="/Home">Home</a>
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"
+        >&times;</a
+      >
+      <a href="/data_entry">Data Entry</a>
+      <a href="/Home">Home</a>
     </div>
 
     <!-- Navbar -->
     <nav class="navbar">
-        <!-- From Uiverse.io by Cevorob -->
-        <div class="slide">
-            <label class="burger" onclick="openNav()" for="burger">
-                <input type="checkbox" id="burger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </label>
-        </div>
-        <div class="logo">
-            <img src="/static/logo.png" alt="Profile">
-        </div>
-        <div class="navbar-title">Navbar title</div>
-        <!-- Profile Options -->
-        <!-- <div class="container">
-            <div class="more">
-                <div class="profile-pic more-btn">
-                    <img src="https://i.ibb.co/KS9VcFr/profile-pic.jpg" alt="Profile">
-                </div>
-
-                <div class="more-menu">
-                    <div class="more-menu-caret">
-                        <div class="more-menu-caret-outer"></div>
-                        <div class="more-menu-caret-inner"></div>
-                    </div>
-                    <ul class="more-menu-items" tabindex="-1" role="menu" aria-labelledby="more-btn" aria-hidden="true">
-                        <li class="more-menu-item" role="presentation">
-                            <a href="" class="more-menu-btn" role="menuitem">Profile</a>
-                        </li>
-                        <li class="more-menu-item" role="presentation">
-                            <a href="/logout" class="more-menu-btn" role="menuitem">Logout</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div> -->
+      <!-- From Uiverse.io by Cevorob -->
+      <div class="slide">
+        <label class="burger" onclick="openNav()" for="burger">
+          <input type="checkbox" id="burger" />
+          <span></span>
+          <span></span>
+          <span></span>
+        </label>
+      </div>
+      <div class="logo">
+        <img src="/static/logo.png" alt="Profile" />
+      </div>
+      <div class="navbar-title">Navbar title</div>
     </nav>
 
-
-    <!-- Search Section -->
-
-
-
-    <!-- <div class="form-group">
-        <label for="{{attr}}">{{attr | replace('_', ' ') | title}}</label>
-        <div class="range-container">
-            <input type="range" id="{{attr}}" name="{{attr}}" {% if attr=='age' %} min="17" max="50" {% set
-                mid_value=(17 + 50) / 2 | int %} {% elif attr=='height_cm' %} min="54" max="272" {% set
-                mid_value=(54 + 272) / 2 | int %} {% elif attr=='weight_kg' %} min="30" max="300" {% set
-                mid_value=(30 + 300) / 2 | int %} {% else %} min="1" max="99" {% set mid_value=(1 + 99) / 2
-                | int %} {% endif %} oninput="{{attr}}_val.value = {{attr}}.value" required>
-            <output id="{{attr}}_val" class="range-value">{{ '%.0f' % mid_value}}</output>
-        </div>
-    </div> -->
-
-
-    <!-- Reviews Section -->
-    <div class="form-container">
-        <h1>ADD THE LOGIC AND FUNCTIONS TO ANALYZE AND FIND THE MAX TOTAL POINTS FOR PHYSICAL ATTRIBUTES OF THE PLAYERS IN THE DATASET.
-            <br>
-            WHEN YOU DO THE SUM/CALCULATION AND FIND THE PLAYER WITH THE MAXIMUM STATS GIVE A SMALL AMOUNT OF LEEWAY UPWARDS AND IF THE USER ENTERS THE FORM WITH AN UNREALISTIC GOAL, 
-
-            <br>
-
-            GIVE THEM A WARNING ON THE FORM TO REDISTRIBUTE THE POINTS. CAN ALSO DISPLAY THE POINTS OR STATS AVAILABLE ONT HE SCREEN SO THEYH KNOW. MAYBE ALSO DO IT FOR LOWEST AMOUNT OF STATS AS WELL.
-        </h1>
+    <!-- Main Content - Two Column Layout -->
+    <div class="main-content">
+      <!-- Left Column - Form -->
+      <div class="form-container">
         <form id="data-entry-form" method="POST" action="/data_entry">
-            <div class="form-grid">
-                {% for attr in attributes %}
-                <div class="form-group">
-                    <label for="{{attr}}">{{attr | replace('_', ' ') | title}}</label>
-                    <div class="range-container">
-                        <input type="range" id="{{attr}}" name="{{attr}}" 
-                            {% if attr=='age' %} min="17" max="50"
-                            {% set mid_value=(17 + 50) / 2 | int %}
-                            {% elif attr=='height_cm' %} min="54" max="272"
-                            {% set mid_value=(54 + 272) / 2 | int %}
-                            {% elif attr=='weight_kg' %} min="30" max="300"
-                            {% set mid_value=(30 + 300) / 2 | int %}
-                            {% else %} min="1" max="99"
-                            {% set mid_value=(1 + 99) / 2 | int %}
-                            {% endif %}
-                            value="{{ mid_value }}"
-                            oninput="document.getElementById('{{attr}}_val').value = this.value" 
-                            onchange="document.getElementById('{{attr}}_val').value = this.value" required>
-                        <input type="number" id="{{attr}}_val" class="range-value" value="{{ '%.0f' % mid_value }}" 
-                            min="{{ 17 if attr == 'age' else 54 if attr == 'height_cm' else 30 if attr == 'weight_kg' else 1 }}" 
-                            max="{{ 50 if attr == 'age' else 272 if attr == 'height_cm' else 300 if attr == 'weight_kg' else 99 }}">
-                    </div>
-                </div>
-                {% endfor %}
+          <div class="form-grid">
+            {% for attr in attributes %}
+            <div class="form-group">
+              <label for="{{attr}}">{{attr | replace('_', ' ') | title}}</label>
+              <div class="range-container">
+                <input type="range" id="{{attr}}" name="{{attr}}" {% if
+                attr=='age' %} min="17" max="50" {% set mid_value=(17 + 50) / 2
+                | int %} {% elif attr=='height_cm' %} min="54" max="272" {% set
+                mid_value=(54 + 272) / 2 | int %} {% elif attr=='weight_kg' %}
+                min="30" max="300" {% set mid_value=(30 + 300) / 2 | int %} {%
+                else %} min="1" max="99" {% set mid_value=(1 + 99) / 2 | int %}
+                {% endif %} value="{{ mid_value }}"
+                oninput="document.getElementById('{{attr}}_val').value =
+                this.value"
+                onchange="document.getElementById('{{attr}}_val').value =
+                this.value" required>
+                <input
+                  type="number"
+                  id="{{attr}}_val"
+                  class="range-value"
+                  value="{{ '%.0f' % mid_value }}"
+                  min="{{ 17 if attr == 'age' else 54 if attr == 'height_cm' else 30 if attr == 'weight_kg' else 1 }}"
+                  max="{{ 50 if attr == 'age' else 272 if attr == 'height_cm' else 300 if attr == 'weight_kg' else 99 }}"
+                />
+              </div>
             </div>
+            {% endfor %}
+          </div>
 
-            <button type="submit" class="submit-btn">Predict Position</button>
+          <button type="submit" class="submit-btn">Predict Position</button>
         </form>
+      </div>
+
+      <!-- Right Column - Stats Display -->
+      <div class="stats-container">
+        <div class="stats-card">
+          <div class="card-header">
+            <h2>Physical Attributes Stats</h2>
+            <button id="expand-stats" class="expand-btn">
+              <i class="fas fa-expand"></i>
+            </button>
+          </div>
+          <div class="card-content">
+            <div class="stats-item">
+              <span class="stats-label">Maximum total physical points:</span>
+              <span class="stats-value"
+                >{{ physical_stats.max_total }} ({{ physical_stats.max_player
+                }})</span
+              >
+            </div>
+            <div class="stats-item">
+              <span class="stats-label">Minimum total physical points:</span>
+              <span class="stats-value"
+                >{{ physical_stats.min_total }} ({{ physical_stats.min_player
+                }})</span
+              >
+            </div>
+            <div class="stats-item">
+              <span class="stats-label">Average total physical points:</span>
+              <span class="stats-value"
+                >{{ "%.1f"|format(physical_stats.avg_total) }}</span
+              >
+            </div>
+            <div class="stats-item">
+              <span class="stats-label">Reasonable maximum (with leeway):</span>
+              <span class="stats-value"
+                >{{ physical_stats.reasonable_max }}</span
+              >
+            </div>
+            <div class="stats-item current-total">
+              <span class="stats-label"
+                >Your current total physical points:</span
+              >
+              <span class="stats-value" id="physical-total">0</span>
+            </div>
+            <div
+              id="validation-warning"
+              class="warning-message"
+              style="display: none"
+            >
+              Warning: Your total physical attributes exceed realistic values.
+              Please redistribute your points.
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
 
+
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            {% for attr in attributes %}
-            const slider_{{attr}} = document.getElementById("{{attr}}");
-            const input_{{attr}} = document.getElementById("{{attr}}_val");
-    
-            input_{{attr}}.addEventListener("input", () => {
-                slider_{{attr}}.value = input_{{attr}}.value;
-            });
-            {% endfor %}
-        });
-    </script>
+      document.addEventListener("DOMContentLoaded", () => {
+          {% for attr in attributes %}
+          const slider_{{attr}} = document.getElementById("{{attr}}");
+          const input_{{attr}} = document.getElementById("{{attr}}_val");
 
-</body>
-
+          input_{{attr}}.addEventListener("input", () => {
+              slider_{{attr}}.value = input_{{attr}}.value;
+          });
+          {% endfor %}
+      });
+  </script>
+  </body>
 </html>

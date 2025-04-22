@@ -18,7 +18,8 @@ from App.controllers import (
     jwt_required,
     get_all_players,
     load_models, get_user, get_user_by_username,
-    create_derived_features
+    create_derived_features,
+    get_physical_attribute_stats
 )
 
 
@@ -108,8 +109,9 @@ def index_page():
 def get_data_entry_page():
     
     players = get_all_players()
+    physical_stats = get_physical_attribute_stats()
     
-    return render_template('data_entry.html', players=players, attributes=player_attributes)
+    return render_template('data_entry.html', players=players, attributes=player_attributes, physical_stats=physical_stats)
 
 
 
@@ -143,21 +145,63 @@ def signup():
 
 @user_views.route('/data_entry', methods=['POST'])
 def get_user_attr():
-
     models_dict, selected_features_dict, pca_dict, scaler = load_models()
-    
     players = get_all_players()
+    physical_stats = get_physical_attribute_stats()
 
     try:
-        
+        # Get input data from form
         input_data = {}
         for attr in player_attributes:
             value = request.form.get(attr, type=int)
             input_data[attr] = value if value is not None else 50
-
         
+        # Validate physical attributes total
+        physical_attrs = [
+            "crossing",
+            "finishing",
+            "heading_accuracy",
+            "short_passing",
+            "volleys",
+            "dribbling",
+            "curve",
+            "fk_accuracy",
+            "long_passing",
+            "ball_control",
+            "acceleration",
+            "sprint_speed",
+            "agility",
+            "reactions",
+            "balance",
+            "shot_power",
+            "jumping",
+            "stamina",
+            "strength",
+            "long_shots",
+            "aggression",
+            "interceptions",
+            "positioning",
+            "vision",
+            "penalties",
+            "composure",
+            "defensive_awareness",
+            "standing_tackle",
+            "sliding_tackle",
+            "gk_diving",
+            "gk_handling",
+            "gk_kicking",
+            "gk_positioning",
+            "gk_reflexes",
+            ]
+        physical_total = sum(input_data.get(attr, 0) for attr in physical_attrs)
+        
+        if physical_total > physical_stats["reasonable_max"]:
+            flash("Your physical attributes total exceeds realistic values. Please redistribute your points.", "error")
+            return render_template('data_entry.html', players=players, attributes=player_attributes, 
+                                  physical_stats=physical_stats, input_data=input_data)
+        
+        # Continue with existing processing
         test_player_df = pd.DataFrame([input_data])
-
         test_player_df = create_derived_features(test_player_df)
         
         test_player_scaled = scaler.transform(test_player_df)
