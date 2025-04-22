@@ -77,3 +77,61 @@ def create_derived_features(df):
     
     return df_new
 
+
+def get_physical_attribute_stats():
+    """Calculate statistics for physical attributes in the dataset"""
+    players = get_all_players()
+    
+    # Define physical attributes
+    physical_attrs = [
+        "acceleration", "sprint_speed", "agility", "balance", 
+        "jumping", "stamina", "strength", "aggression"
+    ]
+    
+    # Initialize stats dictionary
+    stats = {
+        "max_total": 0,
+        "min_total": float('inf'),
+        "avg_total": 0,
+        "max_player": None,
+        "min_player": None,
+        "max_by_attr": {attr: 0 for attr in physical_attrs},
+        "min_by_attr": {attr: 100 for attr in physical_attrs},
+        "avg_by_attr": {attr: 0 for attr in physical_attrs}
+    }
+    
+    total_players = len(players)
+    if total_players == 0:
+        return stats
+    
+    # Calculate stats
+    for player in players:
+        physical_total = sum(getattr(player, attr, 0) or 0 for attr in physical_attrs)
+        
+        # Update max total
+        if physical_total > stats["max_total"]:
+            stats["max_total"] = physical_total
+            stats["max_player"] = player.name
+        
+        # Update min total
+        if physical_total < stats["min_total"]:
+            stats["min_total"] = physical_total
+            stats["min_player"] = player.name
+        
+        # Update attribute-specific stats
+        for attr in physical_attrs:
+            value = getattr(player, attr, 0) or 0
+            stats["max_by_attr"][attr] = max(stats["max_by_attr"][attr], value)
+            stats["min_by_attr"][attr] = min(stats["min_by_attr"][attr], value)
+            stats["avg_by_attr"][attr] += value
+    
+    # Calculate averages
+    stats["avg_total"] = sum(stats["avg_by_attr"].values()) / len(physical_attrs)
+    for attr in physical_attrs:
+        stats["avg_by_attr"][attr] /= total_players
+    
+    # Add a reasonable leeway (10% above max)
+    stats["reasonable_max"] = int(stats["max_total"] * 1.1)
+    
+    return stats
+
