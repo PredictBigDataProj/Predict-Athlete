@@ -107,11 +107,8 @@ def index_page():
 
 @user_views.route('/data_entry', methods=['GET'])
 def get_data_entry_page():
-    
-    players = get_all_players()
     physical_stats = get_physical_attribute_stats()
-    
-    return render_template('data_entry.html', players=players, attributes=player_attributes, physical_stats=physical_stats)
+    return render_template('data_entry.html', attributes=player_attributes, physical_stats=physical_stats)
 
 
 
