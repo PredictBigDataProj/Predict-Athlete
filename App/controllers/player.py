@@ -156,9 +156,12 @@ def get_physical_attribute_stats():
             stats["max_by_attr"][attr] = max(stats["max_by_attr"][attr], value)
             stats["min_by_attr"][attr] = min(stats["min_by_attr"][attr], value)
             stats["avg_by_attr"][attr] += value
+        
+        # Add this physical_total to calculate the true average later
+        stats["avg_total"] += physical_total
     
-    # Calculate averages
-    stats["avg_total"] = sum(stats["avg_by_attr"].values()) / len(physical_attrs)
+    # Calculate averages - FIXED VERSION
+    stats["avg_total"] /= total_players  # Calculate the true average of total points
     for attr in physical_attrs:
         stats["avg_by_attr"][attr] /= total_players
     
@@ -166,4 +169,3 @@ def get_physical_attribute_stats():
     stats["reasonable_max"] = int(stats["max_total"] * 1.1)
     
     return stats
-
