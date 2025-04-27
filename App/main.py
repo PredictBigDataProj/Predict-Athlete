@@ -14,10 +14,12 @@ from App.config import load_config
 from App.controllers import (
     setup_jwt,
     add_auth_context,
-    setup_flask_login
+    setup_flask_login,
 )
 
 from App.views import views, setup_admin
+
+
 
 def add_views(app):
     for view in views:
@@ -41,3 +43,4 @@ def create_app(overrides={}):
         return render_template('401.html', error=error), 401
     app.app_context().push()
     return app
+

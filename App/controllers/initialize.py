@@ -28,7 +28,7 @@ def initialize():
     db.create_all()
     create_user('bob', 'bobpass')
     import_csv_player('App/data/Finished_final_proj_3.csv')
-    load_models()
+    #load_models()
 
 
 def load_models():

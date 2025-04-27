@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, jsonify, request, send_from_directory, flash, redirect, url_for
+from flask import Blueprint, render_template, jsonify, request, send_from_directory, flash, redirect, url_for, current_app
 from flask_jwt_extended import jwt_required, current_user as jwt_current_user
 from flask_login import login_required, current_user
 import numpy as np
@@ -145,7 +145,13 @@ def signup():
 
 @user_views.route('/data_entry', methods=['POST'])
 def get_user_attr():
-    models_dict, selected_features_dict, pca_dict, scaler = load_models()
+    #models_dict, selected_features_dict, pca_dict, scaler = load_models()
+
+    models_dict = current_app.config['MODELS_DICT']
+    selected_features_dict = current_app.config['SELECTED_FEATURES_DICT']
+    pca_dict = current_app.config['PCA_DICT']
+    scaler = current_app.config['SCALER']
+
     players = get_all_players()
     physical_stats = get_physical_attribute_stats()
 

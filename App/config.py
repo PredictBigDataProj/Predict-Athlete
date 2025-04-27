@@ -1,4 +1,5 @@
 import os
+from App.controllers import load_models
 
 def load_config(app, overrides):
     if os.path.exists(os.path.join('./App', 'custom_config.py')):
@@ -15,5 +16,12 @@ def load_config(app, overrides):
     app.config["JWT_COOKIE_SECURE"] = True
     app.config["JWT_COOKIE_CSRF_PROTECT"] = False
     app.config['FLASK_ADMIN_SWATCH'] = 'darkly'
+
+    models_dict, selected_features_dict, pca_dict, scaler = load_models()
+
+    app.config['MODELS_DICT'] = models_dict
+    app.config['SELECTED_FEATURES_DICT'] = selected_features_dict
+    app.config['PCA_DICT'] = pca_dict
+    app.config['SCALER'] = scaler
     for key in overrides:
         app.config[key] = overrides[key]
