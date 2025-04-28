@@ -112,9 +112,9 @@ def get_league_page(league_id, country):
 
 
 
-    nav_name = df[df['league_name_id'] == league_id]['league_name'].unique()
+    league_names = df[df['league_name_id'] == league_id]['league_name'].unique()
+    nav_name = league_names[0] if len(league_names) > 0 else "League"
     #league_info = df
-
     #print(df[['league_name', 'league_name_id']])
     
     #PUT THE VISUALIZATIONS AND ANALYISIS IN THIS FUNCTION/ RENDERED TEMPLATE PAGE 

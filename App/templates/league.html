@@ -11,7 +11,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/data_entry.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/league.css') }}">
     <script src="{{ url_for('static', filename='js/data_entry.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/league.js') }}" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 
 <body>
@@ -37,65 +41,35 @@
         <div class="logo">
             <img src="/static/logo.png" alt="Profile">
         </div>
-        <div class="navbar-title">{{nav_name}} FIND A WAY TO ONLY HAVE THE STRING OF THE LEAGUE NAME HERE, SO WE KNOW WHICH IS WHICH</div>
-        <!-- Profile Options -->
-        <!-- <div class="container">
-            <div class="more">
-                <div class="profile-pic more-btn">
-                    <img src="https://i.ibb.co/KS9VcFr/profile-pic.jpg" alt="Profile">
-                </div>
-
-                <div class="more-menu">
-                    <div class="more-menu-caret">
-                        <div class="more-menu-caret-outer"></div>
-                        <div class="more-menu-caret-inner"></div>
-                    </div>
-                    <ul class="more-menu-items" tabindex="-1" role="menu" aria-labelledby="more-btn" aria-hidden="true">
-                        <li class="more-menu-item" role="presentation">
-                            <a href="" class="more-menu-btn" role="menuitem">Profile</a>
-                        </li>
-                        <li class="more-menu-item" role="presentation">
-                            <a href="/logout" class="more-menu-btn" role="menuitem">Logout</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div> -->
+        <div class="navbar-title">{{nav_name}}</div>
     </nav>
-
-
-    <p>League id we are looking at is: {{league_id}}</p>
-    <p>Country we are looking at is: {{country}}</p>
-
-    <h2>Maybe put some graphs for visualizations and make this page more interactive, a dropdown to filter by nation, filter by positions search etc.</h2>
-
-    <h2>Average Age is: {{avg_age | round(2)}} years </h2>
-
-
-    <pre>This does not have to be a table, probably shouldnt be, the table looks ugly.
-
-        So style and formate this to maek it look better, also the datframe was converted to a dictionary to be searchable in jinja template so you can just use the player model attributes as keys to find whatever data you are looking for to display.
-
-        All calcualtions howver, do it in the league view route, and just follow the formate as the average age from before.
-
-
-        <h3>Put this as a consideration to gather more in depth data as a way to improve system, as you can seee for lower tier leagues like this, our dataset onyl has 1 club, so all club analysius is going to be skewed no matter how we try to do it</h3>
     </pre>
     <section class="scrollable"> 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Index</th>
-                <th>Full Name</th>
-                <th>Name</th>
-                <th>Nation</th>
-                <th>League</th>
-                <th>Club</th>
-            </tr>
-        </thead>
-        <tbody>
-            {%for data in league_info%}
-                    
+        <!-- Average Age Stats Card -->
+        <div class="age-stats-container">
+            <div class="age-label">Average Player Age</div>
+            <div id="average-age" class="age-value">{{avg_age | round(2)}}</div>
+            <div class="age-label">years</div>
+        </div>
+        
+        <div class="bar-chart-container">
+            <h2 class="chart-title">Top 5 Player Nationalities</h2>
+            <div id="nationality-chart"></div>
+        </div>
+
+        <table id="data-table" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Index</th>
+                    <th>Full Name</th>
+                    <th>Name</th>
+                    <th>Nation</th>
+                    <th>League</th>
+                    <th>Club</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for data in league_info%}
                     <tr>
                         <td>{{ loop.index }}</td>  
                         <td>{{data.full_name}}</td> 
@@ -104,19 +78,10 @@
                         <td>{{ data.league_name }}</td> 
                         <td>{{data.club_name}}</td>
                     </tr>
-
-                
-            {%endfor%}
-            
-        </tbody>
-
-
-        
-    </table>
+                {%endfor%}
+            </tbody>
+        </table>
     </section>
-
-
-    
 
 </body>
 
