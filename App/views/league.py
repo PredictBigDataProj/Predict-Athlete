@@ -82,7 +82,7 @@ positions = ["ST", "RWB", "RW", "RM", "RB", "LWB", "LW", "LM", "LB", "GK", "CM",
 
 #models_dict, selected_features_dict, pca_dict, scaler = load_models()
 
-df = pd.read_csv('App/data/Final_project_finished_4.csv')  # index=False avoids saving row indices
+df = pd.read_csv('App/data/Final_project_finished_Continents.csv')  # index=False avoids saving row indices
 
 
 league_views = Blueprint('league_views', __name__, template_folder='../templates')
