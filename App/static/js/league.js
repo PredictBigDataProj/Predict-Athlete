@@ -113,17 +113,13 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  // Get the target value from the element
   const ageElement = document.getElementById("average-age");
   if (!ageElement) return;
 
   const targetAge = parseFloat(ageElement.textContent);
-  // Store the target value for animation
   const displayValue = ageElement.textContent;
-  // Reset to zero for animation
   ageElement.textContent = "0";
 
-  // Set up the animation
   anime({
     targets: "#average-age",
     innerHTML: [0, targetAge],
@@ -133,15 +129,14 @@ document.addEventListener("DOMContentLoaded", function () {
     update: function (anim) {
       const progress = anim.progress / 100;
       const currentValue = targetAge * progress;
-      document.querySelector("#average-age").innerHTML = currentValue.toFixed(2);
+      document.querySelector("#average-age").innerHTML =
+        currentValue.toFixed(2);
     },
-    complete: function() {
-      // Ensure the final value matches exactly what was provided by Flask
+    complete: function () {
       document.querySelector("#average-age").innerHTML = displayValue;
-    }
+    },
   });
 
-  // Add entrance animation for the container
   anime({
     targets: ".age-stats-container",
     translateY: [50, 0],
@@ -151,3 +146,116 @@ document.addEventListener("DOMContentLoaded", function () {
     delay: 300,
   });
 });
+document.addEventListener("DOMContentLoaded", function () {
+  createPositionAgeHeatmap();
+});
+
+function createPositionAgeHeatmap() {
+  const positionData = document.querySelectorAll(".position-data");
+  if (positionData.length === 0) return;
+
+  const heatmapData = [];
+  const positions = [];
+  const ageGroups = new Set();
+
+  positionData.forEach((position) => {
+    const posName = position.dataset.position;
+    positions.push(posName);
+
+    const ageGroupData = position.querySelectorAll(".age-group-data");
+    ageGroupData.forEach((group) => {
+      const groupName = group.dataset.group;
+      const percent = parseFloat(group.dataset.percent);
+      ageGroups.add(groupName);
+
+      heatmapData.push({
+        position: posName,
+        ageGroup: groupName,
+        value: percent,
+      });
+    });
+  });
+
+  const sortedAgeGroups = Array.from(ageGroups).sort();
+
+  const margin = { top: 30, right: 30, bottom: 100, left: 100 };
+  const width = 600 - margin.left - margin.right;
+  const height = 400 - margin.top - margin.bottom;
+
+  const svg = d3
+    .select("#position-age-heatmap")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  const x = d3
+    .scaleBand()
+    .range([0, width])
+    .domain(sortedAgeGroups)
+    .padding(0.05);
+
+  svg
+    .append("g")
+    .attr("transform", `translate(0,${height})`)
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .style("text-anchor", "end")
+    .attr("dx", "-.8em")
+    .attr("dy", ".15em")
+    .attr("transform", "rotate(-65)");
+
+  const y = d3.scaleBand().range([height, 0]).domain(positions).padding(0.05);
+
+  svg.append("g").call(d3.axisLeft(y));
+
+  const colorScale = d3
+    .scaleSequential()
+    .interpolator(d3.interpolateBlues)
+    .domain([0, d3.max(heatmapData, (d) => d.value)]);
+
+  const tooltip = d3
+    .select("body")
+    .append("div")
+    .style("position", "absolute")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "1px")
+    .style("border-radius", "5px")
+    .style("padding", "10px")
+    .style("opacity", 0);
+
+  svg
+    .selectAll()
+    .data(heatmapData)
+    .enter()
+    .append("rect")
+    .attr("x", (d) => x(d.ageGroup))
+    .attr("y", (d) => y(d.position))
+    .attr("width", x.bandwidth())
+    .attr("height", y.bandwidth())
+    .style("fill", (d) => colorScale(d.value))
+    .on("mouseover", function (event, d) {
+      tooltip.transition().duration(200).style("opacity", 0.9);
+      tooltip
+        .html(
+          `Position: ${d.position}<br>Age Group: ${
+            d.ageGroup
+          }<br>Percentage: ${d.value.toFixed(2)}%`
+        )
+        .style("left", event.pageX + 10 + "px")
+        .style("top", event.pageY - 28 + "px");
+    })
+    .on("mouseout", function () {
+      tooltip.transition().duration(500).style("opacity", 0);
+    });
+
+  svg
+    .append("text")
+    .attr("x", width / 2)
+    .attr("y", -10)
+    .attr("text-anchor", "middle")
+    .style("font-size", "16px")
+    .text("Age Group Distribution by Position (%)");
+}
