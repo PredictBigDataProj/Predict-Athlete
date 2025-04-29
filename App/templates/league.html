@@ -51,6 +51,8 @@
             <div id="average-age" class="age-value">{{avg_age | round(2)}}</div>
             <div class="age-label">years</div>
         </div>
+
+        
         
         <div class="bar-chart-container">
             <h2 class="chart-title">Top 5 Player Nationalities</h2>
@@ -82,6 +84,44 @@
             </tbody>
         </table>
     </section>
+    <h1>Overall Age Group Distribution:</h1>
+    <ul>
+        {% for group, percent in age_groups.items() %}
+        <li>{{ group }}: {{ percent | round(2) }}%</li>
+        {% endfor %}
+    </ul>
+
+    <br>
+    <h1>Overall age stats</h1>
+    <h1>Oldest player age is: {{max_age}}</h1>
+    <h1>Youngest player age is: {{min_age}}</h1>
+    <h1>Average Career length overall is: {{avg_career}}</h1>
+    <h1>Youngest player Career length overall is: {{min_career}}</h1>
+    <h1>Oldest player Career length overall is: {{max_career}}</h1>
+    <br>
+
+    {% for stat in position_stats %}
+
+    <h1>Stats for position: {{stat.position}} !</h1>
+    <h2>Age distributions</h2>
+    <ul>
+        {% for group, percent in stat.pos_age_groups.items() %}
+        <li>{{ group }}: {{ percent | round(2) }}%</li>
+        {% endfor %}
+    </ul>
+
+        
+        <h1>Average age: {{avg_age}}</h1>
+        <h1>Min age: {{min_age}}</h1>
+        <h1>Max age: {{max_age}}</h1>
+        <h1>Average career length: {{avg_career}}</h1>
+        <h1>Min career length: {{min_career}}</h1>
+        <h1>Max career length: {{max_career}}</h1>
+
+
+        <br>
+
+    {%endfor%}
 
 </body>
 
