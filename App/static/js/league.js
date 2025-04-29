@@ -183,6 +183,16 @@ const LeagueVisualizer = {
       },
     });
 
+    // Animate the min and max age values
+    anime({
+      targets: '.age-stat-value',
+      opacity: [0, 1],
+      translateY: [10, 0],
+      delay: anime.stagger(200, {start: 1000}),
+      duration: 1000,
+      easing: 'easeOutQuad'
+    });
+
     anime({
       targets: LeagueVisualizer.selectors.ageStatsContainer,
       translateY: [50, 0],

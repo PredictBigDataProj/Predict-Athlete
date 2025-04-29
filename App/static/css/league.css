@@ -1,3 +1,4 @@
+/* Base Layout */
 .scrollable {
     padding-top: 80px;
     padding-left: 20px;
@@ -6,23 +7,60 @@
     box-sizing: border-box;
 }
 
-.bar-chart-container {
-    margin-top: 30px;
+/* Common Chart Container Styles */
+.chart-container,
+.bar-chart-container,
+.pyramid-chart-container,
+.heatmap-container {
+    background-color: #25283D;
+    color: #FFFAFF;
+    border-radius: 10px;
     padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.bar-chart-container {
+    margin-top: 30px;
+}
+
+.pyramid-chart-container,
+.heatmap-container {
+    width: 90%;
+    max-width: 800px;
+}
+
+.heatmap-container {
+    opacity: 0;
+    /* Initial state for animation */
+    transform-origin: center;
+}
+
+/* Chart Titles */
+.chart-title {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #FFFAFF;
+}
+
+/* Bar Chart Styles */
 .bar {
     fill: #4682B4;
-    transition: fill 0.3s;
+    transition: fill 0.3s ease;
 }
 
 .bar:hover {
     fill: #355834;
 }
 
+#nationality-chart {
+    padding: 15px;
+    margin: 10px 0;
+}
+
+/* Axis Styles */
 .axis text {
     font-size: 12px;
 }
@@ -32,20 +70,7 @@
     font-weight: bold;
 }
 
-.chart-title {
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
-    color: #25283D;
-}
-
-#nationality-chart {
-    padding: 15px;
-    margin: 10px 0;
-}
-
-
+/* Age Stats Container */
 .age-stats-container {
     background-color: #25283D;
     color: #FFFAFF;
@@ -55,6 +80,12 @@
     width: 300px;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.age-stats-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .age-value {
@@ -69,18 +100,27 @@
     margin-bottom: 5px;
 }
 
-.heatmap-container {
-    background-color: #FFFAFF;
-    padding: 20px;
-    border-radius: 10px;
-    margin: 20px auto;
-    width: 90%;
-    max-width: 800px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    opacity: 0;
-    transform-origin: center;
+.age-stats-row {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+.age-stat-box {
+    text-align: center;
+    padding: 5px 10px;
+}
+
+.age-stat-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FFFAFF;
+    margin: 5px 0;
+}
+
+/* Heatmap Styles */
 #position-age-heatmap {
     margin: 0 auto;
     overflow-x: auto;
@@ -91,21 +131,8 @@
     margin: 0 auto;
 }
 
-.heatmap-tooltip {
-    position: absolute;
-    background-color: white;
-    border: solid 1px #aaa;
-    border-radius: 5px;
-    padding: 10px;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-}
-
 .heatmap-cell {
-    transition: all 0.3s;
+    transition: all 0.3s ease;
     cursor: pointer;
 }
 
@@ -113,26 +140,27 @@
     filter: brightness(1.1);
 }
 
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+/* Tooltip Styles */
+.heatmap-tooltip,
+.pyramid-tooltip {
+    position: absolute;
+    background-color: white;
+    border: solid 1px #aaa;
+    border-radius: 5px;
+    padding: 10px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    color: #333;
 }
 
-
-.pyramid-chart-container {
-    background-color: #FFFAFF;
-    padding: 20px;
-    border-radius: 10px;
-    margin: 20px auto;
-    width: 90%;
-    max-width: 800px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
+/* Pyramid Chart Styles */
 .position-filter {
     margin: 15px 0;
     text-align: center;
+    color: #FFFAFF;
 }
 
 .position-filter label {
@@ -147,6 +175,11 @@
     background-color: #f8f8f8;
     font-size: 14px;
     cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.position-filter select:hover {
+    background-color: #f0f0f0;
 }
 
 #age-pyramid-chart {
@@ -156,12 +189,12 @@
 
 .pyramid-bar-left {
     fill: #4682B4;
-    transition: fill 0.3s;
+    transition: fill 0.3s ease;
 }
 
 .pyramid-bar-right {
     fill: #6A5ACD;
-    transition: fill 0.3s;
+    transition: fill 0.3s ease;
 }
 
 .pyramid-bar-left:hover,
@@ -185,14 +218,40 @@
     text-anchor: middle;
 }
 
-.pyramid-tooltip {
-    position: absolute;
-    background-color: white;
-    border: solid 1px #aaa;
-    border-radius: 5px;
-    padding: 10px;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+/* Animations */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+
+    .pyramid-chart-container,
+    .heatmap-container,
+    .bar-chart-container {
+        width: 95%;
+    }
+
+    .age-stats-container {
+        width: 90%;
+        max-width: 300px;
+    }
+
+    .chart-title {
+        font-size: 16px;
+    }
+
+    .age-value {
+        font-size: 36px;
+    }
 }

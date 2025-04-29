@@ -50,6 +50,17 @@
             <div class="age-label">Average Player Age</div>
             <div id="average-age" class="age-value">{{avg_age | round(2)}}</div>
             <div class="age-label">years</div>
+            
+            <div class="age-stats-row">
+                <div class="age-stat-box">
+                    <div class="age-label">Youngest</div>
+                    <div class="age-stat-value">{{min_age}}</div>
+                </div>
+                <div class="age-stat-box">
+                    <div class="age-label">Oldest</div>
+                    <div class="age-stat-value">{{max_age}}</div>
+                </div>
+            </div>
         </div>
 
         
@@ -128,8 +139,6 @@
     </ul>
 
     <h1>Overall age stats</h1>
-    <h1>Oldest player age is: {{max_age}}</h1>
-    <h1>Youngest player age is: {{min_age}}</h1>
     <h1>Average Career length overall is: {{avg_career}}</h1>
     <h1>Youngest player Career length overall is: {{min_career}}</h1>
     <h1>Oldest player Career length overall is: {{max_career}}</h1>
