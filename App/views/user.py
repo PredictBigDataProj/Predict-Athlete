@@ -82,7 +82,7 @@ player_attributes = [
 
 
 
-df = pd.read_csv('App/data/Final_project_finished_4.csv')
+df = pd.read_csv('App/data/Final_project_finished_Continents.csv')
 
 user_views = Blueprint('user_views', __name__, template_folder='../templates')
 
