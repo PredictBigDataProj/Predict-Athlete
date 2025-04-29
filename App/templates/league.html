@@ -118,6 +118,15 @@
             </div>
         {% endfor %}
     </div>
+
+    <h1>value counts:</h1>
+
+    <ul>
+        {% for group, age_value in age_counts.items() %}
+        <li>Age in years: {{ group }}        Number of players for those years: {{ age_value}}</li>
+        {% endfor %}
+    </ul>
+
     <h1>Overall age stats</h1>
     <h1>Oldest player age is: {{max_age}}</h1>
     <h1>Youngest player age is: {{min_age}}</h1>
@@ -125,21 +134,25 @@
     <h1>Youngest player Career length overall is: {{min_career}}</h1>
     <h1>Oldest player Career length overall is: {{max_career}}</h1>
     <br>
+
+
     {% for stat in position_stats %}
-    <h1>Stats for position: {{stat.position}} !</h1>
-    <h2>Age distributions</h2>
-    <ul>
-        {% for group, percent in stat.pos_age_groups.items() %}
-        <li>{{ group }}: {{ percent | round(2) }}%</li>
-        {% endfor %}
-    </ul>
-        <h1>Average age: {{avg_age}}</h1>
-        <h1>Min age: {{min_age}}</h1>
-        <h1>Max age: {{max_age}}</h1>
-        <h1>Average career length: {{avg_career}}</h1>
-        <h1>Min career length: {{min_career}}</h1>
-        <h1>Max career length: {{max_career}}</h1>
-        <br>
+        <h1>Stats for position: {{stat.position}} !</h1>
+        <h2>Age distributions</h2>
+
+        <ul>
+            {% for group, percent in stat.pos_age_groups.items() %}
+            <li>{{ group }}: {{ percent | round(2) }}%</li>
+            {% endfor %}
+        </ul>
+
+            <h1>Average age: {{stat.avg_age}}</h1>
+            <h1>Min age: {{stat.min_age}}</h1>
+            <h1>Max age: {{stat.max_age}}</h1>
+            <h1>Average career length: {{stat.avg_career}}</h1>
+            <h1>Min career length: {{stat.min_career}}</h1>
+            <h1>Max career length: {{stat.max_career}}</h1>
+            <br>
     {%endfor%}
 </body>
 </html>
