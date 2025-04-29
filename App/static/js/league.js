@@ -100,7 +100,8 @@ const LeagueVisualizer = {
       .attr("x", chartWidth / 2)
       .attr("y", chartHeight + margin.bottom - 10)
       .style("text-anchor", "middle")
-      .text("Number of Players");
+      .text("Number of Players")
+      .style("fill", "white");
 
     svg
       .selectAll(".bar")
@@ -183,14 +184,13 @@ const LeagueVisualizer = {
       },
     });
 
-    // Animate the min and max age values
     anime({
-      targets: '.age-stat-value',
+      targets: ".age-stat-value",
       opacity: [0, 1],
       translateY: [10, 0],
-      delay: anime.stagger(200, {start: 1000}),
+      delay: anime.stagger(200, { start: 1000 }),
       duration: 1000,
-      easing: 'easeOutQuad'
+      easing: "easeOutQuad",
     });
 
     anime({
@@ -347,7 +347,8 @@ const LeagueVisualizer = {
       .attr("text-anchor", "middle")
       .style("font-size", "16px")
       .style("opacity", 0)
-      .text("Age Group Distribution by Position (%)");
+      .text("Age Group Distribution by Position (%)")
+      .style("fill", "white");
 
     anime({
       targets: title.node(),
@@ -496,7 +497,8 @@ const LeagueVisualizer = {
         `Age Distribution for ${
           position === "all" ? "All Positions" : position
         }`
-      );
+      )
+      .style("fill", "white");
 
     const y = d3
       .scaleBand()
@@ -525,26 +527,20 @@ const LeagueVisualizer = {
       .style("stroke-dasharray", "4,4");
 
     svg
-      .append("g")
-      .attr("class", "pyramid-axis")
-      .attr("transform", `translate(${chartWidth / 2},0)`)
-      .call(d3.axisLeft(y).tickSize(0))
-      .selectAll(".domain")
-      .remove();
-
-    svg
       .append("text")
       .attr("class", "pyramid-label")
       .attr("x", chartWidth / 4)
       .attr("y", chartHeight + 20)
-      .text("Younger Age Groups");
+      .text("Younger Age Groups")
+      .style("fill", "white");
 
     svg
       .append("text")
       .attr("class", "pyramid-label")
       .attr("x", (3 * chartWidth) / 4)
       .attr("y", chartHeight + 20)
-      .text("Older Age Groups");
+      .text("Older Age Groups")
+      .style("fill", "white");
 
     const youngerGroups = ageGroups.slice(0, Math.ceil(ageGroups.length / 2));
     const olderGroups = ageGroups.slice(Math.ceil(ageGroups.length / 2));
@@ -600,8 +596,6 @@ const LeagueVisualizer = {
       .attr("x", (d) => (isLeft ? width / 2 - x(data[d]) : width / 2))
       .attr("width", (d) => x(data[d]));
 
-    // Modified label positioning - for left side (younger age groups),
-    // place labels on the right side of the bars instead of the left
     svg
       .selectAll(`.${side}-label`)
       .data(groups)
@@ -615,6 +609,7 @@ const LeagueVisualizer = {
       .style("font-size", "12px")
       .style("opacity", 0)
       .text((d) => `${data[d].toFixed(1)}%`)
+      .style("fill", "white")
       .transition()
       .delay(1000)
       .duration(500)

@@ -255,3 +255,16 @@
         font-size: 36px;
     }
 }
+
+/* Career Stats Styling */
+.career-stat {
+    width: 100%;
+    margin-top: 5px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.career-stat .age-label:first-child {
+    font-weight: bold;
+    color: #FFFAFF;
+}
