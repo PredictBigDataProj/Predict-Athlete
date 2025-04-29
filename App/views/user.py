@@ -80,8 +80,9 @@ player_attributes = [
 
 
 
-df = pd.read_csv('App/data/Finished_final_proj_3.csv')  # index=False avoids saving row indices
 
+
+df = pd.read_csv('App/data/Final_project_finished_4.csv')
 
 user_views = Blueprint('user_views', __name__, template_folder='../templates')
 
@@ -108,7 +109,20 @@ def index_page():
 @user_views.route('/data_entry', methods=['GET'])
 def get_data_entry_page():
     physical_stats = get_physical_attribute_stats()
-    return render_template('data_entry.html', attributes=player_attributes, physical_stats=physical_stats)
+
+    attr_stats = []
+    for pos in player_attributes:
+
+        attr_data = {
+        'attribute': pos,
+        'avg_stat': df[pos].mean(),
+        'min_stat': df[pos].min(),
+        'max_stat': df[pos].max(),
+        }
+        attr_stats.append(attr_data)
+
+
+    return render_template('data_entry.html', attributes=player_attributes, physical_stats=physical_stats, attr_stats=attr_stats)
 
 
 
@@ -153,13 +167,13 @@ def get_user_attr():
     physical_stats = get_physical_attribute_stats()
 
     try:
-        # Get input data from form
+        
         input_data = {}
         for attr in player_attributes:
             value = request.form.get(attr, type=int)
             input_data[attr] = value if value is not None else 50
         
-        # Validate physical attributes total
+        
         physical_attrs = [
             "crossing",
             "finishing",
@@ -203,7 +217,7 @@ def get_user_attr():
             return render_template('data_entry.html', players=players, attributes=player_attributes, 
                                   physical_stats=physical_stats, input_data=input_data)
         
-        # Continue with existing processing
+        
         test_player_df = pd.DataFrame([input_data])
         test_player_df = create_derived_features(test_player_df)
         
@@ -381,7 +395,9 @@ def get_user_attr():
 
 
 
-        return render_template('result.html', most_likely_position=most_likely_position, top_probability=top_probability, predictions=[(pos, round(prob * 100, 2)) for pos, prob in sorted_predictions], similar_players=similar_players[['full_name', 'similarity_score']].to_dict(orient='records'))
+        return render_template('result.html', most_likely_position=most_likely_position, top_probability=top_probability, 
+        predictions=[(pos, round(prob * 100, 2)) for pos, prob in sorted_predictions], 
+        similar_players=similar_players[['full_name', 'similarity_score']].to_dict(orient='records'))
 
     except Exception as e:
         return f"An error occurred: {e}", 500

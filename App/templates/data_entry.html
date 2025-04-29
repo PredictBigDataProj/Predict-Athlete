@@ -66,7 +66,13 @@
           <div class="form-grid">
             {% for attr in attributes %}
             <div class="form-group">
-              <label for="{{attr}}">{{attr | replace('_', ' ') | title}}</label>
+              <label for="{{attr}}" >{{attr | replace('_', ' ') | title}}</label>
+              {%for stat in attr_stats%}
+                {%if stat.attribute == attr %}
+                  <i class="fas fa-info-circle tooltip-icon" title="Explanation for {{ attr | replace('_', ' ') }} The average is: {{stat.avg_stat}}" data-position="top"></i>
+                {%endif%}
+              {%endfor%}
+              <!-- <i class="fas fa-info-circle tooltip-icon" title="Explanation for {{ attr | replace('_', ' ') }} The average is: {{at}}" data-position="top"></i> -->
               <div class="range-container">
                 <input type="range" id="{{attr}}" name="{{attr}}" {% if
                 attr=='age' %} min="17" max="50" {% set mid_value=(17 + 50) / 2
@@ -164,6 +170,14 @@
           });
           {% endfor %}
       });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var elems = document.querySelectorAll('.tooltipped');
+      var instances = M.Tooltip.init(elems, options);
+    });
+
   </script>
   </body>
 </html>
