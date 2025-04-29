@@ -84,6 +84,13 @@
             </tbody>
         </table>
     </section>
+
+    <h1>Age counts for different ages:</h1>
+    <ul>
+        {% for group, count in age_counts.items() %}
+        <li>Age: {{ group }} -- Count: {{ count}} players</li>
+        {% endfor %}
+    </ul>
     <h1>Overall Age Group Distribution:</h1>
     <ul>
         {% for group, percent in age_groups.items() %}

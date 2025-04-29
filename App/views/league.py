@@ -76,16 +76,7 @@ player_attributes = [
 ]
 
 positions = ["ST", "RWB", "RW", "RM", "RB", "LWB", "LW", "LM", "LB", "GK", "CM", "CF", "CDM", "CB", "CAM"]
-#[
-#     "height_cm", "weight_kg", "age", "crossing", "finishing", "heading_accuracy", 
-#     "short_passing", "volleys", "dribbling", "curve", "fk_accuracy", 
-#     "long_passing", "ball_control", "acceleration", "sprint_speed", "agility", 
-#     "reactions", "balance", "shot_power", "jumping", "stamina", "strength", 
-#     "long_shots", "aggression", "interceptions", "positioning", "vision", 
-#     "penalties", "composure", "defensive_awareness", "standing_tackle", 
-#     "sliding_tackle", "gk_diving", "gk_handling", "gk_kicking", 
-#     "gk_positioning", "gk_reflexes"
-# ]
+
 
 
 
@@ -120,6 +111,7 @@ def get_league_page(league_id, country):
     max_career = league_df['league_Career_length'].max()
     min_career = league_df['league_Career_length'].min()
     avg_career = league_df['league_Career_length'].mean()
+    age_counts = league_df['age'].value_counts()
 
 
     position_stats = []
@@ -183,6 +175,7 @@ def get_league_page(league_id, country):
                             avg_career = avg_career, min_career = min_career, max_career = max_career,
                             position_stats=position_stats,
                             age_groups=group_counts.to_dict(),
+                            age_counts = age_counts.to_dict(),
                              nav_name=nav_name)
 
 
