@@ -77,6 +77,8 @@
     width: 90%;
     max-width: 800px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform-origin: center;
 }
 
 #position-age-heatmap {
@@ -89,7 +91,6 @@
     margin: 0 auto;
 }
 
-/* Tooltip styles for heatmap */
 .heatmap-tooltip {
     position: absolute;
     background-color: white;
@@ -100,7 +101,24 @@
     opacity: 0;
     transition: opacity 0.3s;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
 }
+
+.heatmap-cell {
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.heatmap-cell:hover {
+    filter: brightness(1.1);
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
 
 .pyramid-chart-container {
     background-color: #FFFAFF;

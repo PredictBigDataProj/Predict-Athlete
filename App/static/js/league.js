@@ -8,6 +8,7 @@ const LeagueVisualizer = {
     positionAgeHeatmap: "#position-age-heatmap",
     agePyramidChart: "#age-pyramid-chart",
     positionSelect: "#position-select",
+    heatmapContainer: ".heatmap-container",
   },
 
   chartConfig: {
@@ -21,6 +22,8 @@ const LeagueVisualizer = {
       margin: { top: 30, right: 30, bottom: 100, left: 100 },
       width: 470,
       height: 300,
+      animationDelay: 50,
+      animationDuration: 1000,
     },
     pyramid: {
       margin: { top: 40, right: 80, bottom: 60, left: 80 },
@@ -33,6 +36,7 @@ const LeagueVisualizer = {
     document.addEventListener("DOMContentLoaded", () => {
       this.createNationalityChart();
       this.initAgeAnimation();
+      this.animateHeatmapContainer();
       this.createPositionAgeHeatmap();
       this.initAgePyramidChart();
     });
@@ -189,6 +193,17 @@ const LeagueVisualizer = {
     });
   },
 
+  animateHeatmapContainer: function () {
+    anime({
+      targets: this.selectors.heatmapContainer,
+      translateY: [50, 0],
+      opacity: [0, 1],
+      easing: "easeOutExpo",
+      duration: 1200,
+      delay: 300,
+    });
+  },
+
   createPositionAgeHeatmap: function () {
     const positionData = document.querySelectorAll(this.selectors.positionData);
     if (!positionData.length) return;
@@ -217,7 +232,8 @@ const LeagueVisualizer = {
 
     const sortedAgeGroups = Array.from(ageGroups).sort();
 
-    const { margin, width, height } = this.chartConfig.heatmap;
+    const { margin, width, height, animationDelay, animationDuration } =
+      this.chartConfig.heatmap;
     const chartWidth = width;
     const chartHeight = height;
 
@@ -243,6 +259,7 @@ const LeagueVisualizer = {
 
     svg
       .append("g")
+      .attr("class", "axis")
       .attr("transform", `translate(0,${chartHeight})`)
       .call(d3.axisBottom(x))
       .selectAll("text")
@@ -251,7 +268,7 @@ const LeagueVisualizer = {
       .attr("dy", ".15em")
       .attr("transform", "rotate(-65)");
 
-    svg.append("g").call(d3.axisLeft(y));
+    svg.append("g").attr("class", "axis").call(d3.axisLeft(y));
 
     const colorScale = d3
       .scaleSequential()
@@ -261,25 +278,28 @@ const LeagueVisualizer = {
     const tooltip = d3
       .select("body")
       .append("div")
-      .style("position", "absolute")
-      .style("background-color", "white")
-      .style("border", "solid")
-      .style("border-width", "1px")
-      .style("border-radius", "5px")
-      .style("padding", "10px")
+      .attr("class", "heatmap-tooltip")
       .style("opacity", 0);
 
-    svg
+    const cells = svg
       .selectAll()
       .data(heatmapData)
       .enter()
       .append("rect")
+      .attr("class", "heatmap-cell")
       .attr("x", (d) => x(d.ageGroup))
       .attr("y", (d) => y(d.position))
       .attr("width", x.bandwidth())
       .attr("height", y.bandwidth())
       .style("fill", (d) => colorScale(d.value))
+      .style("opacity", 0)
       .on("mouseover", function (event, d) {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .style("stroke", "#333")
+          .style("stroke-width", 2);
+
         tooltip.transition().duration(200).style("opacity", 0.9);
         tooltip
           .html(
@@ -291,16 +311,42 @@ const LeagueVisualizer = {
           .style("top", event.pageY - 28 + "px");
       })
       .on("mouseout", function () {
+        d3.select(this).transition().duration(200).style("stroke", "none");
+
         tooltip.transition().duration(500).style("opacity", 0);
       });
 
-    svg
+    cells.each(function (d, i) {
+      const cell = d3.select(this);
+
+      anime({
+        targets: this,
+        opacity: [0, 1],
+        scale: [0.5, 1],
+        easing: "easeOutElastic(1, .5)",
+        duration: animationDuration,
+        delay: i * animationDelay,
+      });
+    });
+
+    const title = svg
       .append("text")
+      .attr("class", "chart-title")
       .attr("x", chartWidth / 2)
       .attr("y", -10)
       .attr("text-anchor", "middle")
       .style("font-size", "16px")
+      .style("opacity", 0)
       .text("Age Group Distribution by Position (%)");
+
+    anime({
+      targets: title.node(),
+      opacity: [0, 1],
+      translateY: [-20, 0],
+      easing: "easeOutExpo",
+      duration: 1000,
+      delay: (heatmapData.length * animationDelay) / 2,
+    });
   },
 
   initAgePyramidChart: function () {
@@ -480,14 +526,14 @@ const LeagueVisualizer = {
       .append("text")
       .attr("class", "pyramid-label")
       .attr("x", chartWidth / 4)
-      .attr("y", chartHeight + 40)
+      .attr("y", chartHeight + 20)
       .text("Younger Age Groups");
 
     svg
       .append("text")
       .attr("class", "pyramid-label")
       .attr("x", (3 * chartWidth) / 4)
-      .attr("y", chartHeight + 40)
+      .attr("y", chartHeight + 20)
       .text("Older Age Groups");
 
     const youngerGroups = ageGroups.slice(0, Math.ceil(ageGroups.length / 2));
@@ -544,18 +590,18 @@ const LeagueVisualizer = {
       .attr("x", (d) => (isLeft ? width / 2 - x(data[d]) : width / 2))
       .attr("width", (d) => x(data[d]));
 
+    // Modified label positioning - for left side (younger age groups),
+    // place labels on the right side of the bars instead of the left
     svg
       .selectAll(`.${side}-label`)
       .data(groups)
       .enter()
       .append("text")
       .attr("class", `${side}-label`)
-      .attr("x", (d) =>
-        isLeft ? width / 2 - x(data[d]) - 5 : width / 2 + x(data[d]) + 5
-      )
+      .attr("x", (d) => (isLeft ? width / 2 + 5 : width / 2 + x(data[d]) + 5))
       .attr("y", (d) => y(d) + y.bandwidth() / 2)
       .attr("dy", ".35em")
-      .attr("text-anchor", isLeft ? "end" : "start")
+      .attr("text-anchor", isLeft ? "start" : "start")
       .style("font-size", "12px")
       .style("opacity", 0)
       .text((d) => `${data[d].toFixed(1)}%`)
