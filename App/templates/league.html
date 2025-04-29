@@ -52,8 +52,9 @@
             <div class="age-label">years</div>
         </div>
 
+        
+
         <div class="heatmap-container">
-            <h1>Age Group Distribution Across Positions</h1>
             <div id="position-age-heatmap"></div>
         </div>
 
@@ -89,7 +90,22 @@
         <div id="nationality-chart"></div>
     </div>
     </section>
-    
+    <section class="scrollable">
+        <div class="pyramid-chart-container">
+            <h2 class="chart-title">Age Distribution by Position</h2>
+            <div class="position-filter">
+                <label for="position-select">Select Position:</label>
+                <select id="position-select">
+                    <option value="all">All Positions</option>
+                    {% for stat in position_stats %}
+                    <option value="{{ stat.position }}">{{ stat.position }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div id="age-pyramid-chart"></div>
+        </div>
+    </div>
+    </section>
     <div id="heatmap-data" style="display: none;">
         {% for stat in position_stats %}
             <div class="position-data" 
