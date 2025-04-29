@@ -68,3 +68,131 @@
     font-size: 18px;
     margin-bottom: 5px;
 }
+
+.heatmap-container {
+    background-color: #FFFAFF;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px auto;
+    width: 90%;
+    max-width: 800px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform-origin: center;
+}
+
+#position-age-heatmap {
+    margin: 0 auto;
+    overflow-x: auto;
+}
+
+#position-age-heatmap svg {
+    display: block;
+    margin: 0 auto;
+}
+
+.heatmap-tooltip {
+    position: absolute;
+    background-color: white;
+    border: solid 1px #aaa;
+    border-radius: 5px;
+    padding: 10px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.heatmap-cell {
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.heatmap-cell:hover {
+    filter: brightness(1.1);
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+
+.pyramid-chart-container {
+    background-color: #FFFAFF;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px auto;
+    width: 90%;
+    max-width: 800px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.position-filter {
+    margin: 15px 0;
+    text-align: center;
+}
+
+.position-filter label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.position-filter select {
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #f8f8f8;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+#age-pyramid-chart {
+    margin: 20px auto;
+    height: 400px;
+}
+
+.pyramid-bar-left {
+    fill: #4682B4;
+    transition: fill 0.3s;
+}
+
+.pyramid-bar-right {
+    fill: #6A5ACD;
+    transition: fill 0.3s;
+}
+
+.pyramid-bar-left:hover,
+.pyramid-bar-right:hover {
+    fill: #355834;
+    cursor: pointer;
+}
+
+.pyramid-axis text {
+    font-size: 12px;
+}
+
+.pyramid-label {
+    font-size: 12px;
+    text-anchor: middle;
+}
+
+.pyramid-title {
+    font-size: 16px;
+    font-weight: bold;
+    text-anchor: middle;
+}
+
+.pyramid-tooltip {
+    position: absolute;
+    background-color: white;
+    border: solid 1px #aaa;
+    border-radius: 5px;
+    padding: 10px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}

@@ -44,8 +44,8 @@
         <div class="navbar-title">{{nav_name}}</div>
     </nav>
     </pre>
-    <section class="scrollable"> 
-        <!-- Average Age Stats Card -->
+    <section class="scrollable">
+        
         <div class="age-stats-container">
             <div class="age-label">Average Player Age</div>
             <div id="average-age" class="age-value">{{avg_age | round(2)}}</div>
@@ -53,10 +53,9 @@
         </div>
 
         
-        
-        <div class="bar-chart-container">
-            <h2 class="chart-title">Top 5 Player Nationalities</h2>
-            <div id="nationality-chart"></div>
+
+        <div class="heatmap-container">
+            <div id="position-age-heatmap"></div>
         </div>
 
         <table id="data-table" style="display: none;">
@@ -84,21 +83,41 @@
             </tbody>
         </table>
     </section>
-
-    <h1>Age counts for different ages:</h1>
-    <ul>
-        {% for group, count in age_counts.items() %}
-        <li>Age: {{ group }} -- Count: {{ count}} players</li>
-        {% endfor %}
-    </ul>
-    <h1>Overall Age Group Distribution:</h1>
-    <ul>
-        {% for group, percent in age_groups.items() %}
-        <li>{{ group }}: {{ percent | round(2) }}%</li>
-        {% endfor %}
-    </ul>
-
     <br>
+    <section class="scrollable">
+    <div class="bar-chart-container">
+        <h2 class="chart-title">Top 5 Player Nationalities</h2>
+        <div id="nationality-chart"></div>
+    </div>
+    </section>
+    <section class="scrollable">
+        <div class="pyramid-chart-container">
+            <h2 class="chart-title">Age Distribution by Position</h2>
+            <div class="position-filter">
+                <label for="position-select">Select Position:</label>
+                <select id="position-select">
+                    <option value="all">All Positions</option>
+                    {% for stat in position_stats %}
+                    <option value="{{ stat.position }}">{{ stat.position }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div id="age-pyramid-chart"></div>
+        </div>
+    </div>
+    </section>
+    <div id="heatmap-data" style="display: none;">
+        {% for stat in position_stats %}
+            <div class="position-data" 
+                 data-position="{{ stat.position }}">
+                {% for group, percent in stat.pos_age_groups.items() %}
+                    <span class="age-group-data" 
+                          data-group="{{ group }}" 
+                          data-percent="{{ percent }}"></span>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
     <h1>Overall age stats</h1>
     <h1>Oldest player age is: {{max_age}}</h1>
     <h1>Youngest player age is: {{min_age}}</h1>
@@ -106,9 +125,7 @@
     <h1>Youngest player Career length overall is: {{min_career}}</h1>
     <h1>Oldest player Career length overall is: {{max_career}}</h1>
     <br>
-
     {% for stat in position_stats %}
-
     <h1>Stats for position: {{stat.position}} !</h1>
     <h2>Age distributions</h2>
     <ul>
@@ -116,20 +133,13 @@
         <li>{{ group }}: {{ percent | round(2) }}%</li>
         {% endfor %}
     </ul>
-
-        
         <h1>Average age: {{avg_age}}</h1>
         <h1>Min age: {{min_age}}</h1>
         <h1>Max age: {{max_age}}</h1>
         <h1>Average career length: {{avg_career}}</h1>
         <h1>Min career length: {{min_career}}</h1>
         <h1>Max career length: {{max_career}}</h1>
-
-
         <br>
-
     {%endfor%}
-
 </body>
-
 </html>
