@@ -97,6 +97,8 @@ def get_league_page(league_id, country):
     # labels = ['15-20', '21-25', '26-30', '31-35', '36-40', '41-45', '46-50'] #These are the age ranges, we can make this broader or more specfici depending.
     # df['age_group'] = pd.cut(df['age'], bins=bins, labels=labels, right=True)
 
+
+    #AGE SECTION==================================================================================================
     df['league_name_id'] = df['league_name'].apply(get_league_name_id)
 
 
@@ -124,13 +126,6 @@ def get_league_page(league_id, country):
             print(f'No players in this position: {pos}')
             print("\n")
         else:
-            # avg_age_pos = pos_df['age'].mean()
-            # min_age_pos = pos_df['age'].min()
-            # max_age_pos = pos_df['age'].max()
-            # max_career_pos = pos_df['league_Career_length'].max()
-            # min_career_pos = pos_df['league_Career_length'].min()
-            # avg_career_pos = pos_df['league_Career_length'].mean()
-
 
             pos_data = {
             'position': pos,
@@ -161,7 +156,89 @@ def get_league_page(league_id, country):
 
     avg_age = df[df['league_name_id'] == league_id]['age'].mean() #This is the same analysis as what is in the notebook, just use the df transformations in here and send the data as information tot he template.
 
+    #END OF AGE SECTION==============================================================================================================
 
+    #NATION/COUNTRY SECTION==========================================================================================================
+
+
+
+    
+    nation_df = df[df['league_name_id'] == league_id]
+    print("===========================================")
+    print(f'Doing analysis in this nation: {league_id}')
+
+    
+    unique_nations = nation_df['nation_Nation'].unique().tolist()
+
+    total_count = nation_df.shape[0]#
+    nation_count = nation_df['nation_Nation'].value_counts()
+
+    max_nation_name = nation_count.idxmax()
+    max_nation_num = nation_count.max()
+
+    
+    nation_max_by_position = {
+        pos: {"count": 0, "nation": None} for pos in positions
+    }
+
+    distribution = []
+
+    for nation in unique_nations:
+        spec_count = nation_df[nation_df['nation_Nation'] == nation].shape[0]
+        percentage_count = (spec_count / total_count) * 100
+        print("\n")
+        print(f'The distribution of players for {nation} is: {percentage_count:.2f}%')
+        print(f'The number of players in {nation} is: {spec_count}')
+
+        nation_data = {
+            "nation": nation,
+            "percentage": round(percentage_count, 2),
+            "count": spec_count,
+            "positions": {}
+        }
+
+        for pos in positions:
+            pos_df = nation_df[(nation_df[pos] == 1) & (nation_df['nation_Nation'] == nation)]
+            count_pos = pos_df.shape[0]
+
+            print(f'Number of players that are {pos} is :{count_pos} from {nation}')
+
+            if count_pos > nation_max_by_position[pos]["count"]:
+                nation_max_by_position[pos]["count"] = count_pos
+                nation_max_by_position[pos]["nation"] = nation
+
+                nation_max_by_position[pos] = {
+                    "count": count_pos,
+                    "nation": nation
+                }
+
+        distribution.append(nation_data)
+
+    print("\n")
+    print(f'The nation with the most players is: {max_nation_name} with {max_nation_num} players')
+    print(f'The unique nations present in this league: {unique_nations}')
+    print(f'The total number of players in this league, {league_id}: {total_count}')
+
+    for pos in positions:
+        print(
+            f'The Highest number of {pos} players are from: '
+            f'{nation_max_by_position[pos]["count"]} in the nation: '
+            f'{nation_max_by_position[pos]["nation"]}'
+        )
+
+
+    nation_results = {
+        "total_players": total_count,
+        "most_common_nation": max_nation_name,
+        "most_common_nation_count": max_nation_num,
+        "unique_nations": unique_nations,
+        "distribution": distribution,
+        "max_by_position": nation_max_by_position
+    }
+
+
+
+    #END OF NATION/COUNTRY SECTION==============================================================================================
 
     league_names = df[df['league_name_id'] == league_id]['league_name'].unique()
     nav_name = league_names[0] if len(league_names) > 0 else "League"
@@ -176,7 +253,8 @@ def get_league_page(league_id, country):
                             position_stats=position_stats,
                             age_groups=group_counts.to_dict(),
                             age_counts = age_counts.to_dict(),
-                             nav_name=nav_name)
+                             nav_name=nav_name,
+                             nation_results=nation_results)
 
 
 

@@ -138,6 +138,29 @@
         {% endfor %}
     </div>
 
+    <h1>NEW ADDITION!!! --ADDED THE NALYSIS FOR NATIONS</h1>
+
+    <section>
+        <p>Total Number of players in the league: {{ nation_results.total_players }}</p>
+        <p>Country with the most players: {{ nation_results.most_common_nation }} ({{ nation_results.most_common_nation_count }})</p>
+
+        <h3>Nation Distribution</h3>
+        <ul>
+        {% for nation in nation_results.distribution %}
+            <li>
+            <strong>{{ nation.nation }}</strong>: {{ nation.percentage }}% ({{ nation.count }} players)
+            </li>
+        {% endfor %}
+        </ul>
+
+        <h3>Top Nation by Position</h3>
+        <ul>
+        {% for pos, data in nation_results.max_by_position.items() %}
+            <li>{{ pos }}: {{ data.count }} players from {{ data.nation }}</li>
+        {% endfor %}
+        </ul>
+    </section>
+
     <h1>value counts:</h1>
 
     <ul>
