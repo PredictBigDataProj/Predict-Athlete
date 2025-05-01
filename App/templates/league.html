@@ -16,6 +16,42 @@
     <script src="{{ url_for('static', filename='js/league.js') }}" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
+
+
+    <style>
+        /* body {
+          font-family: Arial, sans-serif;
+          background-color: #f4f4f4;
+          color: #333;
+        } */
+    
+        .chart-container {
+          margin: 40px;
+        }
+    
+        .bar {
+          transition: all 0.3s ease-in-out;
+        }
+    
+        .tooltip {
+          position: absolute;
+          background-color: rgba(0, 0, 0, 0.7);
+          color: white;
+          padding: 5px;
+          border-radius: 3px;
+          pointer-events: none;
+          font-size: 12px;
+        }
+    
+        .axis text {
+          font-size: 14px;
+        }
+    
+        .axis path, .axis line {
+          fill: none;
+          shape-rendering: crispEdges;
+        }
+      </style>
 </head>
 
 <body>
@@ -45,8 +81,59 @@
     </nav>
     </pre>
     <section class="scrollable">
+
+
+
+
+    <div class="age-stats-container">
         
-        <div class="age-stats-container">
+
+        <div class="position-filter">
+            <label for="position-select-age-card">Select Position:</label>
+            <select id="position-select-age-card">
+                <option value="">All Positions</option>
+                {% for stat in position_stats %}
+                    <option value="{{ stat.position }}">{{ stat.position }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+            <div class="age-label">Average Player Age (<span id="position-name"></span>)</div>
+            <div class="age-value" id="avg-age"></div>
+            <div class="age-label">years</div>
+    
+            <div class="age-stats-row">
+                <div class="age-stat-box">
+                    <div class="age-label">Youngest</div>
+                    <div class="age-stat-value" id="min-age"></div>
+                </div>
+                <div class="age-stat-box">
+                    <div class="age-label">Oldest</div>
+                    <div class="age-stat-value" id="max-age"></div>
+                </div>
+            </div>
+    
+            <div class="age-stats-row">
+                <div class="age-stat-box career-stat">
+                    <div class="age-label">Avg Career Length</div>
+                    <div class="age-stat-value" id="avg-career">--</div>
+                    <div class="age-label">years</div>
+                </div>
+            </div>
+    
+            <div class="age-stats-row">
+                <div class="age-stat-box player-count-stat">
+                    <div class="age-label">Total Players</div>
+                    <div class="age-stat-value" id="position-label">--</div>
+                </div>
+            </div>
+        
+    </div>
+
+
+
+        
+        <!-- <div class="age-stats-container">
             <div class="age-label">Average Player Age</div>
             <div id="average-age" class="age-value">{{avg_age | round(2)}}</div>
             <div class="age-label">years</div>
@@ -69,7 +156,14 @@
                     <div class="age-label">years</div>
                 </div>
             </div>
-        </div>
+            
+            <div class="age-stats-row">
+                <div class="age-stat-box player-count-stat">
+                    <div class="age-label">Total Players</div>
+                    <div class="age-stat-value">{{ nation_results.total_players }}</div>
+                </div>
+            </div>
+        </div> -->
 
         
 
@@ -108,6 +202,20 @@
         <h2 class="chart-title">Top 5 Player Nationalities</h2>
         <div id="nationality-chart"></div>
     </div>
+
+    <div class="chart-container" id="player-position-chart">
+        <div class="position-filter">
+            <label for="nationSelect">Filter by Nation:</label>
+            <select id="nationSelect">
+            <option value="all">All Nations</option>
+            <option value="top_by_position">Top Nation per Position</option>
+            {% for nation in nation_results.distribution %}
+                <option value="{{ nation.nation }}">{{ nation.nation }}</option>
+            {% endfor %}
+            </select>
+        </div>
+    </div>
+
     </section>
     <section class="scrollable">
         <div class="pyramid-chart-container">
@@ -141,8 +249,8 @@
     <h1>NEW ADDITION!!! --ADDED THE NALYSIS FOR NATIONS</h1>
 
     <section>
-        <p>Total Number of players in the league: {{ nation_results.total_players }}</p>
-        <p>Country with the most players: {{ nation_results.most_common_nation }} ({{ nation_results.most_common_nation_count }})</p>
+        <!-- <p>Total Number of players in the league: {{ nation_results.total_players }}</p>
+        <p>Country with the most players: {{ nation_results.most_common_nation }} ({{ nation_results.most_common_nation_count }})</p> -->
 
         <h3>Nation Distribution</h3>
         <ul>
@@ -150,33 +258,43 @@
             <li>
             <strong>{{ nation.nation }}</strong>: {{ nation.percentage }}% ({{ nation.count }} players)
             </li>
+<!-- 
+            <h3>Nation Count</h3>
+            <ul>
+                {% for pos, data in nation.positions.items()%}
+                    <li> {{pos}}: {{ data }}</li>
+                {% endfor %}
+                </ul> -->
+
         {% endfor %}
         </ul>
 
-        <h3>Top Nation by Position</h3>
+
+        <!-- <h3>Top Nation by Position</h3>
         <ul>
         {% for pos, data in nation_results.max_by_position.items() %}
             <li>{{ pos }}: {{ data.count }} players from {{ data.nation }}</li>
         {% endfor %}
-        </ul>
+        </ul> -->
+
     </section>
 
-    <h1>value counts:</h1>
+    <!-- <h1>value counts:</h1>
 
     <ul>
         {% for group, age_value in age_counts.items() %}
         <li>Age in years: {{ group }}        Number of players for those years: {{ age_value}}</li>
         {% endfor %}
-    </ul>
+    </ul> -->
 
-    <h1>Overall age stats</h1>
+    <!-- <h1>Overall age stats</h1>
     <h1>Average Career length overall is: {{avg_career}}</h1>
     <h1>Youngest player Career length overall is: {{min_career}}</h1>
     <h1>Oldest player Career length overall is: {{max_career}}</h1>
-    <br>
+    <br> -->
 
 
-    {% for stat in position_stats %}
+    <!-- {% for stat in position_stats %}
         <h1>Stats for position: {{stat.position}} !</h1>
         <h2>Age distributions</h2>
 
@@ -193,6 +311,232 @@
             <h1>Min career length: {{stat.min_career}}</h1>
             <h1>Max career length: {{stat.max_career}}</h1>
             <br>
-    {%endfor%}
+    {%endfor%} -->
+
+
+    <script>
+        const positionStats = {
+            {% for stat in position_stats %}
+            "{{ stat.position }}": {
+                avg_age: {{ stat.avg_age | round(2) }},
+                min_age: {{ stat.min_age }},
+                max_age: {{ stat.max_age }},
+                avg_career: {{ stat.avg_career | round(2) }},
+                age_total_count: {{ stat.age_total_count }},
+                position: "{{ stat.position }}"
+            },
+            {% endfor %}
+        };
+    
+        const overallStats = {
+            avg_age: {{ avg_age | round(2) }},
+            min_age: {{ min_age }},
+            max_age: {{ max_age }},
+            avg_career: {{ avg_career | round(2) }},
+            age_total_count: {{ nation_results.total_players }},
+        };
+    
+        function animateValue(element, start, end, duration = 500) {
+            if (start === end) {
+                element.textContent = end.toFixed(2);
+                return;
+            }
+            let startTime = null;
+            function step(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const progress = timestamp - startTime;
+                const value = start + (end - start) * (progress / duration);
+                element.textContent = value.toFixed(2);
+                if (progress < duration) {
+                    requestAnimationFrame(step);
+                } else {
+                    element.textContent = end.toFixed(2);
+                }
+            }
+            requestAnimationFrame(step);
+        }
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            const select = document.getElementById("position-select-age-card");
+    
+            const avgAge = document.getElementById("avg-age");
+            const minAge = document.getElementById("min-age");
+            const maxAge = document.getElementById("max-age");
+            const avgCareer = document.getElementById("avg-career");
+            const positionLabel = document.getElementById("position-label");
+            const positionName = document.getElementById("position-name");
+    
+            let currentValues = {
+                avg_age: 0,
+                min_age: 0,
+                max_age: 0,
+                avg_career: 0,
+                age_total_count: 0
+            };
+    
+            function updateCard(position) {
+                let data;
+                if (position === "overall" || position === "") {
+                    data = overallStats;
+                    positionLabel.textContent = data.age_total_count;
+                    positionName.textContent = "Overall";
+                } else {
+                    data = positionStats[position];
+                    positionLabel.textContent = data.age_total_count;
+                    positionName.textContent = data.position;
+                }
+    
+                if (data) {
+                    animateValue(avgAge, currentValues.avg_age, data.avg_age);
+                    animateValue(minAge, currentValues.min_age, data.min_age);
+                    animateValue(maxAge, currentValues.max_age, data.max_age);
+                    animateValue(avgCareer, currentValues.avg_career, data.avg_career);
+    
+                    currentValues = {
+                        avg_age: data.avg_age,
+                        min_age: data.min_age,
+                        max_age: data.max_age,
+                        avg_career: data.avg_career,
+                        age_total_count: data.age_total_count
+                    };
+                }
+            }
+    
+            updateCard(select.value);
+    
+            select.addEventListener("change", function () {
+                updateCard(this.value);
+            });
+        });
+    </script>
+
+
+<script>
+
+    const fullData = {
+      {% for nation in nation_results.distribution %}
+        "{{ nation.nation }}": {
+          {% for pos, count in nation.positions.items() %}
+            "{{ pos }}": {{ count }},
+          {% endfor %}
+        },
+      {% endfor %}
+    };
+
+    const maxByPositionData = {
+        {% for pos, data in nation_results.max_by_position.items() %}
+        "{{ pos }}": { nation: "{{ data.nation }}", count: {{ data.count }} },
+        {% endfor %}
+    };
+    
+
+    function getNationData(nation) {
+        if (nation === 'top_by_position') {
+        return Object.entries(maxByPositionData).map(([position, data]) => ({
+            position,
+            count: +data.count,
+            nation: data.nation
+        }));
+        }
+
+        const entries = nation === 'all'
+        ? aggregateAllNations(fullData)
+        : Object.entries(fullData[nation] || {});
+
+        return entries.map(([position, count]) => ({
+        position,
+        count: +count,
+        nation
+        }));
+    }
+  
+
+    function aggregateAllNations(data) {
+      const result = {};
+      for (const nation of Object.keys(data)) {
+        for (const [pos, count] of Object.entries(data[nation])) {
+          result[pos] = (result[pos] || 0) + count;
+        }
+      }
+      return Object.entries(result);
+    }
+  
+
+    const margin = { top: 30, right: 30, bottom: 70, left: 120 };
+    const width = 800;
+    const height = 400;
+  
+    const svg = d3.select("#player-position-chart")
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height);
+  
+    const chartArea = svg.append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+  
+    const xScale = d3.scaleBand().padding(0.1).range([0, width - margin.left - margin.right]);
+    const yScale = d3.scaleLinear().range([height - margin.top - margin.bottom, 0]);
+  
+    const xAxisGroup = chartArea.append("g")
+      .attr("transform", `translate(0, ${height - margin.top - margin.bottom})`);
+  
+    const yAxisGroup = chartArea.append("g");
+  
+    const tooltip = d3.select("body").append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
+  
+    function render(data) {
+      xScale.domain(data.map(d => d.position));
+      yScale.domain([0, d3.max(data, d => d.count)]).nice();
+  
+      xAxisGroup.call(d3.axisBottom(xScale)).selectAll("text")
+        .attr("transform", "rotate(-45)")
+        .style("text-anchor", "end");
+  
+      yAxisGroup.call(d3.axisLeft(yScale));
+  
+      const bars = chartArea.selectAll(".bar")
+        .data(data, d => d.position);
+  
+
+      bars.enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", d => xScale(d.position))
+        .attr("y", d => yScale(d.count))
+        .attr("width", xScale.bandwidth())
+        .attr("height", d => height - margin.top - margin.bottom - yScale(d.count))
+        .attr("fill", "#69b3a2")
+        .on("mouseover", function(event, d) {
+          tooltip.transition().duration(200).style("opacity", .9);
+          tooltip.html(`Nation: ${d.nation}<br>Position: ${d.position}<br>Count: ${d.count}`)
+            .style("left", (event.pageX + 5) + "px")
+            .style("top", (event.pageY - 28) + "px");
+        })
+        .on("mouseout", () => tooltip.transition().duration(500).style("opacity", 0));
+  
+
+      bars
+        .transition()
+        .duration(500)
+        .attr("x", d => xScale(d.position))
+        .attr("y", d => yScale(d.count))
+        .attr("width", xScale.bandwidth())
+        .attr("height", d => height - margin.top - margin.bottom - yScale(d.count));
+  
+
+      bars.exit().remove();
+    }
+  
+
+    render(getNationData('all'));
+  
+    document.getElementById('nationSelect').addEventListener('change', function() {
+      const selectedNation = this.value;
+      const filteredData = getNationData(selectedNation);
+      render(filteredData);
+    });
+  </script>
 </body>
 </html>

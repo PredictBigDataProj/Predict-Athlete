@@ -75,6 +75,46 @@ player_attributes = [
     "pressure_handling"
 ]
 
+player_attributes_1 = [
+    "height_cm",
+    "weight_kg",
+    "crossing",
+    "finishing",
+    "heading_accuracy",
+    "short_passing",
+    "volleys",
+    "dribbling",
+    "curve",
+    "fk_accuracy",
+    "long_passing",
+    "ball_control",
+    "acceleration",
+    "sprint_speed",
+    "agility",
+    "reactions",
+    "balance",
+    "shot_power",
+    "jumping",
+    "stamina",
+    "strength",
+    "long_shots",
+    "aggression",
+    "interceptions",
+    "positioning",
+    "vision",
+    "penalties",
+    "composure",
+    "defensive_awareness",
+    "standing_tackle",
+    "sliding_tackle",
+    "gk_diving",
+    "gk_handling",
+    "gk_kicking",
+    "gk_positioning",
+    "gk_reflexes",
+    "age"
+]
+
 positions = ["ST", "RWB", "RW", "RM", "RB", "LWB", "LW", "LM", "LB", "GK", "CM", "CF", "CDM", "CB", "CAM"]
 
 
@@ -114,6 +154,7 @@ def get_league_page(league_id, country):
     min_career = league_df['league_Career_length'].min()
     avg_career = league_df['league_Career_length'].mean()
     age_counts = league_df['age'].value_counts()
+    
 
 
     position_stats = []
@@ -121,6 +162,7 @@ def get_league_page(league_id, country):
     for pos in positions:
         pos_df = league_df[league_df[pos] == 1]
         group_counts_pos = pos_df['age_group'].value_counts(normalize=True) * 100  # as percentage
+        age_total_count = pos_df.shape[0]
 
         if pos_df.empty:
             print(f'No players in this position: {pos}')
@@ -135,7 +177,8 @@ def get_league_page(league_id, country):
             'avg_career': pos_df['league_Career_length'].mean(),
             'min_career': pos_df['league_Career_length'].min(),
             'max_career': pos_df['league_Career_length'].max(),
-            'pos_age_groups': group_counts_pos.to_dict()
+            'pos_age_groups': group_counts_pos.to_dict(),
+            'age_total_count': age_total_count
             }
             position_stats.append(pos_data)
 
@@ -201,6 +244,8 @@ def get_league_page(league_id, country):
             pos_df = nation_df[(nation_df[pos] == 1) & (nation_df['nation_Nation'] == nation)]
             count_pos = pos_df.shape[0]
 
+            nation_data["positions"][pos] = count_pos
+
             print(f'Number of players that are {pos} is :{count_pos} from {nation}')
 
             if count_pos > nation_max_by_position[pos]["count"]:
@@ -239,6 +284,10 @@ def get_league_page(league_id, country):
 
 
     #END OF NATION/COUNTRY SECTION==============================================================================================
+
+    #Attributes/ Preferred foot section====================================================================================
+
+    #END OF ATTR/ PREFERRED FOOT SECTION=================================================================================
 
     league_names = df[df['league_name_id'] == league_id]['league_name'].unique()
     nav_name = league_names[0] if len(league_names) > 0 else "League"
