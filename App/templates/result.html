@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Title for WebPage</title>
+    <title>Position Recommendation</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
       rel="stylesheet"
@@ -21,6 +21,7 @@
       src="https://kit.fontawesome.com/a076d05399.js"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/result.css') }}"
@@ -31,6 +32,31 @@
     ></script>
   </head>
   <body>
+    <!-- Sidenav -->
+    <div id="mySidenav" class="sidenav">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"
+        >&times;</a
+      >
+      <a href="/data_entry">Data Entry</a>
+      <a href="/Home">Home</a>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+      <!-- From Uiverse.io by Cevorob -->
+      <div class="slide">
+        <label class="burger" onclick="openNav()" for="burger">
+          <input type="checkbox" id="burger" />
+          <span></span>
+          <span></span>
+          <span></span>
+        </label>
+      </div>
+      <div class="logo">
+        <img src="/static/logo.png" alt="Profile" />
+      </div>
+      <div class="navbar-title">{{nav_name}}</div>
+    </nav>
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %}
     <div class="flash-messages">
@@ -39,29 +65,56 @@
       {% endfor %}
     </div>
     {% endif %} {% endwith %}
+    <div class="recommendation-hero">
+      <div class="recommendation-container">
+        <div class="position-card">
+          <h1 class="recommendation-title">Best Position Recommendation</h1>
+          <div class="position-result">
+            <div class="position-name">{{ most_likely_position }}</div>
+            <div class="position-compatibility">
+              <div class="compatibility-bar">
+                <div
+                  class="compatibility-fill"
+                  data-percentage="{{ top_probability }}"
+                ></div>
+              </div>
+              <div class="compatibility-text">
+                {{ top_probability }}% Compatible
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="reviews-container">
-      <div id="reviewsList" style="margin-top: 30px">
+      <div id="reviewsList">
         <section class="scrollable">
-          <h2>Best Position Recommendation</h2>
-          <p><strong>Top Position:</strong> {{ most_likely_position }}</p>
-          <p><strong>Position Compatability:</strong> {{ top_probability }}%</p>
-
-          <h3>Ranked Compatability Probabilities:</h3>
-          <ul>
-            {% for pos, prob in predictions %}
-            <li>{{ pos }}: {{ prob }}%</li>
-            {% endfor %}
-          </ul>
-
-          <h3>Most Similar Players:</h3>
-          <ul>
-            {% for player in similar_players %}
-            <li>
-              {{ player.full_name }} (Similarity Score: {{
-              player.similarity_score }})
-            </li>
-            {% endfor %}
-          </ul>
+          <div class="details-section">
+            <h3>Ranked Compatibility Probabilities:</h3>
+            <ul class="position-list">
+              {% for pos, prob in predictions %}
+              <li class="position-item" data-percentage="{{ prob }}">
+                <span class="position-label">{{ pos }}</span>
+                <div class="position-bar-container">
+                  <div class="position-bar"></div>
+                  <span class="position-percentage">{{ prob }}%</span>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+            <h3>Most Similar Players:</h3>
+            <ul class="players-list">
+              {% for player in similar_players %}
+              <li class="player-item">
+                <span class="player-name">{{ player.full_name }}</span>
+                <span class="similarity-score"
+                  >Similarity: {{ player.similarity_score }}</span
+                >
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
         </section>
       </div>
     </div>
