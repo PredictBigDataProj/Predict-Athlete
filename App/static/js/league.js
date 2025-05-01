@@ -9,6 +9,8 @@ const LeagueVisualizer = {
     agePyramidChart: "#age-pyramid-chart",
     positionSelect: "#position-select",
     heatmapContainer: ".heatmap-container",
+    barChartContainer: ".bar-chart-container",
+    pyramidChartContainer: ".pyramid-chart-container",
   },
 
   chartConfig: {
@@ -32,17 +34,103 @@ const LeagueVisualizer = {
     },
   },
 
+  chartData: {
+    nationality: null,
+    positionAge: null,
+    agePyramid: null,
+    allPositionsData: null,
+  },
+
+  initialized: {
+    nationality: false,
+    heatmap: false,
+    pyramid: false,
+    ageStats: false,
+  },
+
   init: function () {
     document.addEventListener("DOMContentLoaded", () => {
-      this.createNationalityChart();
+      this.setupLazyLoading();
+
       this.initAgeAnimation();
-      this.animateHeatmapContainer();
-      this.createPositionAgeHeatmap();
-      this.initAgePyramidChart();
+
+      this.prepareNationalityData();
+      this.preparePositionAgeData();
+      this.prepareAgePyramidData();
+
+      this.setupPositionSelectListener();
     });
   },
 
-  createNationalityChart: function () {
+  setupLazyLoading: function () {
+    const options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.1,
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const target = entry.target;
+
+          if (
+            target.classList.contains("bar-chart-container") &&
+            !this.initialized.nationality
+          ) {
+            this.createNationalityChart();
+            this.initialized.nationality = true;
+          } else if (
+            target.classList.contains("heatmap-container") &&
+            !this.initialized.heatmap
+          ) {
+            this.animateHeatmapContainer();
+            this.createPositionAgeHeatmap();
+            this.initialized.heatmap = true;
+          } else if (
+            target.classList.contains("pyramid-chart-container") &&
+            !this.initialized.pyramid
+          ) {
+            this.renderPyramidChart(
+              this.chartData.allPositionsData["all"],
+              "all"
+            );
+            this.initialized.pyramid = true;
+          }
+
+          // Unobserve after loading
+          observer.unobserve(target);
+        }
+      });
+    }, options);
+
+    const barChartContainer = document.querySelector(
+      this.selectors.barChartContainer
+    );
+    const heatmapContainer = document.querySelector(
+      this.selectors.heatmapContainer
+    );
+    const pyramidChartContainer = document.querySelector(
+      this.selectors.pyramidChartContainer
+    );
+
+    if (barChartContainer) observer.observe(barChartContainer);
+    if (heatmapContainer) observer.observe(heatmapContainer);
+    if (pyramidChartContainer) observer.observe(pyramidChartContainer);
+  },
+
+  setupPositionSelectListener: function () {
+    const positionSelect = document.getElementById(
+      this.selectors.positionSelect.substring(1)
+    );
+    if (positionSelect) {
+      positionSelect.addEventListener("change", (e) => {
+        this.updateAgePyramidChart(e.target.value);
+      });
+    }
+  },
+
+  prepareNationalityData: function () {
     const tableRows = document.querySelectorAll(this.selectors.dataTable);
     if (!tableRows.length) return;
 
@@ -54,13 +142,17 @@ const LeagueVisualizer = {
       }
     });
 
-    const data = Object.entries(nationData)
+    this.chartData.nationality = Object.entries(nationData)
       .map(([nation, count]) => ({ nation, count }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 5);
+  },
 
-    if (!data.length) return;
+  createNationalityChart: function () {
+    if (!this.chartData.nationality || !this.chartData.nationality.length)
+      return;
 
+    const data = this.chartData.nationality;
     const { margin, width, height, colors } = this.chartConfig.nationality;
     const chartWidth = width - margin.left - margin.right;
     const chartHeight = height;
@@ -214,7 +306,7 @@ const LeagueVisualizer = {
     });
   },
 
-  createPositionAgeHeatmap: function () {
+  preparePositionAgeData: function () {
     const positionData = document.querySelectorAll(this.selectors.positionData);
     if (!positionData.length) return;
 
@@ -240,8 +332,21 @@ const LeagueVisualizer = {
       });
     });
 
-    const sortedAgeGroups = Array.from(ageGroups).sort();
+    this.chartData.positionAge = {
+      heatmapData,
+      positions,
+      ageGroups: Array.from(ageGroups).sort(),
+    };
+  },
 
+  createPositionAgeHeatmap: function () {
+    if (!this.chartData.positionAge) return;
+
+    const {
+      heatmapData,
+      positions,
+      ageGroups: sortedAgeGroups,
+    } = this.chartData.positionAge;
     const { margin, width, height, animationDelay, animationDuration } =
       this.chartConfig.heatmap;
     const chartWidth = width;
@@ -322,22 +427,40 @@ const LeagueVisualizer = {
       })
       .on("mouseout", function () {
         d3.select(this).transition().duration(200).style("stroke", "none");
-
         tooltip.transition().duration(500).style("opacity", 0);
       });
 
-    cells.each(function (d, i) {
-      const cell = d3.select(this);
+    // Optimize animation by using requestAnimationFrame for batching
+    let startTime = null;
+    const duration = animationDuration;
+    const totalDelay = heatmapData.length * animationDelay;
 
-      anime({
-        targets: this,
-        opacity: [0, 1],
-        scale: [0.5, 1],
-        easing: "easeOutElastic(1, .5)",
-        duration: animationDuration,
-        delay: i * animationDelay,
+    function animateCells(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+
+      cells.each(function (d, i) {
+        const cellDelay = i * animationDelay;
+        if (elapsed >= cellDelay) {
+          const cellElapsed = elapsed - cellDelay;
+          if (cellElapsed <= duration) {
+            const progress = Math.min(cellElapsed / duration, 1);
+            const easeProgress = 1 - Math.pow(1 - progress, 3); // Cubic ease out
+            d3.select(this)
+              .style("opacity", easeProgress)
+              .style("transform", `scale(${0.5 + 0.5 * easeProgress})`);
+          } else {
+            d3.select(this).style("opacity", 1).style("transform", "scale(1)");
+          }
+        }
       });
-    });
+
+      if (elapsed < totalDelay + duration) {
+        requestAnimationFrame(animateCells);
+      }
+    }
+
+    requestAnimationFrame(animateCells);
 
     const title = svg
       .append("text")
@@ -356,24 +479,11 @@ const LeagueVisualizer = {
       translateY: [-20, 0],
       easing: "easeOutExpo",
       duration: 1000,
-      delay: (heatmapData.length * animationDelay) / 2,
+      delay: totalDelay / 2,
     });
   },
 
-  initAgePyramidChart: function () {
-    const positionSelect = document.getElementById(
-      this.selectors.positionSelect.substring(1)
-    );
-    if (positionSelect) {
-      positionSelect.addEventListener("change", function () {
-        LeagueVisualizer.updateAgePyramidChart(this.value);
-      });
-    }
-
-    this.createAgePyramidChart();
-  },
-
-  createAgePyramidChart: function () {
+  prepareAgePyramidData: function () {
     const positionData = document.querySelectorAll(this.selectors.positionData);
     if (!positionData.length) return;
 
@@ -401,7 +511,18 @@ const LeagueVisualizer = {
       positionNames
     );
 
-    this.renderPyramidChart(allPositionsData["all"], "all");
+    this.chartData.allPositionsData = allPositionsData;
+  },
+
+  updateAgePyramidChart: function (position) {
+    if (!this.chartData.allPositionsData) return;
+
+    if (this.initialized.pyramid) {
+      this.renderPyramidChart(
+        this.chartData.allPositionsData[position],
+        position
+      );
+    }
   },
 
   combineAllPositionsData: function (allPositionsData, positionNames) {
@@ -429,42 +550,6 @@ const LeagueVisualizer = {
     });
 
     return combinedData;
-  },
-
-  updateAgePyramidChart: function (position) {
-    const positionData = document.querySelectorAll(this.selectors.positionData);
-    if (!positionData.length) return;
-
-    const allPositionsData = {};
-    const positionNames = [];
-
-    positionData.forEach((pos) => {
-      const posName = pos.dataset.position;
-      positionNames.push(posName);
-
-      const ageGroupData = pos.querySelectorAll(".age-group-data");
-      const posData = {};
-
-      ageGroupData.forEach((group) => {
-        const groupName = group.dataset.group;
-        const percent = parseFloat(group.dataset.percent);
-        posData[groupName] = percent;
-      });
-
-      allPositionsData[posName] = posData;
-    });
-
-    allPositionsData["all"] = this.combineAllPositionsData(
-      allPositionsData,
-      positionNames
-    );
-
-    const selectedData =
-      position === "all"
-        ? allPositionsData["all"]
-        : allPositionsData[position] || allPositionsData["all"];
-
-    this.renderPyramidChart(selectedData, position);
   },
 
   renderPyramidChart: function (data, position) {
