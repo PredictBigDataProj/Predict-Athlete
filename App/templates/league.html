@@ -69,6 +69,13 @@
                     <div class="age-label">years</div>
                 </div>
             </div>
+            
+            <div class="age-stats-row">
+                <div class="age-stat-box player-count-stat">
+                    <div class="age-label">Total Players</div>
+                    <div class="age-stat-value">{{ nation_results.total_players }}</div>
+                </div>
+            </div>
         </div>
 
         
@@ -138,12 +145,8 @@
         {% endfor %}
     </div>
 
-    <h1>NEW ADDITION!!! --ADDED THE NALYSIS FOR NATIONS</h1>
 
     <section>
-        <p>Total Number of players in the league: {{ nation_results.total_players }}</p>
-        <p>Country with the most players: {{ nation_results.most_common_nation }} ({{ nation_results.most_common_nation_count }})</p>
-
         <h3>Nation Distribution</h3>
         <ul>
         {% for nation in nation_results.distribution %}
