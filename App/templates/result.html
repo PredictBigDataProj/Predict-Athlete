@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Title for WebPage</title>
+    <title>Position Recommendation</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
       rel="stylesheet"
@@ -21,10 +21,15 @@
       src="https://kit.fontawesome.com/a076d05399.js"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/result.css') }}"
     />
+    <script
+      src="{{ url_for('static', filename='js/result.js') }}"
+      defer
+    ></script>
   </head>
   <body>
     <!-- Sidenav -->
@@ -40,8 +45,8 @@
     <nav class="navbar">
       <!-- From Uiverse.io by Cevorob -->
       <div class="slide">
-        <label class="burger" onclick="openNav()" for="burger">
-          <input type="checkbox" id="burger" />
+        <label class="burger" for="burger" onclick="openNav()">
+          <input type="checkbox" id="burger">
           <span></span>
           <span></span>
           <span></span>
@@ -50,32 +55,8 @@
       <div class="logo">
         <img src="/static/logo.png" alt="Profile" />
       </div>
-      <div class="navbar-title">Navbar title</div>
-      <!-- Profile Options -->
-      <!-- <div class="container">
-            <div class="more">
-                <div class="profile-pic more-btn">
-                    <img src="https://i.ibb.co/KS9VcFr/profile-pic.jpg" alt="Profile">
-                </div>
-                
-                <div class="more-menu">
-                    <div class="more-menu-caret">
-                        <div class="more-menu-caret-outer"></div>
-                        <div class="more-menu-caret-inner"></div>
-                    </div>
-                    <ul class="more-menu-items" tabindex="-1" role="menu" aria-labelledby="more-btn" aria-hidden="true">
-                        <li class="more-menu-item" role="presentation">
-                            <a href="" class="more-menu-btn" role="menuitem">Profile</a>
-                        </li>
-                        <li class="more-menu-item" role="presentation">
-                            <a href="/logout" class="more-menu-btn" role="menuitem">Logout</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div> -->
+      <div class="navbar-title">{{nav_name}}</div>
     </nav>
-
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %}
     <div class="flash-messages">
@@ -84,282 +65,58 @@
       {% endfor %}
     </div>
     {% endif %} {% endwith %}
-
-    <!-- Search Section -->
-
-    <!-- Reviews Section -->
-    <div class="reviews-container">
-      <h3>Premier League players 2025 Season</h3>
-      <p>
-        Checking to ensure the data loads onto website properly, will format
-        later
-      </p>
-
-      <!-- <input type="text" id="myInput" onkeyup="filterReviews()" placeholder="Placeholder ..." title="Type in a name" style="width: 700px;"> -->
-
-      <div id="reviewsList" style="margin-top: 30px">
-        <section class="scrollable">
-          <h2>Best Position Recommendation</h2>
-          <p><strong>Top Position:</strong> {{ most_likely_position }}</p>
-          <p><strong>Position Compatability:</strong> {{ top_probability }}%</p>
-
-          <h3>Ranked Compatability Probabilities:</h3>
-          <ul>
-            {% for pos, prob in predictions %}
-            <li>{{ pos }}: {{ prob }}%</li>
-            {% endfor %}
-          </ul>
-
-          <h3>Most Similar Players:</h3>
-          <ul>
-            {% for player in similar_players %}
-            <li>
-              {{ player.full_name }} (Similarity Score: {{
-              player.similarity_score }})
-            </li>
-            {% endfor %}
-          </ul>
-        </section>
-
-        <!-- {% for review in reviews %} 
-           <div class="review-card">
-                <div class="review-header">
-                    <img src="https://i.ibb.co/KS9VcFr/profile-pic.jpg" alt="User" class="review-avatar">
-                    <div class="review-details">
-                        <a href="/staff-profile/{{review.createdByStaffID}}">
-                            <strong>{{review.staff_name}}</strong>
-                        </a>
-                        
-                        <p>Posted on {{review.dateCreated}} </p>
-                    </div>
-                    <i class="fas fa-external-link-alt"></i>
-                </div>
-                <div class="stars">
-                    {% if review.starRating is not none %}
-                        {% for i in range(review.starRating|int) %}
-                            <i class="fas fa-star"></i>
-                        {% endfor %}
-                        {% for i in range(5 - review.starRating|int) %}
-                            <i class="far fa-star empty"></i>
-                        {% endfor %}
-                    {% else %}
-                        {% for i in range(5) %}
-                            <i class="far fa-star empty"></i>
-                        {% endfor %}  
-                    {% endif %}
-                </div>
-                
-                <div class="review-content">
-                    <a href="/getStudentProfile/{{review.student_id}}">
-                        <h4>Review for {{review.student_name}} ({{review.student_id}})</h4>
-                    </a>
-                    
-                    <p>{{review.details}}</p>
-                </div>
-                <div class="review-footer">
-                    <div class="likes"><i class="fas fa-thumbs-up"></i> 1.1K</div>
-                    <div class="comments"><i class="fas fa-comment"></i> 24K</div>
-                    <button class="expand-btn">Expand</button>
-                </div>
+    <div class="recommendation-hero">
+      <div class="recommendation-container">
+        <div class="position-card">
+          <h1 class="recommendation-title">Best Position Recommendation</h1>
+          <div class="position-result">
+            <div class="position-name">{{ most_likely_position }}</div>
+            <div class="position-compatibility">
+              <div class="compatibility-bar">
+                <div
+                  class="compatibility-fill"
+                  data-percentage="{{ top_probability }}"
+                ></div>
+              </div>
+              <div class="compatibility-text">
+                {{ top_probability }}% Compatible
+              </div>
+            </div>
+          </div>
         </div>
-
-        {% endfor %} -->
-
-        <!-- {% if reviews|length == 0 %}
-        <h4 style="text-align: center;color: white;margin-top: 30px;">No Reviews</h4>
-        {% endif %} -->
       </div>
     </div>
 
-    <script>
-      function searchStudents() {
-        const query = document.getElementById("searchQuery").value;
-
-        fetch(`/searchStudent?query=${query}`)
-          .then((response) => response.json())
-          .then((data) => {
-            const studentList = document.getElementById("student-list");
-            const noStudentsMsg = document.getElementById("no-students");
-
-            studentList.innerHTML = ""; // Clear existing students
-
-            if (data.students.length > 0) {
-              noStudentsMsg.style.display = "none";
-
-              data.students.forEach((student) => {
-                const card = document.createElement("div");
-                card.classList.add("student-card");
-                card.innerHTML = `
-                            <h3>${student.firstname} ${student.lastname}</h3>
-                            <p><strong>Student ID:</strong> ${student.UniId}</p>
-                            <p><strong>Degree:</strong> ${
-                              student.degree ? student.degree : "Not assigned"
-                            }</p>
-                            <a href="/getStudentProfile/${student.UniId}">
-                                <button class="profile-button">View Profile</button>
-                            </a>
-                        `;
-                studentList.appendChild(card);
-              });
-            } else {
-              noStudentsMsg.style.display = "block";
-            }
-          })
-          .catch((error) => console.error("Error fetching students:", error));
-      }
-    </script>
-
-    <!-- JavaScript -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        var el = document.querySelector(".more");
-        var btn = el.querySelector(".more-btn");
-        var menu = el.querySelector(".more-menu");
-        var visible = false;
-
-        //  Function to Show Menu
-        function showMenu(e) {
-          e.preventDefault();
-          if (!visible) {
-            visible = true;
-            el.classList.add("show-more-menu");
-            menu.setAttribute("aria-hidden", false);
-            document.addEventListener("mousedown", hideMenu, false);
-          }
-        }
-
-        //  Function to Hide Menu When Clicking Outside
-        function hideMenu(e) {
-          if (btn.contains(e.target) || menu.contains(e.target)) {
-            return; // Don't close if clicking inside the menu
-          }
-          if (visible) {
-            visible = false;
-            el.classList.remove("show-more-menu");
-            menu.setAttribute("aria-hidden", true);
-            document.removeEventListener("mousedown", hideMenu);
-          }
-        }
-
-        // Ensure Click Works for Profile Link
-        document
-          .querySelector(".more-menu a")
-          .addEventListener("click", function () {
-            console.log("Profile link clicked! Navigating...");
-            document
-              .querySelector(".more-menu")
-              .classList.remove("show-more-menu");
-            window.location.href = "/staff-profile";
-          });
-
-        btn.addEventListener("click", showMenu, false);
-
-        //  Function to Open Sidebar Menu
-        function openNav() {
-          document.getElementById("mySidenav").style.width = "250px";
-          document.getElementById("main-content").style.marginLeft = "250px";
-        }
-
-        //  Function to Close Sidebar Menu
-        function closeNav() {
-          document.getElementById("mySidenav").style.width = "0";
-          document.getElementById("main-content").style.marginLeft = "0";
-        }
-
-        // Function to Filter Reviews in Search Bar
-        function filterReviews() {
-          let input, filter, reviews, studentName, i, txtValue;
-          input = document.getElementById("myInput");
-          filter = input.value.toUpperCase();
-          reviews = document
-            .getElementById("reviewsList")
-            .getElementsByClassName("review-card");
-
-          for (i = 0; i < reviews.length; i++) {
-            studentName = reviews[i].querySelector("h4");
-
-            if (studentName) {
-              txtValue = studentName.textContent || studentName.innerText;
-              if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                reviews[i].style.display = "";
-              } else {
-                reviews[i].style.display = "none";
-              }
-            }
-          }
-        }
-
-        //  Function to Search for Students
-        function searchStudents() {
-          const query = document.getElementById("searchQuery").value;
-
-          fetch(`/searchStudent?query=${query}`)
-            .then((response) => response.json())
-            .then((data) => {
-              const studentList = document.getElementById("student-list");
-              const noStudentsMsg = document.getElementById("no-students");
-
-              studentList.innerHTML = ""; // Clear existing students
-
-              if (data.students.length > 0) {
-                noStudentsMsg.style.display = "none";
-
-                data.students.forEach((student) => {
-                  const card = document.createElement("div");
-                  card.classList.add("student-card");
-                  card.innerHTML = `
-                                <h3>${student.firstname} ${
-                    student.lastname
-                  }</h3>
-                                <p><strong>Student ID:</strong> ${
-                                  student.UniId
-                                }</p>
-                                <p><strong>Degree:</strong> ${
-                                  student.degree
-                                    ? student.degree
-                                    : "Not assigned"
-                                }</p>
-                                <a href="/getStudentProfile/${student.UniId}">
-                                    <button class="profile-button">View Profile</button>
-                                </a>
-                            `;
-                  studentList.appendChild(card);
-                });
-              } else {
-                noStudentsMsg.style.display = "block";
-              }
-            })
-            .catch((error) => console.error("Error fetching students:", error));
-        }
-
-        //  Attach Filter Function to Input Field
-        document
-          .getElementById("myInput")
-          .addEventListener("keyup", filterReviews);
-      });
-
-      //for navbar
-      function openNav() {
-        document.getElementById("mySidenav").style.width = "250px";
-        document.getElementById("main-content").style.marginLeft = "250px";
-      }
-
-      function closeNav() {
-        document.getElementById("mySidenav").style.width = "0";
-        document.getElementById("main-content").style.marginLeft = "0";
-      }
-    </script>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        setTimeout(function () {
-          let flashMessages = document.querySelectorAll(".flash-message");
-          flashMessages.forEach(function (msg) {
-            msg.style.opacity = "0";
-            setTimeout(() => (msg.style.display = "none"), 500);
-          });
-        }, 3000); // Messages disappear after 3 seconds
-      });
-    </script>
+    <div class="reviews-container">
+      <div id="reviewsList">
+        <section class="scrollable">
+          <div class="details-section">
+            <h3>Ranked Compatibility Probabilities:</h3>
+            <ul class="position-list">
+              {% for pos, prob in predictions %}
+              <li class="position-item" data-percentage="{{ prob }}">
+                <span class="position-label">{{ pos }}</span>
+                <div class="position-bar-container">
+                  <div class="position-bar"></div>
+                  <span class="position-percentage">{{ prob }}%</span>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+            <h3>Most Similar Players:</h3>
+            <ul class="players-list">
+              {% for player in similar_players %}
+              <li class="player-item">
+                <span class="player-name">{{ player.full_name }}</span>
+                <span class="similarity-score"
+                  >Similarity: {{ player.similarity_score }}</span
+                >
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </section>
+      </div>
+    </div>
   </body>
 </html>
