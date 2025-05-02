@@ -211,19 +211,32 @@ def get_league_page(league_id, country):
 
     
     unique_nations = nation_df['nation_Nation'].unique().tolist()
+    unique_regions = nation_df['nation_region'].unique().tolist()
 
     total_count = nation_df.shape[0]#
     nation_count = nation_df['nation_Nation'].value_counts()
+    region_count = nation_df['nation_region'].value_counts()
 
     max_nation_name = nation_count.idxmax()
     max_nation_num = nation_count.max()
+
+   # region_count = nation_df['nation_region'].value_counts()
+
+    max_region_name = region_count.idxmax()
+    max_region_num = region_count.max()
+    
 
     
     nation_max_by_position = {
         pos: {"count": 0, "nation": None} for pos in positions
     }
 
+    region_max_by_position = {
+        pos: {"region_count": 0, "region": None} for pos in positions
+    }
+
     distribution = []
+    region_distribution = []
 
     for nation in unique_nations:
         spec_count = nation_df[nation_df['nation_Nation'] == nation].shape[0]
@@ -258,18 +271,6 @@ def get_league_page(league_id, country):
 
         distribution.append(nation_data)
 
-    # # print("\n")
-    # # print(f'The nation with the most players is: {max_nation_name} with {max_nation_num} players')
-    # # print(f'The unique nations present in this league: {unique_nations}')
-    # # print(f'The total number of players in this league, {league_id}: {total_count}')
-
-    # for pos in positions:
-    #     # print(
-    #     #     f'The Highest number of {pos} players are from: '
-    #     #     f'{nation_max_by_position[pos]["count"]} in the nation: '
-    #     #     f'{nation_max_by_position[pos]["nation"]}'
-    #     # )
-
 
     nation_results = {
         "total_players": total_count,
@@ -278,6 +279,50 @@ def get_league_page(league_id, country):
         "unique_nations": unique_nations,
         "distribution": distribution,
         "max_by_position": nation_max_by_position
+    }
+
+
+    for region in unique_regions:
+        region_spec_count = nation_df[nation_df['nation_region'] == region].shape[0]
+        region_percentage_count = (region_spec_count / total_count) * 100
+        # print("\n")
+        # print(f'The distribution of players for {nation} is: {percentage_count:.2f}%')
+        # print(f'The number of players in {nation} is: {spec_count}')
+
+        region_data = {
+            "region": region,
+            "region_percentage": round(region_percentage_count, 2),
+            "region_count": region_spec_count,
+            "positions": {}
+        }
+
+        for pos in positions:
+            pos_df = nation_df[(nation_df[pos] == 1) & (nation_df['nation_region'] == region)]
+            region_count_pos = pos_df.shape[0]
+
+            region_data["positions"][pos] = region_count_pos
+
+            # print(f'Number of players that are {pos} is :{count_pos} from {nation}')
+
+            if region_count_pos > region_max_by_position[pos]["region_count"]:
+                region_max_by_position[pos]["region_count"] = region_count_pos
+                region_max_by_position[pos]["region"] = region
+
+                region_max_by_position[pos] = {
+                    "region_count": region_count_pos,
+                    "region": region
+                }
+
+        region_distribution.append(region_data)
+
+
+    region_results = {
+        "region_total_players": total_count,
+        "most_common_region": max_region_name,
+        "most_common_region_count": max_region_num,
+        "unique_regions": unique_regions,
+        "region_distribution": region_distribution,
+        "region_max_by_position": region_max_by_position
     }
 
 
@@ -429,7 +474,7 @@ def get_league_page(league_id, country):
                             age_groups=group_counts.to_dict(),
                             age_counts = age_counts.to_dict(),
                             nav_name=nav_name,
-                            nation_results=nation_results,
+                            nation_results=nation_results, region_results=region_results,
                             left_footed_players=count_left_total, right_footed_players=count_right_total, total_players=total_ovr,
                             attribute_data= attribute_data, pos_attribute_data= pos_attribute_data
                              )

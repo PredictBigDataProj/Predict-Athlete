@@ -95,6 +95,25 @@
 
 
     <section class="scrollable">
+
+        <div class="chart-container" id="region-position-chart">
+            <h2 class="chart-title">Position Distribution by Region</h2>
+            <div class="position-filter">
+              <label for="regionSelect">Filter by Region:</label>
+              <select id="regionSelect">
+                <option value="all">All Regions</option>
+                <option value="top_by_position">Top Region per Position</option>
+                {% for region in region_results.region_distribution %}
+                  <option value="{{ region.region }}">{{ region.region }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+        
+</section>
+
+
+    <section class="scrollable">
             <!-- Chart Container for Preferred Foot by Position -->
             <div class="chart-container" id="preferred-foot-chart">
                 <!-- Filter for Position -->
@@ -406,23 +425,23 @@
     </section> -->
 
     <section>
-        <!-- <p>Total Number of players in the league: {{ nation_results.total_players }}</p>
-        <p>Country with the most players: {{ nation_results.most_common_nation }} ({{ nation_results.most_common_nation_count }})</p> -->
+        <p>Total Number of players in the league: {{ nation_results.total_players }}</p>
+        <p>Region with the most players: {{ region_results.most_common_region }} ({{ region_results.most_common_region_count }})</p>
 
-        <h3>Nation Distribution</h3>
+        <h3>Region Distribution</h3>
         <h1> do a heatmap with a drop down for attributes, so it shows the correlation between the different attributes and position</h1>
         <ul>
-        {% for nation in nation_results.distribution %}
+        {% for region in region_results.region_distribution %}
             <li>
-            <strong>{{ nation.nation }}</strong>: {{ nation.percentage }}% ({{ nation.count }} players)
+            <strong>{{ region.region }}</strong>: {{ region.region_percentage }}% ({{ region.region_count }} players)
             </li>
 
-            <!-- <h3>Nation Count</h3>
+            <h3>Region Count</h3>
             <ul>
-                {% for pos, data in nation.positions.items()%}
+                {% for pos, data in region.positions.items()%}
                     <li> {{pos}}: {{ data }}</li>
                 {% endfor %}
-                </ul> -->
+                </ul>
 
         {% endfor %}
         </ul> 
@@ -958,6 +977,124 @@
 </script>
 
   
+<script>
+    const regionData = {
+      {% for region in region_results.region_distribution %}
+        "{{ region.region }}": {
+          {% for pos, count in region.positions.items() %}
+            "{{ pos }}": {{ count }},
+          {% endfor %}
+        },
+      {% endfor %}
+    };
+  
+    const regionMaxByPosition = {
+      {% for pos, data in region_results.region_max_by_position.items() %}
+        "{{ pos }}": { region: "{{ data.region }}", count: {{ data.region_count }} },
+      {% endfor %}
+    };
+  
+    function getRegionData(region) {
+      if (region === 'top_by_position') {
+        return Object.entries(regionMaxByPosition).map(([position, data]) => ({
+          position,
+          count: +data.count,
+          region: data.region
+        }));
+      }
+  
+      const entries = region === 'all'
+        ? aggregateAllRegions(regionData)
+        : Object.entries(regionData[region] || {});
+  
+      return entries.map(([position, count]) => ({
+        position,
+        count: +count,
+        region
+      }));
+    }
+  
+    function aggregateAllRegions(data) {
+      const result = {};
+      for (const region of Object.keys(data)) {
+        for (const [pos, count] of Object.entries(data[region])) {
+          result[pos] = (result[pos] || 0) + count;
+        }
+      }
+      return Object.entries(result);
+    }
+  
+    const regionMargin = { top: 30, right: 30, bottom: 70, left: 120 };
+    const regionWidth = 800;
+    const regionHeight = 400;
+  
+    const regionSvg = d3.select("#region-position-chart")
+      .append("svg")
+      .attr("width", regionWidth)
+      .attr("height", regionHeight);
+  
+    const regionChartArea = regionSvg.append("g")
+      .attr("transform", `translate(${regionMargin.left},${regionMargin.top})`);
+  
+    const regionXScale = d3.scaleBand().padding(0.1).range([0, regionWidth - regionMargin.left - regionMargin.right]);
+    const regionYScale = d3.scaleLinear().range([regionHeight - regionMargin.top - regionMargin.bottom, 0]);
+  
+    const regionXAxisGroup = regionChartArea.append("g")
+      .attr("transform", `translate(0, ${regionHeight - regionMargin.top - regionMargin.bottom})`);
+  
+    const regionYAxisGroup = regionChartArea.append("g");
+  
+    const regionTooltip = d3.select("body").append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
+  
+    function renderRegionChart(data) {
+      regionXScale.domain(data.map(d => d.position));
+      regionYScale.domain([0, d3.max(data, d => d.count)]).nice();
+  
+      regionXAxisGroup.call(d3.axisBottom(regionXScale)).selectAll("text")
+        .attr("transform", "rotate(-45)")
+        .style("text-anchor", "end");
+  
+      regionYAxisGroup.call(d3.axisLeft(regionYScale));
+  
+      const bars = regionChartArea.selectAll(".region-bar")
+        .data(data, d => d.position);
+  
+      bars.enter()
+        .append("rect")
+        .attr("class", "region-bar")
+        .attr("x", d => regionXScale(d.position))
+        .attr("y", d => regionYScale(d.count))
+        .attr("width", regionXScale.bandwidth())
+        .attr("height", d => regionHeight - regionMargin.top - regionMargin.bottom - regionYScale(d.count))
+        .attr("fill", "#4C9F70")
+        .on("mouseover", function(event, d) {
+          regionTooltip.transition().duration(200).style("opacity", .9);
+          regionTooltip.html(`Region: ${d.region}<br>Position: ${d.position}<br>Count: ${d.count}`)
+            .style("left", (event.pageX + 5) + "px")
+            .style("top", (event.pageY - 28) + "px");
+        })
+        .on("mouseout", () => regionTooltip.transition().duration(500).style("opacity", 0));
+  
+      bars.transition()
+        .duration(500)
+        .attr("x", d => regionXScale(d.position))
+        .attr("y", d => regionYScale(d.count))
+        .attr("width", regionXScale.bandwidth())
+        .attr("height", d => regionHeight - regionMargin.top - regionMargin.bottom - regionYScale(d.count));
+  
+      bars.exit().remove();
+    }
+  
+    renderRegionChart(getRegionData('all'));
+  
+    document.getElementById('regionSelect').addEventListener('change', function () {
+      const selectedRegion = this.value;
+      const filteredData = getRegionData(selectedRegion);
+      renderRegionChart(filteredData);
+    });
+  </script>
 
 
 </body>
