@@ -130,11 +130,6 @@ league_views = Blueprint('league_views', __name__, template_folder='../templates
 @league_views.route('/league/<league_id>-<country>', methods=['GET'])
 def get_league_page(league_id, country):
 
-    #print(f"League ID: {league_id}, Country: {country}")
-
-    # bins = [15, 20, 25, 30, 35, 40, 45, 50] #These are the borders for the age groupings, can change depending.
-    # labels = ['15-20', '21-25', '26-30', '31-35', '36-40', '41-45', '46-50'] #These are the age ranges, we can make this broader or more specfici depending.
-    # df['age_group'] = pd.cut(df['age'], bins=bins, labels=labels, right=True)
 
 
     #AGE SECTION==================================================================================================
@@ -154,12 +149,19 @@ def get_league_page(league_id, country):
     avg_career = league_df['league_Career_length'].mean()
     age_counts = league_df['age'].value_counts()
     
+    global_avg_age = df['age'].mean()
+    global_min_age = df['age'].min()
+    global_max_age = df['age'].max()
+    global_max_career = df['league_Career_length'].max()
+    global_min_career = df['league_Career_length'].min()
+    global_avg_career = df['league_Career_length'].mean()
 
 
     position_stats = []
 
     for pos in positions:
         pos_df = league_df[league_df[pos] == 1]
+        # global_pos_df = df[df[pos] == 1] #IM AT HERE!!!!!!!!!!!!!!!!!!!!!!!!
         group_counts_pos = pos_df['age_group'].value_counts(normalize=True) * 100  # as percentage
         age_total_count = pos_df.shape[0]
 
@@ -181,19 +183,6 @@ def get_league_page(league_id, country):
             }
             position_stats.append(pos_data)
 
-
-    # print("\n")
-    # print(f"Overall for the {league_id} League")
-    # print(f'Average age is : {avg_age:.2f} years old')
-    # print(f'Youngest age is : {min_age:.2f} years old')
-    # print(f'Oldest age is : {max_age:.2f} years old')
-    # print(f'Max Career length is : {max_career:.2f} years')
-    # print(f'Min Career length is : {min_career:.2f} years')
-    # print(f'Average Career length is : {avg_career:.2f} years')
-    # print(f"Age Group Distribution for League: {league_id}")
-    # print(group_counts)
-    # print("\n")
-    # print("=======================================================================")
 
 
     avg_age = df[df['league_name_id'] == league_id]['age'].mean() #This is the same analysis as what is in the notebook, just use the df transformations in here and send the data as information tot he template.
@@ -348,21 +337,14 @@ def get_league_page(league_id, country):
     
     total_ovr = count_left_total + count_right_total
     
-    # print(f'Total Number of players in {league_id} are: {total_ovr}')
-    # print(f'Total Number of left footed players {league_id} are: {count_left_total}')
-    # print(f'Total Number of right footed players  {league_id} are: {count_right_total}')
-    
+
     attribute_data = []
 
     for attr in player_attributes_1:
         total_attr_max = final_df[attr].max()
         total_attr_min = final_df[attr].min()
         total_attr_avg = final_df[attr].mean()
-        # print (f'The Overall maximum {attr} is: {total_attr_max}')
-        # print (f'The Overall minimum {attr} is: {total_attr_min}')
-        # print (f'The Overall average {attr} is: {total_attr_avg}')
-        # print("\n")
-
+ 
         attri_data = {
             'attribute': attr,
             'avg_score': final_df[attr].mean(),
@@ -406,17 +388,7 @@ def get_league_page(league_id, country):
             else:
                 print(f'Better chance if you are right footed as a {pos} in {league_id}')
                 #foot_score = 1 if player_foot == 'Right' else 0.5
-    
-
-
-
-
-        # print("\n")
-
-
-        
-        # print(f'Number of left footed players that are {pos}: {count_left}')
-        # print(f'Number of right footed players that are {pos}: {count_right}')
+ 
         
         if pos not in attr_max:
             attr_max[pos] = {}
@@ -431,10 +403,6 @@ def get_league_page(league_id, country):
             pos_attr_min = attr_min[pos][attr]
             pos_attr_avg = attr_avg[pos][attr]
 
-            # print (f'The maximum {attr} for {pos} is: {attr_max[pos][attr]}')
-            # print (f'The minimum {attr} for {pos} is: {attr_min[pos][attr]}')
-            # print (f'The average {attr} for {pos} is: {attr_avg[pos][attr]}')
-            # print("\n")
 
             pos_attri_data["attributes"][attr] = {
                 'pos_attr_max': pos_attr_max,
@@ -454,18 +422,11 @@ def get_league_page(league_id, country):
                     values[key] = 0  # Replace NaN with 0 or another default value like "No Data"
 
 
-
-
-
-
     #END OF ATTR/ PREFERRED FOOT SECTION=================================================================================
 
     league_names = df[df['league_name_id'] == league_id]['league_name'].unique()
     nav_name = league_names[0] if len(league_names) > 0 else "League"
-    #league_info = df
-    #print(df[['league_name', 'league_name_id']])
-    
-    #PUT THE VISUALIZATIONS AND ANALYISIS IN THIS FUNCTION/ RENDERED TEMPLATE PAGE 
+ 
 
     return render_template('league.html', league_id=league_id, country=country, league_info=league_info.to_dict(orient='records'),
                             avg_age = avg_age, min_age = min_age, max_age = max_age,
