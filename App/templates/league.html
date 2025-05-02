@@ -19,6 +19,26 @@
 
 
     <style>
+
+.position-attribute-correlation-tooltip {
+      position: absolute;
+      text-align: left;
+      padding: 8px;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      border-radius: 4px;
+      pointer-events: none;
+      font-size: 12px;
+    }
+    .axis text {
+      fill: white;
+    }
+
+    select {
+      margin-bottom: 10px;
+      padding: 5px;
+      font-size: 14px;
+    }
         /* body {
           font-family: Arial, sans-serif;
           background-color: #f4f4f4;
@@ -390,64 +410,49 @@
         {% endfor %}
     </div>
 
-    <h1>NEW ADDITION!!! --ADDED THE NALYSIS FOR NATIONS</h1>
-
-    <!-- <section>
 
 
-        <h2>Overall attribute data:</h2>
-        <ul>
-        {%for data in attribute_data%}
+
+
+    <div class="chart-container">
+
+        <h2 class="chart-title">Average Attribute - Position Heat Map</h2>
         
-            <li>{{data.attribute}} max: {{data.max_score}} min: {{data.min_score}} avg: {{data.avg_score}}  </li>
-        {%endfor%}
-        </ul>
-    </section> -->
+        <div class="position-filter">
+            <label for="attribute-select" style="color:white;">Select Attribute:</label>
+            <select id="attribute-select">
+            <option value="All">All</option>
+            </select>
+        </div>
 
-    <!-- <section>
-
-
-        <h3>Position attribute data</h3>
-        <ul>
-            {%for data in pos_attribute_data%}
-            
-                <li>Posistion name: {{data.position}} Left footed players: {{data.count_left}} Right footed players: {{data.count_right}} 
-                    position total: {{data.pos_total}}  </li>
-
-                    <h3>Pos Scores</h3>
-                    <ul>
-                        {% for attr, score in data.attributes.items()%}
-                            <li> {{attr}}: maximum: {{ score.pos_attr_max }} minimum: {{ score.pos_attr_min }} average: {{ score.pos_attr_avg }}</li>
-                        {% endfor %}
-                        </ul>
-            {%endfor%}
-        </ul>
-    </section> -->
+        <div id="position-attribute-heatmap"></div>
+      </div>
+    
 
     <section>
-        <p>Total Number of players in the league: {{ nation_results.total_players }}</p>
-        <p>Region with the most players: {{ region_results.most_common_region }} ({{ region_results.most_common_region_count }})</p>
 
-        <h3>Region Distribution</h3>
-        <h1> do a heatmap with a drop down for attributes, so it shows the correlation between the different attributes and position</h1>
-        <ul>
-        {% for region in region_results.region_distribution %}
-            <li>
-            <strong>{{ region.region }}</strong>: {{ region.region_percentage }}% ({{ region.region_count }} players)
-            </li>
-
-            <h3>Region Count</h3>
-            <ul>
-                {% for pos, data in region.positions.items()%}
-                    <li> {{pos}}: {{ data }}</li>
-                {% endfor %}
+        <div class="data-container" style="display: none;">
+            <!-- Dynamically insert position-attribute data here using Jinja templating -->
+            {% for data in pos_attribute_data %}
+            <div class="position-attribute-data" data-position="{{ data.position }}">
+              <div class="pos-scores">
+                <ul>
+                  {% for attr, score in data.attributes.items() %}
+                  <div class="attribute-correlation-data" 
+                       data-attribute="{{ attr }}" 
+                       data-correlation="{{ score.pos_attr_avg }}">
+                    <li>{{ attr }}: Max: {{ score.pos_attr_max }} | Min: {{ score.pos_attr_min }} | Avg: {{ score.pos_attr_avg }}</li>
+                  </div>
+                  {% endfor %}
                 </ul>
-
-        {% endfor %}
-        </ul> 
-
-
+              </div>
+            </div>
+            {% endfor %}
+        </div>
     </section>
+
+
+    
 
 
     <script>
@@ -675,77 +680,6 @@
     });
   </script>
 
-
-
-
-<!-- <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      // Data passed from Django (just to show an example)
-      const leftFootedPlayers = {{ left_footed_players }};
-      const rightFootedPlayers = {{ right_footed_players }};
-  
-      // Data for the chart: left and right footed players
-      const footData = [
-        { foot: "Left", count: leftFootedPlayers },
-        { foot: "Right", count: rightFootedPlayers }
-      ];
-  
-      // Chart settings
-      const margin = { top: 30, right: 30, bottom: 70, left: 120 };
-      const width = 600;
-      const height = 400;
-  
-      // Create the SVG container for the chart
-      const svg = d3.select("#preferred-foot-chart")
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height);
-  
-      const chartArea = svg.append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
-  
-      // Set up the scales for x and y axes
-      const xScale = d3.scaleBand().padding(0.3).range([0, width - margin.left - margin.right]);
-      const yScale = d3.scaleLinear().range([height - margin.top - margin.bottom, 0]);
-  
-      // Create the x and y axis groups
-      const xAxisGroup = chartArea.append("g")
-        .attr("transform", `translate(0, ${height - margin.top - margin.bottom})`);
-  
-      const yAxisGroup = chartArea.append("g");
-  
-      // Set the domains for the axes based on the data
-      xScale.domain(footData.map(d => d.foot));
-      yScale.domain([0, d3.max(footData, d => d.count)]).nice();
-  
-      // Add x and y axes to the chart
-      xAxisGroup.call(d3.axisBottom(xScale)).selectAll("text").style("text-anchor", "middle");
-      yAxisGroup.call(d3.axisLeft(yScale));
-  
-      // Create bars for the chart
-      chartArea.selectAll(".bar-foot")
-        .data(footData)
-        .enter()
-        .append("rect")
-        .attr("class", "bar-foot")
-        .attr("x", d => xScale(d.foot))
-        .attr("y", d => yScale(d.count))
-        .attr("width", xScale.bandwidth())
-        .attr("height", d => height - margin.top - margin.bottom - yScale(d.count))
-        .attr("fill", d => d.foot === "Left" ? "#1f77b4" : "#ff7f0e");
-  
-      // Add labels to the bars
-      chartArea.selectAll(".label")
-        .data(footData)
-        .enter()
-        .append("text")
-        .attr("class", "label")
-        .attr("x", d => xScale(d.foot) + xScale.bandwidth() / 2)
-        .attr("y", d => yScale(d.count) - 5)
-        .attr("text-anchor", "middle")
-        .text(d => d.count);
-    });
-  </script> -->
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -1096,6 +1030,198 @@
     });
   </script>
 
+<script>
+    const positionAttributeHeatmap = {
+      chartConfig: {
+        margin: { top: 30, right: 30, bottom: 150, left: 100 },
+        width: 470,
+        height: 350,
+        animationDelay: 50,
+        animationDuration: 1000,
+      },
 
+      heatmapData: [],
+      positions: [],
+      attributes: new Set(),
+
+      init: function () {
+        document.addEventListener("DOMContentLoaded", () => {
+            const container = document.getElementById("position-attribute-heatmap");
+            this.chartConfig.width = container.offsetWidth - this.chartConfig.margin.left - this.chartConfig.margin.right;
+
+            this.extractData();
+            this.populateDropdown();
+            this.createHeatmap();
+            document.getElementById("attribute-select").addEventListener("change", () => {
+            d3.select("#position-attribute-heatmap").selectAll("*").remove(); // Clear chart
+            this.createHeatmap(document.getElementById("attribute-select").value);
+            });
+        });
+        },
+
+      extractData: function () {
+        const positionData = document.querySelectorAll(".position-attribute-data");
+        if (!positionData.length) return;
+
+        this.heatmapData = [];
+        this.positions = [];
+        this.attributes.clear();
+
+        positionData.forEach((position) => {
+          const posName = position.dataset.position;
+          this.positions.push(posName);
+
+          const attributeData = position.querySelectorAll(".attribute-correlation-data");
+          attributeData.forEach((data) => {
+            const attributeName = data.dataset.attribute;
+            const correlationValue = parseFloat(data.dataset.correlation);
+            this.attributes.add(attributeName);
+
+            this.heatmapData.push({
+              position: posName,
+              attribute: attributeName,
+              value: correlationValue,
+            });
+          });
+        });
+      },
+
+      populateDropdown: function () {
+        const dropdown = document.getElementById("attribute-select");
+        const sortedAttributes = Array.from(this.attributes).sort();
+        sortedAttributes.forEach((attr) => {
+          const option = document.createElement("option");
+          option.value = attr;
+          option.textContent = attr;
+          dropdown.appendChild(option);
+        });
+      },
+
+      createHeatmap: function (selectedAttribute = "All") {
+        const { margin, width, height, animationDelay, animationDuration } = this.chartConfig;
+        const chartWidth = width;
+        const chartHeight = height;
+
+        const filteredData = selectedAttribute === "All"
+          ? this.heatmapData
+          : this.heatmapData.filter((d) => d.attribute === selectedAttribute);
+
+        const attributes = selectedAttribute === "All"
+          ? Array.from(this.attributes).sort()
+          : [selectedAttribute];
+
+        const svg = d3
+          .select("#position-attribute-heatmap")
+          .append("svg")
+          .attr("width", chartWidth + margin.left + margin.right)
+          .attr("height", chartHeight + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        const x = d3.scaleBand()
+          .range([0, chartWidth])
+          .domain(attributes)
+          .padding(0.05);
+
+        const y = d3.scaleBand()
+          .range([chartHeight, 0])
+          .domain(this.positions)
+          .padding(0.05);
+
+        svg.append("g")
+          .attr("class", "axis")
+          .attr("transform", `translate(0,${chartHeight})`)
+          .call(d3.axisBottom(x))
+          .selectAll("text")
+          .style("text-anchor", "end")
+          .attr("dx", "-.8em")
+          .attr("dy", ".15em")
+          .attr("transform", "rotate(-65)");
+
+        svg.append("g")
+          .attr("class", "axis")
+          .call(d3.axisLeft(y));
+
+        const colorScale = d3
+          .scaleSequential()
+          .interpolator(d3.interpolateBlues)
+          .domain([0, d3.max(filteredData, (d) => d.value)]);
+
+        const tooltip = d3
+          .select("body")
+          .append("div")
+          .attr("class", "position-attribute-correlation-tooltip")
+          .style("opacity", 0);
+
+        const cells = svg
+          .selectAll()
+          .data(filteredData)
+          .enter()
+          .append("rect")
+          .attr("class", "position-attribute-correlation-cell")
+          .attr("x", (d) => x(d.attribute))
+          .attr("y", (d) => y(d.position))
+          .attr("width", x.bandwidth())
+          .attr("height", y.bandwidth())
+          .style("fill", (d) => colorScale(d.value))
+          .style("opacity", 0)
+          .on("mouseover", function (event, d) {
+            d3.select(this)
+              .transition()
+              .duration(200)
+              .style("stroke", "#333")
+              .style("stroke-width", 2);
+            tooltip
+              .transition()
+              .duration(200)
+              .style("opacity", 0.9);
+            tooltip
+              .html(`Position: ${d.position}<br>Attribute: ${d.attribute}<br>Correlation: ${d.value.toFixed(2)}`)
+              .style("left", event.pageX + 10 + "px")
+              .style("top", event.pageY - 28 + "px");
+          })
+          .on("mouseout", function () {
+            d3.select(this)
+              .transition()
+              .duration(200)
+              .style("stroke", "none");
+            tooltip.transition().duration(500).style("opacity", 0);
+          });
+
+        cells.each(function (d, i) {
+          anime({
+            targets: this,
+            opacity: [0, 1],
+            scale: [0.5, 1],
+            easing: "easeOutElastic(1, .5)",
+            duration: animationDuration,
+            delay: i * animationDelay,
+          });
+        });
+
+        const title = svg
+          .append("text")
+          .attr("class", "chart-title")
+          .attr("x", chartWidth / 2)
+          .attr("y", -10)
+          .attr("text-anchor", "middle")
+          .style("font-size", "16px")
+          .style("opacity", 0)
+          .text("Average ")
+          .style("fill", "white");
+
+        anime({
+          targets: title.node(),
+          opacity: [0, 1],
+          translateY: [-20, 0],
+          easing: "easeOutExpo",
+          duration: 1000,
+          delay: (filteredData.length * animationDelay) / 2,
+        });
+      },
+    };
+
+    positionAttributeHeatmap.init();
+  </script>
 </body>
 </html>
