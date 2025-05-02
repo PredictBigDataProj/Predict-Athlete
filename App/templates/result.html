@@ -118,5 +118,33 @@
         </section>
       </div>
     </div>
+
+    <button id="league-fit-btn">Button for best league fit</button>
+    <div id="league-fit-result"></div>
+
+    <script>
+      const inputData = {{ input_data | tojson }};
+    </script>
+
+    <script>
+      document.getElementById('league-fit-btn').addEventListener('click', () => {
+        fetch('/best-fit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(inputData)
+        })
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('league-fit-result').innerHTML =
+            `<p><strong>Best Fit League:</strong> ${data.best_league}</p>`;
+        })
+        .catch(error => console.error('Error:', error));
+      });
+    </script>
+
   </body>
+
+
 </html>

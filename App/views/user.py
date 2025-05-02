@@ -19,7 +19,8 @@ from App.controllers import (
     get_all_players,
     load_models, get_user, get_user_by_username,
     create_derived_features,
-    get_physical_attribute_stats
+    get_physical_attribute_stats,
+    calculate_best_league
 )
 
 
@@ -85,6 +86,15 @@ player_attributes = [
 df = pd.read_csv('App/data/Final_project_finished_Continents.csv')
 
 user_views = Blueprint('user_views', __name__, template_folder='../templates')
+
+
+@user_views.route('/best-fit', methods=['POST'])
+def best_fit_ajax():
+    player_data = request.get_json()
+   
+    best_league = calculate_best_league(player_data)
+    #does not reutrn anything right now, still in progress.
+    return jsonify({'best_league': best_league})
 
 @user_views.route('/users', methods=['GET'])
 def get_user_page():
@@ -395,7 +405,7 @@ def get_user_attr():
 
 
 
-        return render_template('result.html', most_likely_position=most_likely_position, top_probability=top_probability, 
+        return render_template('result.html', most_likely_position=most_likely_position, input_data=input_data, top_probability=top_probability, 
         predictions=[(pos, round(prob * 100, 2)) for pos, prob in sorted_predictions], 
         similar_players=similar_players[['full_name', 'similarity_score']].to_dict(orient='records'))
 
