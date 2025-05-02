@@ -116,6 +116,60 @@
 
     <section class="scrollable">
 
+      <label for="positionSelect"><strong>Select Position:</strong></label>
+      <select id="positionSelect-table" onchange="updatePositionTable()">
+          <option value="All">All Positions</option>
+          {% for data in position_stats %}
+              <option value="{{ data.position }}">{{ data.position }}</option>
+          {% endfor %}
+      </select>
+
+      <table border="1" cellpadding="8" style="margin-top: 10px;">
+          <thead>
+              <tr>
+                  <th>Attribute</th>
+                  <th>League Specific</th>
+                  <th>Global</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <td>Average Age</td>
+                  <td id="avgAgeCell">{{ avg_age }}</td>
+                  <td id="globalAvgAgeCell">{{ global_avg_age }}</td>
+              </tr>
+              <tr>
+                  <td>Youngest Age</td>
+                  <td id="minAgeCell">{{ min_age }}</td>
+                  <td id="globalMinAgeCell">{{ global_min_age }}</td>
+              </tr>
+              <tr>
+                  <td>Oldest Age</td>
+                  <td id="maxAgeCell">{{ max_age }}</td>
+                  <td id="globalMaxAgeCell">{{ global_max_age }}</td>
+              </tr>
+              <tr>
+                  <td>Average Career Length</td>
+                  <td id="avgCareerCell">{{ avg_career }}</td>
+                  <td id="globalAvgCareerCell">{{ global_avg_career }}</td>
+              </tr>
+              <tr>
+                  <td>Shortest Career</td>
+                  <td id="minCareerCell">{{ min_career }}</td>
+                  <td id="globalMinCareerCell">{{ global_min_career }}</td>
+              </tr>
+              <tr>
+                  <td>Longest Career</td>
+                  <td id="maxCareerCell">{{ max_career }}</td>
+                  <td id="globalMaxCareerCell">{{ global_max_career }}</td>
+              </tr>
+          </tbody>
+      </table>
+
+    </section>
+
+    <section class="scrollable">
+
         <div class="chart-container" id="region-position-chart">
             <h2 class="chart-title">Position Distribution by Region</h2>
             <div class="position-filter">
@@ -1223,5 +1277,75 @@
 
     positionAttributeHeatmap.init();
   </script>
+
+
+
+<script>
+  const positionStats = {
+      {% for data in position_stats %}
+      "{{ data.position }}": {
+          avg_age: {{ data.avg_age }},
+          min_age: {{ data.min_age }},
+          max_age: {{ data.max_age }},
+          avg_career: {{ data.avg_career }},
+          min_career: {{ data.min_career }},
+          max_career: {{ data.max_career }}
+      }{% if not loop.last %},{% endif %}
+      {% endfor %}
+  };
+
+  const globalPositionStats = {
+      {% for data in global_position_stats %}
+      "{{ data.position }}": {
+          avg_age: {{ data.avg_age }},
+          min_age: {{ data.min_age }},
+          max_age: {{ data.max_age }},
+          avg_career: {{ data.avg_career }},
+          min_career: {{ data.min_career }},
+          max_career: {{ data.max_career }}
+      }{% if not loop.last %},{% endif %}
+      {% endfor %}
+  };
+
+  // Default league-wide stats
+  const defaultStats = {
+      avg_age: {{ avg_age }},
+      min_age: {{ min_age }},
+      max_age: {{ max_age }},
+      avg_career: {{ avg_career }},
+      min_career: {{ min_career }},
+      max_career: {{ max_career }}
+  };
+
+  const defaultGlobalStats = {
+      avg_age: {{ global_avg_age }},
+      min_age: {{ global_min_age }},
+      max_age: {{ global_max_age }},
+      avg_career: {{ global_avg_career }},
+      min_career: {{ global_min_career }},
+      max_career: {{ global_max_career }}
+  };
+
+  function updatePositionTable() {
+      const selected = document.getElementById('positionSelect-table').value;
+
+      const stats = selected === "All" ? defaultStats : positionStats[selected];
+      const globalStats = selected === "All" ? defaultGlobalStats : globalPositionStats[selected];
+
+      document.getElementById('avgAgeCell').innerText = stats.avg_age.toFixed(2);
+      document.getElementById('minAgeCell').innerText = stats.min_age.toFixed(2);
+      document.getElementById('maxAgeCell').innerText = stats.max_age.toFixed(2);
+      document.getElementById('avgCareerCell').innerText = stats.avg_career.toFixed(2);
+      document.getElementById('minCareerCell').innerText = stats.min_career.toFixed(2);
+      document.getElementById('maxCareerCell').innerText = stats.max_career.toFixed(2);
+
+      document.getElementById('globalAvgAgeCell').innerText = globalStats.avg_age.toFixed(2);
+      document.getElementById('globalMinAgeCell').innerText = globalStats.min_age.toFixed(2);
+      document.getElementById('globalMaxAgeCell').innerText = globalStats.max_age.toFixed(2);
+      document.getElementById('globalAvgCareerCell').innerText = globalStats.avg_career.toFixed(2);
+      document.getElementById('globalMinCareerCell').innerText = globalStats.min_career.toFixed(2);
+      document.getElementById('globalMaxCareerCell').innerText = globalStats.max_career.toFixed(2);
+  }
+</script>
 </body>
 </html>
