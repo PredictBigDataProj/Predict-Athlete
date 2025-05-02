@@ -52,6 +52,17 @@
           fill: none;
           shape-rendering: crispEdges;
         }
+
+        .scrollable-chart-container {
+            width: 100%;
+            overflow-x: auto; /* Enable horizontal scrolling */
+            padding: 10px 0;
+        }
+
+        #attribute-chart-content {
+            width: 1500px; /* Adjust the width as needed to fit all bars */
+            height: 400px; /* Adjust the height of the chart */
+        }
       </style>
 </head>
 
@@ -104,6 +115,84 @@
                     <div id="preferred-foot-chart"></div>
                 </div>
             </div>
+
+
+
+
+
+
+
+
+            <div class="attribute-stats-container">
+            
+                <!-- The single card to display the selected stats -->
+                <div class="age-stats-container">
+
+                    <!-- Filter for Position -->
+                    <div class="position-filter">
+                        <label for="position-select-attribute-card">Select Position:</label>
+                        <select id="position-select-attribute-card">
+                            <option value="">All Positions</option>
+                            {% for stat in position_stats %}
+                                <option value="{{ stat.position }}">{{ stat.position }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                
+                    <!-- Filter for Attribute -->
+                    <div class="position-filter">
+                        <label for="attribute-select-card">Select Attribute:</label>
+                        <select id="attribute-select-card">
+                            <option value="">Select an Attribute</option>
+                            {% for data in attribute_data %}
+                                <option value="{{ data.attribute }}">{{ data.attribute }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+
+                    <div class="attribute-name" id="attribute-name">Attribute Name</div>
+                    
+                    <div class="attribute-value"></div>
+                    
+                    <!-- <div class="age-label">Attribute Name (<span id="position-name"></span>)</div>
+                    <div class="age-value" id="avg-age"></div>
+                    <div class="age-label">years</div> -->
+
+                        <div class="age-stats-row">
+                            <div class="age-stat-box player-count-stat">
+                                <div class="age-label"> Highest Value</div>
+                                <div class="age-stat-value" id="max-attribute-value">--</div>
+                            </div>
+                        </div>
+
+                        <div class="age-stats-row">
+                            <div class="age-stat-box player-count-stat">
+                                <div class="age-label">Lowest Value</div>
+                                <div class="age-stat-value" id="min-attribute-value">--</div>
+                            </div>
+                        </div>
+
+                        <div class="age-stats-row">
+                            <div class="age-stat-box player-count-stat">
+                                <div class="age-label">Average Value</div>
+                                <div class="age-stat-value" id="avg-attribute-value">--</div>
+                            </div>
+                        </div>
+
+                        <!-- <div class="value-row">
+                            <div class="label">Max:</div><div id="max-attribute-value">--</div>
+                        </div>
+                        <div class="value-row">
+                            <div class="label">Min:</div><div id="min-attribute-value">--</div>
+                        </div>
+                        <div class="value-row">
+                            <div class="label">Avg:</div><div id="avg-attribute-value">--</div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+            
     </section>
 
 
@@ -284,9 +373,8 @@
 
     <h1>NEW ADDITION!!! --ADDED THE NALYSIS FOR NATIONS</h1>
 
-    <section>
-        <p>The total number of left footed players: {{left_footed_players}}</p>
-        <p>The total number of right footed players: {{right_footed_players}}</p>
+    <!-- <section>
+
 
         <h2>Overall attribute data:</h2>
         <ul>
@@ -295,9 +383,9 @@
             <li>{{data.attribute}} max: {{data.max_score}} min: {{data.min_score}} avg: {{data.avg_score}}  </li>
         {%endfor%}
         </ul>
-    </section>
+    </section> -->
 
-    <section>
+    <!-- <section>
 
 
         <h3>Position attribute data</h3>
@@ -315,20 +403,21 @@
                         </ul>
             {%endfor%}
         </ul>
-    </section>
+    </section> -->
 
     <section>
         <!-- <p>Total Number of players in the league: {{ nation_results.total_players }}</p>
         <p>Country with the most players: {{ nation_results.most_common_nation }} ({{ nation_results.most_common_nation_count }})</p> -->
 
         <h3>Nation Distribution</h3>
+        <h1> do a heatmap with a drop down for attributes, so it shows the correlation between the different attributes and position</h1>
         <ul>
         {% for nation in nation_results.distribution %}
             <li>
             <strong>{{ nation.nation }}</strong>: {{ nation.percentage }}% ({{ nation.count }} players)
             </li>
-<!-- 
-            <h3>Nation Count</h3>
+
+            <!-- <h3>Nation Count</h3>
             <ul>
                 {% for pos, data in nation.positions.items()%}
                     <li> {{pos}}: {{ data }}</li>
@@ -336,7 +425,7 @@
                 </ul> -->
 
         {% endfor %}
-        </ul>
+        </ul> 
 
 
     </section>
@@ -759,7 +848,114 @@
 
 
 
+<script>
+    const posAttributeData = {
+        {% for data in pos_attribute_data %}
+        "{{ data.position }}": {
+            attributes: {
+                {% for attr, score in data.attributes.items() %}
+                "{{ attr }}": {
+                    max: {{ score.pos_attr_max }},
+                    min: {{ score.pos_attr_min }},
+                    avg: {{ score.pos_attr_avg | round(2) }}
+                },
+                {% endfor %}
+            }
+        },
+        {% endfor %}
+    };
 
+    const overallAttributes = {
+        {% for data in attribute_data %}
+        "{{ data.attribute }}": {
+            max: {{ data.max_score }},
+            min: {{ data.min_score }},
+            avg: {{ data.avg_score | round(2) }}
+        },
+        {% endfor %}
+    };
+
+    function animateValue(element, start, end, duration = 500) {
+        if (start === end) {
+            element.textContent = end.toFixed(2);
+            return;
+        }
+        let startTime = null;
+        function step(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const progress = timestamp - startTime;
+            const value = start + (end - start) * (progress / duration);
+            element.textContent = value.toFixed(2);
+            if (progress < duration) {
+                requestAnimationFrame(step);
+            } else {
+                element.textContent = end.toFixed(2);
+            }
+        }
+        requestAnimationFrame(step);
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const positionSelect = document.getElementById("position-select-attribute-card");
+        const attributeSelect = document.getElementById("attribute-select-card");
+
+        const attrNameEl = document.getElementById("attribute-name");
+        const maxEl = document.getElementById("max-attribute-value");
+        const minEl = document.getElementById("min-attribute-value");
+        const avgEl = document.getElementById("avg-attribute-value");
+
+        let currentValues = {
+            max: 0,
+            min: 0,
+            avg: 0
+        };
+
+        function updateCard() {
+            const selectedPosition = positionSelect.value;
+            const selectedAttribute = attributeSelect.value;
+
+            if (!selectedAttribute) {
+                attrNameEl.textContent = "Attribute Name";
+                maxEl.textContent = "--";
+                minEl.textContent = "--";
+                avgEl.textContent = "--";
+                currentValues = { max: 0, min: 0, avg: 0 };
+                return;
+            }
+
+            let scores;
+
+            if (selectedPosition && posAttributeData[selectedPosition] && posAttributeData[selectedPosition].attributes[selectedAttribute]) {
+                scores = posAttributeData[selectedPosition].attributes[selectedAttribute];
+            } else if (overallAttributes[selectedAttribute]) {
+                scores = overallAttributes[selectedAttribute];
+            }
+
+            if (scores) {
+                attrNameEl.textContent = selectedAttribute;
+                animateValue(maxEl, currentValues.max, scores.max);
+                animateValue(minEl, currentValues.min, scores.min);
+                animateValue(avgEl, currentValues.avg, scores.avg);
+                currentValues = {
+                    max: scores.max,
+                    min: scores.min,
+                    avg: scores.avg
+                };
+            } else {
+                attrNameEl.textContent = selectedAttribute;
+                maxEl.textContent = "--";
+                minEl.textContent = "--";
+                avgEl.textContent = "--";
+                currentValues = { max: 0, min: 0, avg: 0 };
+            }
+        }
+
+        positionSelect.addEventListener("change", updateCard);
+        attributeSelect.addEventListener("change", updateCard);
+
+        updateCard();  // Trigger on page load
+    });
+</script>
 
   
 
