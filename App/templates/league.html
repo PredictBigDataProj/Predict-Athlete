@@ -16,6 +16,74 @@
     <script src="{{ url_for('static', filename='js/league.js') }}" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
+
+
+    <style>
+
+.position-attribute-correlation-tooltip {
+      position: absolute;
+      text-align: left;
+      padding: 8px;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      border-radius: 4px;
+      pointer-events: none;
+      font-size: 12px;
+    }
+    .axis text {
+      fill: white;
+    }
+
+    select {
+      margin-bottom: 10px;
+      padding: 5px;
+      font-size: 14px;
+    }
+        /* body {
+          font-family: Arial, sans-serif;
+          background-color: #f4f4f4;
+          color: #333;
+        } */
+    
+        .chart-container {
+          margin: 40px;
+        }
+        
+    
+        .bar {
+          transition: all 0.3s ease-in-out;
+        }
+    
+        .tooltip {
+          position: absolute;
+          background-color: rgba(0, 0, 0, 0.7);
+          color: white;
+          padding: 5px;
+          border-radius: 3px;
+          pointer-events: none;
+          font-size: 12px;
+        }
+    
+        .axis text {
+          font-size: 14px;
+        }
+    
+        .axis path, .axis line {
+          fill: none;
+          shape-rendering: crispEdges;
+        }
+
+        .scrollable-chart-container {
+            width: 100%;
+            overflow-x: auto; /* Enable horizontal scrolling */
+            padding: 10px 0;
+        }
+
+        #attribute-chart-content {
+            width: 1500px; /* Adjust the width as needed to fit all bars */
+            height: 400px; /* Adjust the height of the chart */
+        }
+      </style>
 </head>
 
 <body>
@@ -44,9 +112,186 @@
         <div class="navbar-title">{{nav_name}}</div>
     </nav>
     </pre>
+
+
     <section class="scrollable">
+
+        <div class="chart-container" id="region-position-chart">
+            <h2 class="chart-title">Position Distribution by Region</h2>
+            <div class="position-filter">
+              <label for="regionSelect">Filter by Region:</label>
+              <select id="regionSelect">
+                <option value="all">All Regions</option>
+                <option value="top_by_position">Top Region per Position</option>
+                {% for region in region_results.region_distribution %}
+                  <option value="{{ region.region }}">{{ region.region }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
         
-        <div class="age-stats-container">
+</section>
+
+
+    <section class="scrollable">
+            <!-- Chart Container for Preferred Foot by Position -->
+            <div class="chart-container" id="preferred-foot-chart">
+                <!-- Filter for Position -->
+                <div class="position-filter">
+                    <label for="positionSelect-foot">Filter by Position:</label>
+                    <select id="positionSelect-foot">
+                        <option value="all">All Positions</option>
+                        {% for data in pos_attribute_data %}
+                            <option value="{{ data.position }}">{{ data.position }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Preferred Foot Chart Section -->
+                
+                <div id="preferred-foot-chart-container">
+                    <h2 class="chart-title">Preferred Foot</h2>
+                    <div id="preferred-foot-chart"></div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+            <div class="attribute-stats-container">
+            
+                <!-- The single card to display the selected stats -->
+                <div class="age-stats-container">
+
+                    <!-- Filter for Position -->
+                    <div class="position-filter">
+                        <label for="position-select-attribute-card">Select Position:</label>
+                        <select id="position-select-attribute-card">
+                            <option value="">All Positions</option>
+                            {% for stat in position_stats %}
+                                <option value="{{ stat.position }}">{{ stat.position }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                
+                    <!-- Filter for Attribute -->
+                    <div class="position-filter">
+                        <label for="attribute-select-card">Select Attribute:</label>
+                        <select id="attribute-select-card">
+                            <option value="">Select an Attribute</option>
+                            {% for data in attribute_data %}
+                                <option value="{{ data.attribute }}">{{ data.attribute }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+
+                    <div class="attribute-name" id="attribute-name">Attribute Name</div>
+                    
+                    <div class="attribute-value"></div>
+                    
+                    <!-- <div class="age-label">Attribute Name (<span id="position-name"></span>)</div>
+                    <div class="age-value" id="avg-age"></div>
+                    <div class="age-label">years</div> -->
+
+                        <div class="age-stats-row">
+                            <div class="age-stat-box player-count-stat">
+                                <div class="age-label"> Highest Value</div>
+                                <div class="age-stat-value" id="max-attribute-value">--</div>
+                            </div>
+                        </div>
+
+                        <div class="age-stats-row">
+                            <div class="age-stat-box player-count-stat">
+                                <div class="age-label">Lowest Value</div>
+                                <div class="age-stat-value" id="min-attribute-value">--</div>
+                            </div>
+                        </div>
+
+                        <div class="age-stats-row">
+                            <div class="age-stat-box player-count-stat">
+                                <div class="age-label">Average Value</div>
+                                <div class="age-stat-value" id="avg-attribute-value">--</div>
+                            </div>
+                        </div>
+
+                        <!-- <div class="value-row">
+                            <div class="label">Max:</div><div id="max-attribute-value">--</div>
+                        </div>
+                        <div class="value-row">
+                            <div class="label">Min:</div><div id="min-attribute-value">--</div>
+                        </div>
+                        <div class="value-row">
+                            <div class="label">Avg:</div><div id="avg-attribute-value">--</div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+            
+    </section>
+
+
+    <section class="scrollable">
+
+   
+
+
+
+
+
+    <div class="age-stats-container">
+        
+
+        <div class="position-filter">
+            <label for="position-select-age-card">Select Position:</label>
+            <select id="position-select-age-card">
+                <option value="">All Positions</option>
+                {% for stat in position_stats %}
+                    <option value="{{ stat.position }}">{{ stat.position }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+            <div class="age-label">Average Player Age (<span id="position-name"></span>)</div>
+            <div class="age-value" id="avg-age"></div>
+            <div class="age-label">years</div>
+    
+            <div class="age-stats-row">
+                <div class="age-stat-box">
+                    <div class="age-label">Youngest</div>
+                    <div class="age-stat-value" id="min-age"></div>
+                </div>
+                <div class="age-stat-box">
+                    <div class="age-label">Oldest</div>
+                    <div class="age-stat-value" id="max-age"></div>
+                </div>
+            </div>
+    
+            <div class="age-stats-row">
+                <div class="age-stat-box career-stat">
+                    <div class="age-label">Avg Career Length</div>
+                    <div class="age-stat-value" id="avg-career">--</div>
+                    <div class="age-label">years</div>
+                </div>
+            </div>
+    
+            <div class="age-stats-row">
+                <div class="age-stat-box player-count-stat">
+                    <div class="age-label">Total Players</div>
+                    <div class="age-stat-value" id="position-label">--</div>
+                </div>
+            </div>
+        
+    </div>
+
+
+
+        
+        <!-- <div class="age-stats-container">
             <div class="age-label">Average Player Age</div>
             <div id="average-age" class="age-value">{{avg_age | round(2)}}</div>
             <div class="age-label">years</div>
@@ -69,7 +314,14 @@
                     <div class="age-label">years</div>
                 </div>
             </div>
-        </div>
+            
+            <div class="age-stats-row">
+                <div class="age-stat-box player-count-stat">
+                    <div class="age-label">Total Players</div>
+                    <div class="age-stat-value">{{ nation_results.total_players }}</div>
+                </div>
+            </div>
+        </div> -->
 
         
 
@@ -108,7 +360,27 @@
         <h2 class="chart-title">Top 5 Player Nationalities</h2>
         <div id="nationality-chart"></div>
     </div>
+
+    <div class="chart-container" id="player-position-chart">
+        <h2 class="chart-title">Position Distibution by Nation</h2>
+        <div class="position-filter">
+            <label for="nationSelect">Filter by Nation:</label>
+            <select id="nationSelect">
+            <option value="all">All Nations</option>
+            <option value="top_by_position">Top Nation per Position</option>
+            {% for nation in nation_results.distribution %}
+                <option value="{{ nation.nation }}">{{ nation.nation }}</option>
+            {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    
+
+    
     </section>
+
+
     <section class="scrollable">
         <div class="pyramid-chart-container">
             <h2 class="chart-title">Age Distribution by Position</h2>
@@ -138,61 +410,818 @@
         {% endfor %}
     </div>
 
-    <h1>NEW ADDITION!!! --ADDED THE NALYSIS FOR NATIONS</h1>
+
+
+
+
+    <div class="chart-container">
+
+        <h2 class="chart-title">Average Attribute - Position Heat Map</h2>
+        
+        <div class="position-filter">
+            <label for="attribute-select" style="color:white;">Select Attribute:</label>
+            <select id="attribute-select">
+            <option value="All">All</option>
+            </select>
+        </div>
+
+        <div id="position-attribute-heatmap"></div>
+      </div>
+    
 
     <section>
-        <p>Total Number of players in the league: {{ nation_results.total_players }}</p>
-        <p>Country with the most players: {{ nation_results.most_common_nation }} ({{ nation_results.most_common_nation_count }})</p>
 
-        <h3>Nation Distribution</h3>
-        <ul>
-        {% for nation in nation_results.distribution %}
-            <li>
-            <strong>{{ nation.nation }}</strong>: {{ nation.percentage }}% ({{ nation.count }} players)
-            </li>
-        {% endfor %}
-        </ul>
-
-        <h3>Top Nation by Position</h3>
-        <ul>
-        {% for pos, data in nation_results.max_by_position.items() %}
-            <li>{{ pos }}: {{ data.count }} players from {{ data.nation }}</li>
-        {% endfor %}
-        </ul>
+        <div class="data-container" style="display: none;">
+            <!-- Dynamically insert position-attribute data here using Jinja templating -->
+            {% for data in pos_attribute_data %}
+            <div class="position-attribute-data" data-position="{{ data.position }}">
+              <div class="pos-scores">
+                <ul>
+                  {% for attr, score in data.attributes.items() %}
+                  <div class="attribute-correlation-data" 
+                       data-attribute="{{ attr }}" 
+                       data-correlation="{{ score.pos_attr_avg }}">
+                    <li>{{ attr }}: Max: {{ score.pos_attr_max }} | Min: {{ score.pos_attr_min }} | Avg: {{ score.pos_attr_avg }}</li>
+                  </div>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+            {% endfor %}
+        </div>
     </section>
 
-    <h1>value counts:</h1>
 
-    <ul>
-        {% for group, age_value in age_counts.items() %}
-        <li>Age in years: {{ group }}        Number of players for those years: {{ age_value}}</li>
-        {% endfor %}
-    </ul>
-
-    <h1>Overall age stats</h1>
-    <h1>Average Career length overall is: {{avg_career}}</h1>
-    <h1>Youngest player Career length overall is: {{min_career}}</h1>
-    <h1>Oldest player Career length overall is: {{max_career}}</h1>
-    <br>
+    
 
 
-    {% for stat in position_stats %}
-        <h1>Stats for position: {{stat.position}} !</h1>
-        <h2>Age distributions</h2>
-
-        <ul>
-            {% for group, percent in stat.pos_age_groups.items() %}
-            <li>{{ group }}: {{ percent | round(2) }}%</li>
+    <script>
+        const positionStats = {
+            {% for stat in position_stats %}
+            "{{ stat.position }}": {
+                avg_age: {{ stat.avg_age | round(2) }},
+                min_age: {{ stat.min_age }},
+                max_age: {{ stat.max_age }},
+                avg_career: {{ stat.avg_career | round(2) }},
+                age_total_count: {{ stat.age_total_count }},
+                position: "{{ stat.position }}"
+            },
             {% endfor %}
-        </ul>
+        };
+    
+        const overallStats = {
+            avg_age: {{ avg_age | round(2) }},
+            min_age: {{ min_age }},
+            max_age: {{ max_age }},
+            avg_career: {{ avg_career | round(2) }},
+            age_total_count: {{ nation_results.total_players }},
+        };
+    
+        function animateValue(element, start, end, duration = 500) {
+            if (start === end) {
+                element.textContent = end.toFixed(2);
+                return;
+            }
+            let startTime = null;
+            function step(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const progress = timestamp - startTime;
+                const value = start + (end - start) * (progress / duration);
+                element.textContent = value.toFixed(2);
+                if (progress < duration) {
+                    requestAnimationFrame(step);
+                } else {
+                    element.textContent = end.toFixed(2);
+                }
+            }
+            requestAnimationFrame(step);
+        }
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            const select = document.getElementById("position-select-age-card");
+    
+            const avgAge = document.getElementById("avg-age");
+            const minAge = document.getElementById("min-age");
+            const maxAge = document.getElementById("max-age");
+            const avgCareer = document.getElementById("avg-career");
+            const positionLabel = document.getElementById("position-label");
+            const positionName = document.getElementById("position-name");
+    
+            let currentValues = {
+                avg_age: 0,
+                min_age: 0,
+                max_age: 0,
+                avg_career: 0,
+                age_total_count: 0
+            };
+    
+            function updateCard(position) {
+                let data;
+                if (position === "overall" || position === "") {
+                    data = overallStats;
+                    positionLabel.textContent = data.age_total_count;
+                    positionName.textContent = "Overall";
+                } else {
+                    data = positionStats[position];
+                    positionLabel.textContent = data.age_total_count;
+                    positionName.textContent = data.position;
+                }
+    
+                if (data) {
+                    animateValue(avgAge, currentValues.avg_age, data.avg_age);
+                    animateValue(minAge, currentValues.min_age, data.min_age);
+                    animateValue(maxAge, currentValues.max_age, data.max_age);
+                    animateValue(avgCareer, currentValues.avg_career, data.avg_career);
+    
+                    currentValues = {
+                        avg_age: data.avg_age,
+                        min_age: data.min_age,
+                        max_age: data.max_age,
+                        avg_career: data.avg_career,
+                        age_total_count: data.age_total_count
+                    };
+                }
+            }
+    
+            updateCard(select.value);
+    
+            select.addEventListener("change", function () {
+                updateCard(this.value);
+            });
+        });
+    </script>
 
-            <h1>Average age: {{stat.avg_age}}</h1>
-            <h1>Min age: {{stat.min_age}}</h1>
-            <h1>Max age: {{stat.max_age}}</h1>
-            <h1>Average career length: {{stat.avg_career}}</h1>
-            <h1>Min career length: {{stat.min_career}}</h1>
-            <h1>Max career length: {{stat.max_career}}</h1>
-            <br>
-    {%endfor%}
+
+<script>
+
+    const fullData = {
+      {% for nation in nation_results.distribution %}
+        "{{ nation.nation }}": {
+          {% for pos, count in nation.positions.items() %}
+            "{{ pos }}": {{ count }},
+          {% endfor %}
+        },
+      {% endfor %}
+    };
+
+    const maxByPositionData = {
+        {% for pos, data in nation_results.max_by_position.items() %}
+        "{{ pos }}": { nation: "{{ data.nation }}", count: {{ data.count }} },
+        {% endfor %}
+    };
+    
+
+    function getNationData(nation) {
+        if (nation === 'top_by_position') {
+        return Object.entries(maxByPositionData).map(([position, data]) => ({
+            position,
+            count: +data.count,
+            nation: data.nation
+        }));
+        }
+
+        const entries = nation === 'all'
+        ? aggregateAllNations(fullData)
+        : Object.entries(fullData[nation] || {});
+
+        return entries.map(([position, count]) => ({
+        position,
+        count: +count,
+        nation
+        }));
+    }
+  
+
+    function aggregateAllNations(data) {
+      const result = {};
+      for (const nation of Object.keys(data)) {
+        for (const [pos, count] of Object.entries(data[nation])) {
+          result[pos] = (result[pos] || 0) + count;
+        }
+      }
+      return Object.entries(result);
+    }
+  
+
+    const margin = { top: 30, right: 30, bottom: 70, left: 120 };
+    const width = 800;
+    const height = 400;
+  
+    const svg = d3.select("#player-position-chart")
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height);
+  
+    const chartArea = svg.append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+  
+    const xScale = d3.scaleBand().padding(0.1).range([0, width - margin.left - margin.right]);
+    const yScale = d3.scaleLinear().range([height - margin.top - margin.bottom, 0]);
+  
+    const xAxisGroup = chartArea.append("g")
+      .attr("transform", `translate(0, ${height - margin.top - margin.bottom})`);
+  
+    const yAxisGroup = chartArea.append("g");
+  
+    const tooltip = d3.select("body").append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
+  
+    function render(data) {
+      xScale.domain(data.map(d => d.position));
+      yScale.domain([0, d3.max(data, d => d.count)]).nice();
+  
+      xAxisGroup.call(d3.axisBottom(xScale)).selectAll("text")
+        .attr("transform", "rotate(-45)")
+        .style("text-anchor", "end");
+  
+      yAxisGroup.call(d3.axisLeft(yScale));
+  
+      const bars = chartArea.selectAll(".bar")
+        .data(data, d => d.position);
+  
+
+      bars.enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", d => xScale(d.position))
+        .attr("y", d => yScale(d.count))
+        .attr("width", xScale.bandwidth())
+        .attr("height", d => height - margin.top - margin.bottom - yScale(d.count))
+        .attr("fill", "#69b3a2")
+        .on("mouseover", function(event, d) {
+          tooltip.transition().duration(200).style("opacity", .9);
+          tooltip.html(`Nation: ${d.nation}<br>Position: ${d.position}<br>Count: ${d.count}`)
+            .style("left", (event.pageX + 5) + "px")
+            .style("top", (event.pageY - 28) + "px");
+        })
+        .on("mouseout", () => tooltip.transition().duration(500).style("opacity", 0));
+  
+
+      bars
+        .transition()
+        .duration(500)
+        .attr("x", d => xScale(d.position))
+        .attr("y", d => yScale(d.count))
+        .attr("width", xScale.bandwidth())
+        .attr("height", d => height - margin.top - margin.bottom - yScale(d.count));
+  
+
+      bars.exit().remove();
+    }
+  
+
+    render(getNationData('all'));
+  
+    document.getElementById('nationSelect').addEventListener('change', function() {
+      const selectedNation = this.value;
+      const filteredData = getNationData(selectedNation);
+      render(filteredData);
+    });
+  </script>
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Global player counts
+      const leftFootedPlayers = {{ left_footed_players }};
+      const rightFootedPlayers = {{ right_footed_players }};
+  
+      // Data for each position
+      const posData = [
+        {% for data in pos_attribute_data %}
+          {
+            position: "{{ data.position }}",
+            left: {{ data.count_left }},
+            right: {{ data.count_right }}
+          },
+        {% endfor %}
+      ];
+  
+      // Tooltip setup
+      const tooltip = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+  
+      // Chart setup
+      const margin = { top: 30, right: 30, bottom: 70, left: 120 };
+      const width = 600;
+      const height = 400;
+  
+      const svg = d3.select("#preferred-foot-chart")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+  
+      const chartArea = svg.append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+  
+      const xScale = d3.scaleBand().padding(0.3).range([0, width - margin.left - margin.right]);
+      const yScale = d3.scaleLinear().range([height - margin.top - margin.bottom, 0]);
+  
+      const xAxisGroup = chartArea.append("g")
+        .attr("transform", `translate(0, ${height - margin.top - margin.bottom})`);
+  
+      const yAxisGroup = chartArea.append("g");
+  
+      function updateChart(left, right) {
+        const total = left + right;
+        const footData = [
+          { foot: "Left", count: left, percentage: ((left / total) * 100).toFixed(1) },
+          { foot: "Right", count: right, percentage: ((right / total) * 100).toFixed(1) }
+        ];
+  
+        xScale.domain(footData.map(d => d.foot));
+        yScale.domain([0, d3.max(footData, d => d.count)]).nice();
+  
+        xAxisGroup.call(d3.axisBottom(xScale));
+        yAxisGroup.call(d3.axisLeft(yScale));
+  
+        const bars = chartArea.selectAll(".bar-foot")
+          .data(footData);
+  
+        bars.enter()
+          .append("rect")
+          .attr("class", "bar-foot")
+          .merge(bars)
+          .on("mouseover", function (event, d) {
+            tooltip.transition().duration(200).style("opacity", .9);
+            tooltip.html(`Foot: ${d.foot}<br>Count: ${d.count}<br>Percentage: ${d.percentage}%`)
+              .style("left", (event.pageX + 10) + "px")
+              .style("top", (event.pageY - 28) + "px");
+          })
+          .on("mouseout", () => tooltip.transition().duration(500).style("opacity", 0))
+          .transition()
+          .duration(500)
+          .attr("x", d => xScale(d.foot))
+          .attr("y", d => yScale(d.count))
+          .attr("width", xScale.bandwidth())
+          .attr("height", d => height - margin.top - margin.bottom - yScale(d.count))
+          .attr("fill", d => d.foot === "Left" ? "#1f77b4" : "#ff7f0e");
+  
+        bars.exit().remove();
+  
+        const labels = chartArea.selectAll(".label")
+          .data(footData);
+  
+        labels.enter()
+          .append("text")
+          .attr("class", "label")
+          .style("fill", "white")
+          .merge(labels)
+          .transition()
+          .duration(500)
+          .attr("x", d => xScale(d.foot) + xScale.bandwidth() / 2)
+          .attr("y", d => yScale(d.count) - 5)
+          .attr("text-anchor", "middle")
+          .text(d => d.count);
+  
+        labels.exit().remove();
+      }
+  
+      // Initial chart render
+      updateChart(leftFootedPlayers, rightFootedPlayers);
+  
+      // Dropdown filter
+      const dropdown = document.getElementById("positionSelect-foot");
+      dropdown.addEventListener("change", function () {
+        const selectedPosition = this.value;
+  
+        if (selectedPosition === "all") {
+          updateChart(leftFootedPlayers, rightFootedPlayers);
+        } else {
+          const found = posData.find(p => p.position === selectedPosition);
+          if (found) {
+            updateChart(found.left, found.right);
+          }
+        }
+      });
+    });
+  </script>
+
+
+
+<script>
+    const posAttributeData = {
+        {% for data in pos_attribute_data %}
+        "{{ data.position }}": {
+            attributes: {
+                {% for attr, score in data.attributes.items() %}
+                "{{ attr }}": {
+                    max: {{ score.pos_attr_max }},
+                    min: {{ score.pos_attr_min }},
+                    avg: {{ score.pos_attr_avg | round(2) }}
+                },
+                {% endfor %}
+            }
+        },
+        {% endfor %}
+    };
+
+    const overallAttributes = {
+        {% for data in attribute_data %}
+        "{{ data.attribute }}": {
+            max: {{ data.max_score }},
+            min: {{ data.min_score }},
+            avg: {{ data.avg_score | round(2) }}
+        },
+        {% endfor %}
+    };
+
+    function animateValue(element, start, end, duration = 500) {
+        if (start === end) {
+            element.textContent = end.toFixed(2);
+            return;
+        }
+        let startTime = null;
+        function step(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const progress = timestamp - startTime;
+            const value = start + (end - start) * (progress / duration);
+            element.textContent = value.toFixed(2);
+            if (progress < duration) {
+                requestAnimationFrame(step);
+            } else {
+                element.textContent = end.toFixed(2);
+            }
+        }
+        requestAnimationFrame(step);
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const positionSelect = document.getElementById("position-select-attribute-card");
+        const attributeSelect = document.getElementById("attribute-select-card");
+
+        const attrNameEl = document.getElementById("attribute-name");
+        const maxEl = document.getElementById("max-attribute-value");
+        const minEl = document.getElementById("min-attribute-value");
+        const avgEl = document.getElementById("avg-attribute-value");
+
+        let currentValues = {
+            max: 0,
+            min: 0,
+            avg: 0
+        };
+
+        function updateCard() {
+            const selectedPosition = positionSelect.value;
+            const selectedAttribute = attributeSelect.value;
+
+            if (!selectedAttribute) {
+                attrNameEl.textContent = "Attribute Name";
+                maxEl.textContent = "--";
+                minEl.textContent = "--";
+                avgEl.textContent = "--";
+                currentValues = { max: 0, min: 0, avg: 0 };
+                return;
+            }
+
+            let scores;
+
+            if (selectedPosition && posAttributeData[selectedPosition] && posAttributeData[selectedPosition].attributes[selectedAttribute]) {
+                scores = posAttributeData[selectedPosition].attributes[selectedAttribute];
+            } else if (overallAttributes[selectedAttribute]) {
+                scores = overallAttributes[selectedAttribute];
+            }
+
+            if (scores) {
+                attrNameEl.textContent = selectedAttribute;
+                animateValue(maxEl, currentValues.max, scores.max);
+                animateValue(minEl, currentValues.min, scores.min);
+                animateValue(avgEl, currentValues.avg, scores.avg);
+                currentValues = {
+                    max: scores.max,
+                    min: scores.min,
+                    avg: scores.avg
+                };
+            } else {
+                attrNameEl.textContent = selectedAttribute;
+                maxEl.textContent = "--";
+                minEl.textContent = "--";
+                avgEl.textContent = "--";
+                currentValues = { max: 0, min: 0, avg: 0 };
+            }
+        }
+
+        positionSelect.addEventListener("change", updateCard);
+        attributeSelect.addEventListener("change", updateCard);
+
+        updateCard();  // Trigger on page load
+    });
+</script>
+
+  
+<script>
+    const regionData = {
+      {% for region in region_results.region_distribution %}
+        "{{ region.region }}": {
+          {% for pos, count in region.positions.items() %}
+            "{{ pos }}": {{ count }},
+          {% endfor %}
+        },
+      {% endfor %}
+    };
+  
+    const regionMaxByPosition = {
+      {% for pos, data in region_results.region_max_by_position.items() %}
+        "{{ pos }}": { region: "{{ data.region }}", count: {{ data.region_count }} },
+      {% endfor %}
+    };
+  
+    function getRegionData(region) {
+      if (region === 'top_by_position') {
+        return Object.entries(regionMaxByPosition).map(([position, data]) => ({
+          position,
+          count: +data.count,
+          region: data.region
+        }));
+      }
+  
+      const entries = region === 'all'
+        ? aggregateAllRegions(regionData)
+        : Object.entries(regionData[region] || {});
+  
+      return entries.map(([position, count]) => ({
+        position,
+        count: +count,
+        region
+      }));
+    }
+  
+    function aggregateAllRegions(data) {
+      const result = {};
+      for (const region of Object.keys(data)) {
+        for (const [pos, count] of Object.entries(data[region])) {
+          result[pos] = (result[pos] || 0) + count;
+        }
+      }
+      return Object.entries(result);
+    }
+  
+    const regionMargin = { top: 30, right: 30, bottom: 70, left: 120 };
+    const regionWidth = 800;
+    const regionHeight = 400;
+  
+    const regionSvg = d3.select("#region-position-chart")
+      .append("svg")
+      .attr("width", regionWidth)
+      .attr("height", regionHeight);
+  
+    const regionChartArea = regionSvg.append("g")
+      .attr("transform", `translate(${regionMargin.left},${regionMargin.top})`);
+  
+    const regionXScale = d3.scaleBand().padding(0.1).range([0, regionWidth - regionMargin.left - regionMargin.right]);
+    const regionYScale = d3.scaleLinear().range([regionHeight - regionMargin.top - regionMargin.bottom, 0]);
+  
+    const regionXAxisGroup = regionChartArea.append("g")
+      .attr("transform", `translate(0, ${regionHeight - regionMargin.top - regionMargin.bottom})`);
+  
+    const regionYAxisGroup = regionChartArea.append("g");
+  
+    const regionTooltip = d3.select("body").append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
+  
+    function renderRegionChart(data) {
+      regionXScale.domain(data.map(d => d.position));
+      regionYScale.domain([0, d3.max(data, d => d.count)]).nice();
+  
+      regionXAxisGroup.call(d3.axisBottom(regionXScale)).selectAll("text")
+        .attr("transform", "rotate(-45)")
+        .style("text-anchor", "end");
+  
+      regionYAxisGroup.call(d3.axisLeft(regionYScale));
+  
+      const bars = regionChartArea.selectAll(".region-bar")
+        .data(data, d => d.position);
+  
+      bars.enter()
+        .append("rect")
+        .attr("class", "region-bar")
+        .attr("x", d => regionXScale(d.position))
+        .attr("y", d => regionYScale(d.count))
+        .attr("width", regionXScale.bandwidth())
+        .attr("height", d => regionHeight - regionMargin.top - regionMargin.bottom - regionYScale(d.count))
+        .attr("fill", "#4C9F70")
+        .on("mouseover", function(event, d) {
+          regionTooltip.transition().duration(200).style("opacity", .9);
+          regionTooltip.html(`Region: ${d.region}<br>Position: ${d.position}<br>Count: ${d.count}`)
+            .style("left", (event.pageX + 5) + "px")
+            .style("top", (event.pageY - 28) + "px");
+        })
+        .on("mouseout", () => regionTooltip.transition().duration(500).style("opacity", 0));
+  
+      bars.transition()
+        .duration(500)
+        .attr("x", d => regionXScale(d.position))
+        .attr("y", d => regionYScale(d.count))
+        .attr("width", regionXScale.bandwidth())
+        .attr("height", d => regionHeight - regionMargin.top - regionMargin.bottom - regionYScale(d.count));
+  
+      bars.exit().remove();
+    }
+  
+    renderRegionChart(getRegionData('all'));
+  
+    document.getElementById('regionSelect').addEventListener('change', function () {
+      const selectedRegion = this.value;
+      const filteredData = getRegionData(selectedRegion);
+      renderRegionChart(filteredData);
+    });
+  </script>
+
+<script>
+    const positionAttributeHeatmap = {
+      chartConfig: {
+        margin: { top: 30, right: 30, bottom: 150, left: 100 },
+        width: 470,
+        height: 350,
+        animationDelay: 50,
+        animationDuration: 1000,
+      },
+
+      heatmapData: [],
+      positions: [],
+      attributes: new Set(),
+
+      init: function () {
+        document.addEventListener("DOMContentLoaded", () => {
+            const container = document.getElementById("position-attribute-heatmap");
+            this.chartConfig.width = container.offsetWidth - this.chartConfig.margin.left - this.chartConfig.margin.right;
+
+            this.extractData();
+            this.populateDropdown();
+            this.createHeatmap();
+            document.getElementById("attribute-select").addEventListener("change", () => {
+            d3.select("#position-attribute-heatmap").selectAll("*").remove(); // Clear chart
+            this.createHeatmap(document.getElementById("attribute-select").value);
+            });
+        });
+        },
+
+      extractData: function () {
+        const positionData = document.querySelectorAll(".position-attribute-data");
+        if (!positionData.length) return;
+
+        this.heatmapData = [];
+        this.positions = [];
+        this.attributes.clear();
+
+        positionData.forEach((position) => {
+          const posName = position.dataset.position;
+          this.positions.push(posName);
+
+          const attributeData = position.querySelectorAll(".attribute-correlation-data");
+          attributeData.forEach((data) => {
+            const attributeName = data.dataset.attribute;
+            const correlationValue = parseFloat(data.dataset.correlation);
+            this.attributes.add(attributeName);
+
+            this.heatmapData.push({
+              position: posName,
+              attribute: attributeName,
+              value: correlationValue,
+            });
+          });
+        });
+      },
+
+      populateDropdown: function () {
+        const dropdown = document.getElementById("attribute-select");
+        const sortedAttributes = Array.from(this.attributes).sort();
+        sortedAttributes.forEach((attr) => {
+          const option = document.createElement("option");
+          option.value = attr;
+          option.textContent = attr;
+          dropdown.appendChild(option);
+        });
+      },
+
+      createHeatmap: function (selectedAttribute = "All") {
+        const { margin, width, height, animationDelay, animationDuration } = this.chartConfig;
+        const chartWidth = width;
+        const chartHeight = height;
+
+        const filteredData = selectedAttribute === "All"
+          ? this.heatmapData
+          : this.heatmapData.filter((d) => d.attribute === selectedAttribute);
+
+        const attributes = selectedAttribute === "All"
+          ? Array.from(this.attributes).sort()
+          : [selectedAttribute];
+
+        const svg = d3
+          .select("#position-attribute-heatmap")
+          .append("svg")
+          .attr("width", chartWidth + margin.left + margin.right)
+          .attr("height", chartHeight + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        const x = d3.scaleBand()
+          .range([0, chartWidth])
+          .domain(attributes)
+          .padding(0.05);
+
+        const y = d3.scaleBand()
+          .range([chartHeight, 0])
+          .domain(this.positions)
+          .padding(0.05);
+
+        svg.append("g")
+          .attr("class", "axis")
+          .attr("transform", `translate(0,${chartHeight})`)
+          .call(d3.axisBottom(x))
+          .selectAll("text")
+          .style("text-anchor", "end")
+          .attr("dx", "-.8em")
+          .attr("dy", ".15em")
+          .attr("transform", "rotate(-65)");
+
+        svg.append("g")
+          .attr("class", "axis")
+          .call(d3.axisLeft(y));
+
+        const colorScale = d3
+          .scaleSequential()
+          .interpolator(d3.interpolateBlues)
+          .domain([0, d3.max(filteredData, (d) => d.value)]);
+
+        const tooltip = d3
+          .select("body")
+          .append("div")
+          .attr("class", "position-attribute-correlation-tooltip")
+          .style("opacity", 0);
+
+        const cells = svg
+          .selectAll()
+          .data(filteredData)
+          .enter()
+          .append("rect")
+          .attr("class", "position-attribute-correlation-cell")
+          .attr("x", (d) => x(d.attribute))
+          .attr("y", (d) => y(d.position))
+          .attr("width", x.bandwidth())
+          .attr("height", y.bandwidth())
+          .style("fill", (d) => colorScale(d.value))
+          .style("opacity", 0)
+          .on("mouseover", function (event, d) {
+            d3.select(this)
+              .transition()
+              .duration(200)
+              .style("stroke", "#333")
+              .style("stroke-width", 2);
+            tooltip
+              .transition()
+              .duration(200)
+              .style("opacity", 0.9);
+            tooltip
+              .html(`Position: ${d.position}<br>Attribute: ${d.attribute}<br>Correlation: ${d.value.toFixed(2)}`)
+              .style("left", event.pageX + 10 + "px")
+              .style("top", event.pageY - 28 + "px");
+          })
+          .on("mouseout", function () {
+            d3.select(this)
+              .transition()
+              .duration(200)
+              .style("stroke", "none");
+            tooltip.transition().duration(500).style("opacity", 0);
+          });
+
+        cells.each(function (d, i) {
+          anime({
+            targets: this,
+            opacity: [0, 1],
+            scale: [0.5, 1],
+            easing: "easeOutElastic(1, .5)",
+            duration: animationDuration,
+            delay: i * animationDelay,
+          });
+        });
+
+        const title = svg
+          .append("text")
+          .attr("class", "chart-title")
+          .attr("x", chartWidth / 2)
+          .attr("y", -10)
+          .attr("text-anchor", "middle")
+          .style("font-size", "16px")
+          .style("opacity", 0)
+          .text("Average ")
+          .style("fill", "white");
+
+        anime({
+          targets: title.node(),
+          opacity: [0, 1],
+          translateY: [-20, 0],
+          easing: "easeOutExpo",
+          duration: 1000,
+          delay: (filteredData.length * animationDelay) / 2,
+        });
+      },
+    };
+
+    positionAttributeHeatmap.init();
+  </script>
 </body>
 </html>
