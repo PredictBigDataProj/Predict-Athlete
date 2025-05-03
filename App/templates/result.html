@@ -119,30 +119,91 @@
       </div>
     </div>
 
-    <button id="league-fit-btn">Button for best league fit</button>
-    <div id="league-fit-result"></div>
 
-    <script>
-      const inputData = {{ input_data | tojson }};
-    </script>
 
-    <script>
-      document.getElementById('league-fit-btn').addEventListener('click', () => {
-        fetch('/best-fit', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(inputData)
-        })
-        .then(response => response.json())
-        .then(data => {
-          document.getElementById('league-fit-result').innerHTML =
-            `<p><strong>Best Fit League:</strong> ${data.best_league}</p>`;
-        })
-        .catch(error => console.error('Error:', error));
-      });
-    </script>
+
+    <button id="open-modal-btn">Find Best League Fit</button>
+
+
+    <div id="league-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6);">
+      <div style="background:white; margin:10% auto; padding:20px; width:300px; position:relative;">
+        <h3>Enter Additional Info</h3>
+
+        <!-- <label for="country">Country:</label>
+        <input list="country-list" id="country" name="country" required>
+        <datalist id="country-list">
+          {% for country in unique_countries %}
+            <option value="{{ country }}">
+          {% endfor %}
+        </datalist> -->
+
+        <label for="country">Select your country:</label>
+        <input list="country-list" id="country" name="country" placeholder="Start typing your country" required>
+        <datalist id="country-list">
+          {% for country in countries %}
+            <option value="{{ country }}">
+          {% endfor %}
+          <option value="Other">
+        </datalist>
+
+        <p>Preferred Foot:</p>
+        <label><input type="radio" name="preferred_foot" value="Left"> Left</label>
+        <label><input type="radio" name="preferred_foot" value="Right" checked> Right</label>
+
+        <label for="career_length">Career Length (years):</label>
+        <input type="number" id="career_length" name="career_length" min="0" required>
+
+        <br><br>
+        <button id="submit-modal">Submit</button>
+        <button id="close-modal">Cancel</button>
+      </div>
+    </div>
+
+
+  <script>
+    const inputData = {{ input_data | tojson }};
+    const mostLikelyPosition = "{{ most_likely_position }}";
+
+    document.getElementById('open-modal-btn').addEventListener('click', () => {
+      document.getElementById('league-modal').style.display = 'block';
+    });
+
+    document.getElementById('close-modal').addEventListener('click', () => {
+      document.getElementById('league-modal').style.display = 'none';
+    });
+
+    document.getElementById('submit-modal').addEventListener('click', () => {
+      const country = document.getElementById('country').value;
+      const preferredFoot = document.querySelector('input[name="preferred_foot"]:checked').value;
+      const careerLength = document.getElementById('career_length').value;
+
+      if (!country || !careerLength) {
+        alert("Please fill out all fields.");
+        return;
+      }
+
+      const requestData = {
+        attributes: inputData,
+        country: country,
+        career_length: parseInt(careerLength),
+        preferred_foot: preferredFoot,
+        position: mostLikelyPosition
+      };
+
+      fetch('/best-fit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('league-fit-result').innerHTML =
+          `<p><strong>Best Fit League:</strong> ${data.best_league}</p>`;
+        document.getElementById('league-modal').style.display = 'none';
+      })
+      .catch(error => console.error('Error:', error));
+    });
+  </script>
 
   </body>
 

@@ -19,8 +19,11 @@ def get_league_name_id(league_name_string):
     print(df[['league_name', 'league_name_id']])
 
 
-def calculate_best_league(player_data):
+def calculate_best_league(attributes, country, career_length, preferred_foot, position):
     df = pd.read_csv('App/data/Final_project_finished_Continents.csv')
+
+    print(f'Country is: {country}')
+    print(f'Position is: {position}')
 
     unique_leagues = df['league_name_id'].unique().tolist()
 
@@ -35,7 +38,7 @@ def calculate_best_league(player_data):
         score = {}
 
 
-        for key, data in player_data.items():
+        for key, data in attributes.items():
             #print(f'The keys are: {key}, {data}')
             avg = league_df[key].mean()
 

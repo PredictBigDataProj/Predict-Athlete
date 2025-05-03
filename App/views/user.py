@@ -88,18 +88,36 @@ df = pd.read_csv('App/data/Final_project_finished_Continents.csv')
 user_views = Blueprint('user_views', __name__, template_folder='../templates')
 
 
+
+
 @user_views.route('/best-fit', methods=['POST'])
 def best_fit_ajax():
     player_data = request.get_json()
-   
-    best_league = calculate_best_league(player_data)
-    #does not reutrn anything right now, still in progress.
+
+    attributes = player_data.get('attributes', {})
+    country = player_data.get('country')
+    career_length = player_data.get('career_length')
+    preferred_foot = player_data.get('preferred_foot')
+    position = player_data.get('position')
+
+    
+    best_league = calculate_best_league(
+        attributes=attributes,
+        country=country,
+        career_length=career_length,
+        preferred_foot=preferred_foot,
+        position=position
+    )
+
     return jsonify({'best_league': best_league})
 
 @user_views.route('/users', methods=['GET'])
 def get_user_page():
     users = get_all_users()
     return render_template('users.html', users=users)
+
+
+
 
 
 @user_views.route('/Home', methods=['GET'])
@@ -403,9 +421,9 @@ def get_user_attr():
         
         similar_players = df.sort_values(by='similarity_score').head(5) #Change the head number to give how much ever players you want to display when doing it.
 
+        countries = df['nation_Nation'].unique().tolist()
 
-
-        return render_template('result.html', most_likely_position=most_likely_position, input_data=input_data, top_probability=top_probability, 
+        return render_template('result.html', most_likely_position=most_likely_position, countries=countries, input_data=input_data, top_probability=top_probability, 
         predictions=[(pos, round(prob * 100, 2)) for pos, prob in sorted_predictions], 
         similar_players=similar_players[['full_name', 'similarity_score']].to_dict(orient='records'))
 
