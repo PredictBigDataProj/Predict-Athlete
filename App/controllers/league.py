@@ -19,63 +19,50 @@ def get_league_name_id(league_name_string):
     print(df[['league_name', 'league_name_id']])
 
 
+
 def calculate_best_league(attributes, country, career_length, preferred_foot, position):
     df = pd.read_csv('App/data/Final_project_finished_Continents.csv')
 
-    print(f'Country is: {country}')
-    print(f'Position is: {position}')
-
     unique_leagues = df['league_name_id'].unique().tolist()
-
-    # score = {
-    #     key: {"score": 0} for key in player_data
-    # }
-
     league_scores = {}
+
     for league in unique_leagues:
-        
-        league_df = df[df['league_name_id'] == league]
+        league_df = df[(df['league_name_id'] == league) & (df[position] == 1)]
         score = {}
 
+        for attr, player_value in attributes.items():
+            if league_df[attr].isnull().all():
+                continue
 
-        for key, data in attributes.items():
-            #print(f'The keys are: {key}, {data}')
-            avg = league_df[key].mean()
+            low_percentile = league_df[attr].quantile(0.05) #These are the low tier players, can adjust to suit
+            high_percentile = league_df[attr].quantile(0.95) #These would be the best of the best players, adjust to suit
+            avg = league_df[attr].mean()
+            p40 = league_df[attr].quantile(0.4) #I just picked 40th percentile but can be adjusted to suit
+            p70 = league_df[attr].quantile(0.7)
+            max_val = league_df[attr].max()
+            leeway = 2  #This is basically a constant so that in terms of the max valuje, we give a small amount of tolerance before we penalize for b eing above the max value
 
-            # if abs(avg - data) < 5 or abs(avg - data) < (0.10 * avg):
-            #     # print(f'No significant difference in the averange range for the atribute {key}')
-            #     league_score = 0.5
-            # else:
-            #     # print(f'Large difference in average range for the attribute {key}')
-            #     league_score = 1
-
-            if data >= avg:
-                # Reward: higher the value above avg, higher the score (capped at 1)
-                league_score = min(1.0, 0.5 + (data - avg) / avg)
+            if player_value < low_percentile:
+                attr_score = 0.1
+            elif player_value >= low_percentile and player_value < avg:
+                attr_score = 0.3
+            elif p40 <= player_value <= p70:
+                attr_score = 0.6
+            elif player_value > p70 and player_value <= (max_val + leeway):
+                attr_score = 1.0
+            elif player_value > high_percentile or player_value > (max_val + leeway):
+                attr_score = 0.2
             else:
-                # Penalty: lower the value below avg, lower the score
-                league_score = max(0.0, 0.5 - (avg - data) / avg)
+                attr_score = 0.0  
 
+            score[attr] = attr_score
 
-            score[key] = league_score
-
-        # print("testing score dict from here downwards")
-        # print(score)
-
-        total_score = 0
-
-        for key, data in score.items():
-            total_score = total_score + float(data)
-
-        print(f'Total score is: {total_score} for {league}')
         total_score = sum(score.values())
+        print(f'Total score is: {total_score} for {league}')
         league_scores[league] = total_score
-
 
     best_league = max(league_scores, key=league_scores.get)
     best_score = league_scores[best_league]
 
     print(f"The best league fit is: {best_league} with a score of {best_score}")
-
-    # best_fit = sorted(league_scores.items(), key=lambda x: x[1], reverse=True)
-    # return best_fit
+    # return league_scores
