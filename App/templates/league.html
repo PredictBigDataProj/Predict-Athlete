@@ -193,10 +193,7 @@
                     <div class="attribute-name" id="attribute-name">Attribute Name</div>
                     
                     <div class="attribute-value"></div>
-                    
-                    <!-- <div class="age-label">Attribute Name (<span id="position-name"></span>)</div>
-                    <div class="age-value" id="avg-age"></div>
-                    <div class="age-label">years</div> -->
+
 
                         <div class="age-stats-row">
                             <div class="age-stat-box player-count-stat">
@@ -218,16 +215,6 @@
                                 <div class="age-stat-value" id="avg-attribute-value">--</div>
                             </div>
                         </div>
-
-                        <!-- <div class="value-row">
-                            <div class="label">Max:</div><div id="max-attribute-value">--</div>
-                        </div>
-                        <div class="value-row">
-                            <div class="label">Min:</div><div id="min-attribute-value">--</div>
-                        </div>
-                        <div class="value-row">
-                            <div class="label">Avg:</div><div id="avg-attribute-value">--</div>
-                        </div> -->
                     </div>
                 </div>
             </div>
@@ -236,11 +223,6 @@
 
 
     <section class="scrollable">
-
-   
-
-
-
 
 
     <div class="age-stats-container">
@@ -288,42 +270,6 @@
         
     </div>
 
-
-
-        
-        <!-- <div class="age-stats-container">
-            <div class="age-label">Average Player Age</div>
-            <div id="average-age" class="age-value">{{avg_age | round(2)}}</div>
-            <div class="age-label">years</div>
-            
-            <div class="age-stats-row">
-                <div class="age-stat-box">
-                    <div class="age-label">Youngest</div>
-                    <div class="age-stat-value">{{min_age}}</div>
-                </div>
-                <div class="age-stat-box">
-                    <div class="age-label">Oldest</div>
-                    <div class="age-stat-value">{{max_age}}</div>
-                </div>
-            </div>
-            
-            <div class="age-stats-row">
-                <div class="age-stat-box career-stat">
-                    <div class="age-label">Avg Career Length</div>
-                    <div class="age-stat-value">{{avg_career | round(2)}}</div>
-                    <div class="age-label">years</div>
-                </div>
-            </div>
-            
-            <div class="age-stats-row">
-                <div class="age-stat-box player-count-stat">
-                    <div class="age-label">Total Players</div>
-                    <div class="age-stat-value">{{ nation_results.total_players }}</div>
-                </div>
-            </div>
-        </div> -->
-
-        
 
         <div class="heatmap-container">
             <div id="position-age-heatmap"></div>
@@ -432,7 +378,6 @@
     <section>
 
         <div class="data-container" style="display: none;">
-            <!-- Dynamically insert position-attribute data here using Jinja templating -->
             {% for data in pos_attribute_data %}
             <div class="position-attribute-data" data-position="{{ data.position }}">
               <div class="pos-scores">

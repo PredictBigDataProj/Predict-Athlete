@@ -23,6 +23,10 @@ def get_league_name_id(league_name_string):
 def calculate_best_league(attributes, country, career_length, preferred_foot, position):
     df = pd.read_csv('App/data/Final_project_finished_Continents.csv')
 
+    print(f'{country}')
+    print(f'{career_length}')
+    print(f'{preferred_foot}')
+
     unique_leagues = df['league_name_id'].unique().tolist()
     league_scores = {}
 
@@ -56,6 +60,46 @@ def calculate_best_league(attributes, country, career_length, preferred_foot, po
                 attr_score = 0.0  
 
             score[attr] = attr_score
+
+
+
+
+
+
+        # nation_count = nation_df['nation_Nation'].value_counts()
+        # region_count = nation_df['nation_region'].value_counts()
+
+        # max_nation_name = nation_count.idxmax()
+        # max_nation_num = nation_count.max()
+
+        nation_count = league_df['nation_Nation'].value_counts()
+
+
+        max_nation_name = nation_count.idxmax()
+        max_nation_num = nation_count.max()
+        
+        print(f'We are in this league: {league} with these nations: {nation_count}')
+
+        left_df = league_df[league_df['preferred_foot_Left'] == 1]
+        right_df = league_df[league_df['preferred_foot_Right'] == 1]
+
+        count_left = left_df.shape[0]
+        count_right = right_df.shape[0]
+
+        if count_left > count_right:
+            if preferred_foot == "Left":
+                pref_foot_score = 1.0
+            else:
+                pref_foot_score = 0.4
+        elif count_right > count_left:
+            if preferred_foot == "Right":
+                pref_foot_score = 1.0
+            else:
+                pref_foot_score = 0.4
+        else:
+            pref_foot_score = 0.7
+
+        score['pref_foot'] = pref_foot_score
 
         total_score = sum(score.values())
         print(f'Total score is: {total_score} for {league}')
