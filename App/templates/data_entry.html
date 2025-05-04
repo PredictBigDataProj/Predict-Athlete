@@ -76,9 +76,9 @@
               <div class="range-container">
                 <input type="range" id="{{attr}}" name="{{attr}}" {% if
                 attr=='age' %} min="17" max="50" {% set mid_value=(17 + 50) / 2
-                | int %} {% elif attr=='height_cm' %} min="54" max="272" {% set
-                mid_value=(54 + 272) / 2 | int %} {% elif attr=='weight_kg' %}
-                min="30" max="300" {% set mid_value=(30 + 300) / 2 | int %} {%
+                | int %} {% elif attr=='height_cm' %} min="135" max="210" {% set
+                mid_value=(135 + 210) / 2 | int %} {% elif attr=='weight_kg' %}
+                min="45" max="115" {% set mid_value=(45 + 115) / 2 | int %} {%
                 else %} min="1" max="99" {% set mid_value=(1 + 99) / 2 | int %}
                 {% endif %} value="{{ mid_value }}"
                 oninput="document.getElementById('{{attr}}_val').value =
@@ -90,8 +90,8 @@
                   id="{{attr}}_val"
                   class="range-value"
                   value="{{ '%.0f' % mid_value }}"
-                  min="{{ 17 if attr == 'age' else 54 if attr == 'height_cm' else 30 if attr == 'weight_kg' else 1 }}"
-                  max="{{ 50 if attr == 'age' else 272 if attr == 'height_cm' else 300 if attr == 'weight_kg' else 99 }}"
+                  min="{{ 17 if attr == 'age' else 135 if attr == 'height_cm' else 45 if attr == 'weight_kg' else 1 }}"
+                  max="{{ 50 if attr == 'age' else 210 if attr == 'height_cm' else 115 if attr == 'weight_kg' else 99 }}"
                 />
               </div>
             </div>
