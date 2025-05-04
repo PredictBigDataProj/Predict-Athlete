@@ -150,14 +150,20 @@
         <label><input type="radio" name="preferred_foot" value="Left"> Left</label>
         <label><input type="radio" name="preferred_foot" value="Right" checked> Right</label>
 
-        <label for="career_length">Career Length (years):</label>
-        <input type="number" id="career_length" name="career_length" min="0" value="0" required>
+        <label for="career_length" hidden>Career Length (years):</label>
+        <input type="number" id="career_length" name="career_length" min="0" value="0" hidden>
 
         <br><br>
         <button id="submit-modal">Submit</button>
         <button id="close-modal">Cancel</button>
+        <p>The top 3 best fit leagues will pop up after you press submit, since its inside the modal, just close and repopn afte you press submit.
+          You can move it outside as this is most likely better, i just put it here so you can see it., Just mocve the div which has id="league-fit-result"
+        </p>
+        <div id="league-fit-result" style="margin-top: 20px;"></div>
+
       </div>
     </div>
+
 
 
   <script>
@@ -197,8 +203,12 @@
       })
       .then(response => response.json())
       .then(data => {
-        document.getElementById('league-fit-result').innerHTML =
-          `<p><strong>Best Fit League:</strong> ${data.best_league}</p>`;
+        let resultHTML = "<h4>Top 3 League Fits:</h4><ol>";
+        data.top_leagues.forEach(entry => {
+          resultHTML += `<li>${entry.league} (Score: ${entry.score.toFixed(2)})</li>`;
+        });
+        resultHTML += "</ol>";
+        document.getElementById('league-fit-result').innerHTML = resultHTML;
         document.getElementById('league-modal').style.display = 'none';
       })
       .catch(error => console.error('Error:', error));

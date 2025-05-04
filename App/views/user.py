@@ -101,7 +101,7 @@ def best_fit_ajax():
     position = player_data.get('position')
 
     
-    best_league = calculate_best_league(
+    top_leagues = calculate_best_league(
         attributes=attributes,
         country=country,
         career_length=career_length,
@@ -109,7 +109,13 @@ def best_fit_ajax():
         position=position
     )
 
-    return jsonify({'best_league': best_league})
+
+    results = [
+        {"rank": i + 1, "league": league, "score": score}
+        for i, (league, score) in enumerate(top_leagues)
+    ]
+
+    return jsonify({'top_leagues': results})
 
 @user_views.route('/users', methods=['GET'])
 def get_user_page():

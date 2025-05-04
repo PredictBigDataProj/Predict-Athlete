@@ -9,19 +9,6 @@ from App.default_config import DATA_PATH
 
 
 
-# import numpy as np
-# import pandas as pd
-# from sklearn.preprocessing import StandardScaler
-# from sklearn.decomposition import PCA
-# from sklearn.feature_selection import RFE
-# from sklearn.linear_model import LogisticRegression, Lasso
-# from sklearn.ensemble import RandomForestClassifier
-# from xgboost import XGBClassifier
-# from sklearn.model_selection import train_test_split, GridSearchCV
-# from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score
-# from imblearn.over_sampling import SMOTE
-
-
 
 def initialize():
     db.drop_all()
