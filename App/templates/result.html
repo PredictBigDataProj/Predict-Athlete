@@ -21,6 +21,7 @@
       src="https://kit.fontawesome.com/a076d05399.js"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <link
       rel="stylesheet"
@@ -133,75 +134,16 @@
 
     <button id="open-modal-btn">Find Best League Fit</button>
 
+    <!-- Hidden datalist for countries -->
+    <datalist id="country-list" style="display: none">
+      {% for country in countries %}
+      <option value="{{ country }}">{% endfor %}</option>
+      <option value="Other"></option>
+    </datalist>
+
     <div
-      id="league-modal"
-      style="
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.6);
-      "
-    >
-      <div
-        style="
-          background: white;
-          margin: 10% auto;
-          padding: 20px;
-          width: 300px;
-          position: relative;
-        "
-      >
-        <h3>Enter Additional Info</h3>
-
-        <label for="country">Select your country:</label>
-        <input
-          list="country-list"
-          id="country"
-          name="country"
-          placeholder="Start typing your country"
-          required
-        />
-        <datalist id="country-list">
-          {% for country in countries %}
-          <option value="{{ country }}">{% endfor %}</option>
-
-          <option value="Other"></option>
-        </datalist>
-
-        <p>Preferred Foot:</p>
-        <label
-          ><input type="radio" name="preferred_foot" value="Left" /> Left</label
-        >
-        <label
-          ><input type="radio" name="preferred_foot" value="Right" checked />
-          Right</label
-        >
-
-        <label for="career_length" hidden>Career Length (years):</label>
-        <input
-          type="number"
-          id="career_length"
-          name="career_length"
-          min="0"
-          value="0"
-          hidden
-        />
-
-        <br /><br />
-        <button id="submit-modal">Submit</button>
-        <button id="close-modal">Cancel</button>
-        <p>
-          The top 3 best fit leagues will pop up after you press submit, since
-          its inside the modal, just close and repopn afte you press submit. You
-          can move it outside as this is most likely better, i just put it here
-          so you can see it., Just mocve the div which has
-          id="league-fit-result"
-        </p>
-        <div id="league-fit-result" style="margin-top: 20px"></div>
-      </div>
-    </div>
+      id="league-fit-result"
+      style="margin: 2rem auto; max-width: 800px; text-align: center"
+    ></div>
   </body>
 </html>

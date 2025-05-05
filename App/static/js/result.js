@@ -114,72 +114,119 @@ function setupSearchListeners() {
  */
 function setupLeagueFitListeners() {
   const openModalBtn = document.getElementById("open-modal-btn");
-  const closeModalBtn = document.getElementById("close-modal");
-  const submitModalBtn = document.getElementById("submit-modal");
-  const leagueModal = document.getElementById("league-modal");
 
   if (openModalBtn) {
-    openModalBtn.addEventListener("click", () => {
-      if (leagueModal) leagueModal.style.display = "block";
+    openModalBtn.addEventListener("click", showLeagueFitModal);
+  }
+}
+
+/**
+ * Show the SweetAlert2 modal for league fit
+ */
+function showLeagueFitModal() {
+  // Get the country options from the datalist
+  const countryList = document.getElementById("country-list");
+  let countryOptions = "";
+
+  if (countryList) {
+    const options = countryList.querySelectorAll("option");
+    options.forEach((option) => {
+      if (option.value) {
+        countryOptions += `<option value="${option.value}">${option.value}</option>`;
+      }
     });
   }
 
-  if (closeModalBtn) {
-    closeModalBtn.addEventListener("click", () => {
-      if (leagueModal) leagueModal.style.display = "none";
-    });
-  }
+  Swal.fire({
+    title: "<strong>Find Your Best League Fit</strong>",
+    icon: "info",
+    html: `
+      <div class="swal-form">
+        <div class="swal-form-group">
+          <label for="swal-country">Select your country:</label>
+          <input list="swal-country-list" id="swal-country" class="swal2-input" placeholder="Start typing your country" required>
+          <datalist id="swal-country-list">
+            ${countryOptions}
+          </datalist>
+        </div>
+        
+        <div class="swal-form-group">
+          <p>Preferred Foot:</p>
+          <div class="swal-radio-group">
+            <label><input type="radio" name="preferred_foot" value="Left"> Left</label>
+            <label><input type="radio" name="preferred_foot" value="Right" checked> Right</label>
+          </div>
+        </div>
+      </div>
+    `,
+    showCloseButton: true,
+    showCancelButton: true,
+    focusConfirm: false,
+    confirmButtonText: `
+      <i class="fa fa-paper-plane"></i> Submit
+    `,
+    confirmButtonAriaLabel: "Submit",
+    cancelButtonText: `
+      <i class="fa fa-times"></i> Cancel
+    `,
+    cancelButtonAriaLabel: "Cancel",
+    preConfirm: () => {
+      const country = document.getElementById("swal-country").value;
+      const preferredFoot = document.querySelector(
+        'input[name="preferred_foot"]:checked'
+      ).value;
 
-  if (submitModalBtn) {
-    submitModalBtn.addEventListener("click", handleLeagueFitSubmit);
-  }
+      if (!country) {
+        Swal.showValidationMessage("Please select your country");
+        return false;
+      }
+
+      return {
+        country: country,
+        preferredFoot: preferredFoot,
+        careerLength: 0, // Hidden field, using default value
+      };
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const formData = result.value;
+      handleLeagueFitSubmit(formData);
+    }
+  });
 }
 
 /**
  * Handle league fit form submission
  */
-function handleLeagueFitSubmit() {
-  const countryInput = document.getElementById("country");
-  const preferredFootInputs = document.querySelectorAll(
-    'input[name="preferred_foot"]'
-  );
-  const careerLengthInput = document.getElementById("career_length");
+function handleLeagueFitSubmit(formData) {
   const leagueFitResult = document.getElementById("league-fit-result");
-  const leagueModal = document.getElementById("league-modal");
 
-  if (!countryInput || !careerLengthInput || !leagueFitResult) return;
-
-  const country = countryInput.value;
-  const careerLength = careerLengthInput.value;
-
-  let preferredFoot = "Right"; // Default
-  for (const input of preferredFootInputs) {
-    if (input.checked) {
-      preferredFoot = input.value;
-      break;
-    }
-  }
-
-  if (!country || !careerLength) {
-    alert("Please fill out all fields.");
-    return;
-  }
+  if (!leagueFitResult) return;
 
   const requestData = {
     attributes: inputData,
-    country: country,
-    career_length: parseInt(careerLength),
-    preferred_foot: preferredFoot,
+    country: formData.country,
+    career_length: 0, // Using default value
+    preferred_foot: formData.preferredFoot,
     position: mostLikelyPosition,
   };
 
-  fetchLeagueFit(requestData, leagueFitResult, leagueModal);
+  // Show loading state
+  Swal.fire({
+    title: "Finding best leagues...",
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+
+  fetchLeagueFit(requestData, leagueFitResult);
 }
 
 /**
  * Fetch league fit data from server
  */
-function fetchLeagueFit(requestData, resultElement, modalElement) {
+function fetchLeagueFit(requestData, resultElement) {
   fetch("/best-fit", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -192,11 +239,34 @@ function fetchLeagueFit(requestData, resultElement, modalElement) {
       return response.json();
     })
     .then((data) => {
+      // Close loading dialog
+      Swal.close();
+
+      // Display results
       displayLeagueFitResults(data, resultElement);
-      if (modalElement) modalElement.style.display = "none";
+
+      // Show success message
+      Swal.fire({
+        title: "Success!",
+        text: "We found your best league matches!",
+        icon: "success",
+        timer: 2000,
+        showConfirmButton: false,
+      });
     })
     .catch((error) => {
       console.error("Error fetching league fit data:", error);
+
+      // Close loading dialog
+      Swal.close();
+
+      // Show error message
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to fetch league data. Please try again.",
+        icon: "error",
+      });
+
       resultElement.innerHTML =
         '<p class="error">Error fetching league data. Please try again.</p>';
     });
@@ -211,11 +281,28 @@ function displayLeagueFitResults(data, resultElement) {
     return;
   }
 
-  let resultHTML = "<h4>Top 3 League Fits:</h4><ol>";
-  data.top_leagues.forEach((entry) => {
-    resultHTML += `<li>${entry.league} (Score: ${entry.score.toFixed(2)})</li>`;
+  let resultHTML = `
+    <div class="league-results">
+      <h3>Top 3 League Fits</h3>
+      <div class="league-list">
+  `;
+
+  data.top_leagues.forEach((entry, index) => {
+    const medal = index === 0 ? "1" : index === 1 ? "2" : "3";
+    resultHTML += `
+      <div class="league-item">
+        <span class="league-medal">${medal}</span>
+        <span class="league-name">${entry.league}</span>
+        <span class="league-score">Score: ${entry.score.toFixed(2)}</span>
+      </div>
+    `;
   });
-  resultHTML += "</ol>";
+
+  resultHTML += `
+      </div>
+    </div>
+  `;
+
   resultElement.innerHTML = resultHTML;
 }
 
