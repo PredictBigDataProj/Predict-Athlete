@@ -32,6 +32,18 @@
     ></script>
   </head>
   <body>
+    <!-- Hidden elements to store template variables for JavaScript -->
+    <div
+      id="input-data"
+      data-input="{{ input_data | tojson }}"
+      style="display: none"
+    ></div>
+    <div
+      id="most-likely-position"
+      data-position="{{ most_likely_position }}"
+      style="display: none"
+    ></div>
+
     <!-- Sidenav -->
     <div id="mySidenav" class="sidenav">
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"
@@ -46,7 +58,7 @@
       <!-- From Uiverse.io by Cevorob -->
       <div class="slide">
         <label class="burger" for="burger" onclick="openNav()">
-          <input type="checkbox" id="burger">
+          <input type="checkbox" id="burger" />
           <span></span>
           <span></span>
           <span></span>
@@ -119,103 +131,77 @@
       </div>
     </div>
 
-
-
-
     <button id="open-modal-btn">Find Best League Fit</button>
 
-
-    <div id="league-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6);">
-      <div style="background:white; margin:10% auto; padding:20px; width:300px; position:relative;">
+    <div
+      id="league-modal"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+      "
+    >
+      <div
+        style="
+          background: white;
+          margin: 10% auto;
+          padding: 20px;
+          width: 300px;
+          position: relative;
+        "
+      >
         <h3>Enter Additional Info</h3>
 
-        <!-- <label for="country">Country:</label>
-        <input list="country-list" id="country" name="country" required>
-        <datalist id="country-list">
-          {% for country in unique_countries %}
-            <option value="{{ country }}">
-          {% endfor %}
-        </datalist> -->
-
         <label for="country">Select your country:</label>
-        <input list="country-list" id="country" name="country" placeholder="Start typing your country" required>
+        <input
+          list="country-list"
+          id="country"
+          name="country"
+          placeholder="Start typing your country"
+          required
+        />
         <datalist id="country-list">
           {% for country in countries %}
-            <option value="{{ country }}">
-          {% endfor %}
-          <option value="Other">
+          <option value="{{ country }}">{% endfor %}</option>
+
+          <option value="Other"></option>
         </datalist>
 
         <p>Preferred Foot:</p>
-        <label><input type="radio" name="preferred_foot" value="Left"> Left</label>
-        <label><input type="radio" name="preferred_foot" value="Right" checked> Right</label>
+        <label
+          ><input type="radio" name="preferred_foot" value="Left" /> Left</label
+        >
+        <label
+          ><input type="radio" name="preferred_foot" value="Right" checked />
+          Right</label
+        >
 
         <label for="career_length" hidden>Career Length (years):</label>
-        <input type="number" id="career_length" name="career_length" min="0" value="0" hidden>
+        <input
+          type="number"
+          id="career_length"
+          name="career_length"
+          min="0"
+          value="0"
+          hidden
+        />
 
-        <br><br>
+        <br /><br />
         <button id="submit-modal">Submit</button>
         <button id="close-modal">Cancel</button>
-        <p>The top 3 best fit leagues will pop up after you press submit, since its inside the modal, just close and repopn afte you press submit.
-          You can move it outside as this is most likely better, i just put it here so you can see it., Just mocve the div which has id="league-fit-result"
+        <p>
+          The top 3 best fit leagues will pop up after you press submit, since
+          its inside the modal, just close and repopn afte you press submit. You
+          can move it outside as this is most likely better, i just put it here
+          so you can see it., Just mocve the div which has
+          id="league-fit-result"
         </p>
-        <div id="league-fit-result" style="margin-top: 20px;"></div>
-
+        <div id="league-fit-result" style="margin-top: 20px"></div>
       </div>
     </div>
-
-
-
-  <script>
-    const inputData = {{ input_data | tojson }};
-    const mostLikelyPosition = "{{ most_likely_position }}";
-
-    document.getElementById('open-modal-btn').addEventListener('click', () => {
-      document.getElementById('league-modal').style.display = 'block';
-    });
-
-    document.getElementById('close-modal').addEventListener('click', () => {
-      document.getElementById('league-modal').style.display = 'none';
-    });
-
-    document.getElementById('submit-modal').addEventListener('click', () => {
-      const country = document.getElementById('country').value;
-      const preferredFoot = document.querySelector('input[name="preferred_foot"]:checked').value;
-      const careerLength = document.getElementById('career_length').value;
-
-      if (!country || !careerLength) {
-        alert("Please fill out all fields.");
-        return;
-      }
-
-      const requestData = {
-        attributes: inputData,
-        country: country,
-        career_length: parseInt(careerLength),
-        preferred_foot: preferredFoot,
-        position: mostLikelyPosition
-      };
-
-      fetch('/best-fit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestData)
-      })
-      .then(response => response.json())
-      .then(data => {
-        let resultHTML = "<h4>Top 3 League Fits:</h4><ol>";
-        data.top_leagues.forEach(entry => {
-          resultHTML += `<li>${entry.league} (Score: ${entry.score.toFixed(2)})</li>`;
-        });
-        resultHTML += "</ol>";
-        document.getElementById('league-fit-result').innerHTML = resultHTML;
-        document.getElementById('league-modal').style.display = 'none';
-      })
-      .catch(error => console.error('Error:', error));
-    });
-  </script>
-
   </body>
-
-
 </html>
