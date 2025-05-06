@@ -2,7 +2,7 @@
 document.addEventListener("DOMContentLoaded", initializeApp);
 
 // Global variables
-let inputData, mostLikelyPosition;
+let mostLikelyPosition;
 
 /**
  * Initialize the application
@@ -25,16 +25,7 @@ function initializeApp() {
  * Initialize data from DOM elements
  */
 function initializeDataFromDOM() {
-  const inputDataElement = document.getElementById("input-data");
   const positionElement = document.getElementById("most-likely-position");
-
-  if (inputDataElement) {
-    try {
-      inputData = JSON.parse(inputDataElement.getAttribute("data-input"));
-    } catch (error) {
-      console.error("Error parsing input data:", error);
-    }
-  }
 
   if (positionElement) {
     mostLikelyPosition = positionElement.getAttribute("data-position");
