@@ -274,6 +274,7 @@ function displayLeagueFitResults(data, resultElement) {
 
   let resultHTML = `
     <div class="league-results">
+
       <h3>Top 3 League Fits</h3>
       <div class="league-list">
   `;
@@ -284,7 +285,7 @@ function displayLeagueFitResults(data, resultElement) {
       <div class="league-item">
         <span class="league-medal">${medal}</span>
         <span class="league-name">${entry.league}</span>
-        <span class="league-score">Score: ${entry.score.toFixed(2)}</span>
+        <span class="league-score">Score: ${entry.score.toFixed(2)} / 39.0</span>
       </div>
     `;
   });
