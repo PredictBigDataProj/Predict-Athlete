@@ -55,12 +55,16 @@
       <div class="logo">
         <img src="/static/logo.png" alt="Profile" />
       </div>
-      <div class="navbar-title">Navbar title</div>
+      <div class="navbar-title">Data Entry</div>
     </nav>
 
-    <!-- Main Content - Two Column Layout -->
+
     <div class="main-content">
-      <!-- Left Column - Form -->
+
+      <button type="button" class="submit-btn" onclick="loadTyrellData()">Load Tyrell Data</button>
+      <button type="button" class="submit-btn" onclick="loadIsaData()">Load Isa Data</button>
+      <button type="button" class="submit-btn" onclick="loadTestPlayerData()">Load Sample Player Data</button>
+
       <div class="form-container">
         <form id="data-entry-form" method="POST" action="/data_entry">
           <div class="form-grid">
@@ -69,7 +73,7 @@
               <label for="{{attr}}" >{{attr | replace('_', ' ') | title}}</label>
               {%for stat in attr_stats%}
                 {%if stat.attribute == attr %}
-                  <i class="fas fa-info-circle tooltip-icon" title="Explanation for {{ attr | replace('_', ' ') }} The average is: {{stat.avg_stat}}" data-position="top"></i>
+                  <i class="fas fa-info-circle tooltip-icon" title="{{ attr | replace('_', ' ') }}-- The average is: {{stat.avg_stat}}" data-position="top"></i>
                 {%endif%}
               {%endfor%}
               <!-- <i class="fas fa-info-circle tooltip-icon" title="Explanation for {{ attr | replace('_', ' ') }} The average is: {{at}}" data-position="top"></i> -->
@@ -179,5 +183,168 @@
     });
 
   </script>
+
+
+  <script>
+    function loadTyrellData() {
+      const TyrellData = {
+        "height_cm": 182,
+        "weight_kg": 104,
+        "crossing": 58,
+        "finishing": 78,
+        "heading_accuracy": 72,
+        "short_passing": 77,
+        "volleys": 33,
+        "dribbling": 68,
+        "curve": 69,
+        "fk_accuracy": 38,
+        "long_passing": 77,
+        "ball_control": 68,
+        "acceleration": 82,
+        "sprint_speed":84,
+        "agility": 73,
+        "reactions": 55,
+        "balance": 73,
+        "shot_power": 79,
+        "jumping": 58,
+        "stamina": 60,
+        "strength": 74,
+        "long_shots": 60,
+        "aggression": 40,
+        "interceptions": 36,
+        "positioning": 65,
+        "vision": 71,
+        "penalties": 83,
+        "composure": 58,
+        "defensive_awareness": 33,
+        "standing_tackle": 41,
+        "sliding_tackle": 41,
+        "gk_diving": 13,
+        "gk_handling": 12,
+        "gk_kicking": 15,
+        "gk_positioning": 8,
+        "gk_reflexes": 13,
+        "age": 22,
+      };
+
+      for (const attr in TyrellData) {
+        const rangeInput = document.getElementById(attr);
+        const numberInput = document.getElementById(attr + '_val');
+        if (rangeInput && numberInput) {
+          rangeInput.value = TyrellData[attr];
+          numberInput.value = TyrellData[attr];
+        }
+      }
+    }
+  </script>
+
+
+  <script>
+    function loadIsaData() {
+      const IsaData = {
+        "height_cm": 182,
+        "weight_kg": 104,
+        "crossing": 58,
+        "finishing": 78,
+        "heading_accuracy": 72,
+        "short_passing": 77,
+        "volleys": 33,
+        "dribbling": 68,
+        "curve": 69,
+        "fk_accuracy": 38,
+        "long_passing": 77,
+        "ball_control": 68,
+        "acceleration": 82,
+        "sprint_speed":84,
+        "agility": 73,
+        "reactions": 55,
+        "balance": 73,
+        "shot_power": 79,
+        "jumping": 58,
+        "stamina": 60,
+        "strength": 74,
+        "long_shots": 60,
+        "aggression": 40,
+        "interceptions": 36,
+        "positioning": 65,
+        "vision": 71,
+        "penalties": 83,
+        "composure": 58,
+        "defensive_awareness": 33,
+        "standing_tackle": 41,
+        "sliding_tackle": 41,
+        "gk_diving": 13,
+        "gk_handling": 12,
+        "gk_kicking": 15,
+        "gk_positioning": 8,
+        "gk_reflexes": 13,
+        "age": 22,
+      };
+
+      for (const attr in IsaData) {
+        const rangeInput = document.getElementById(attr);
+        const numberInput = document.getElementById(attr + '_val');
+        if (rangeInput && numberInput) {
+          rangeInput.value = IsaData[attr];
+          numberInput.value = IsaData[attr];
+        }
+      }
+    }
+  </script>
+
+
+  <script>
+    function loadTestPlayerData() {
+      const SampleData = {
+        "height_cm": 182,
+        "weight_kg": 75,
+        "crossing": 78,
+        "finishing": 94,
+        "heading_accuracy": 73,
+        "short_passing": 86,
+        "volleys": 84,
+        "dribbling": 93,
+        "curve": 80,
+        "fk_accuracy": 69,
+        "long_passing": 71,
+        "ball_control": 92,
+        "acceleration": 97,
+        "sprint_speed":97,
+        "agility": 93,
+        "reactions": 93,
+        "balance": 82,
+        "shot_power": 90,
+        "jumping": 88,
+        "stamina": 88,
+        "strength": 77,
+        "long_shots": 83,
+        "aggression": 64,
+        "interceptions": 38,
+        "positioning": 93,
+        "vision": 83,
+        "penalties": 84,
+        "composure": 88,
+        "defensive_awareness": 26,
+        "standing_tackle": 34,
+        "sliding_tackle": 32,
+        "gk_diving": 13,
+        "gk_handling": 5,
+        "gk_kicking": 7,
+        "gk_positioning": 11,
+        "gk_reflexes": 6,
+        "age": 26,
+      };
+
+      for (const attr in SampleData) {
+        const rangeInput = document.getElementById(attr);
+        const numberInput = document.getElementById(attr + '_val');
+        if (rangeInput && numberInput) {
+          rangeInput.value = SampleData[attr];
+          numberInput.value = SampleData[attr];
+        }
+      }
+    }
+  </script>
+
   </body>
 </html>
