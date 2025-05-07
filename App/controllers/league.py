@@ -89,10 +89,18 @@ def calculate_best_league(attributes, country, career_length, preferred_foot, po
         # max_nation_num = nation_count.max()
 
         nation_count = league_df['nation_Nation'].value_counts()
+        print(nation_count)
 
 
-        max_nation_name = nation_count.idxmax()
-        max_nation_num = nation_count.max()
+        if not nation_count.empty:
+            max_nation_name = nation_count.idxmax()
+            max_nation_num = nation_count.max()
+        else:
+            max_nation_name = None  # or some fallback/default behavior
+            max_nation_num = 0
+
+        # max_nation_name = nation_count.idxmax()
+        # max_nation_num = nation_count.max()
         
         #print(f'We are in this league: {league} with these nations: {nation_count}')
 
