@@ -19,8 +19,7 @@
 
 
     <style>
-
-.position-attribute-correlation-tooltip {
+      .position-attribute-correlation-tooltip {
       position: absolute;
       text-align: left;
       padding: 8px;
@@ -113,47 +112,172 @@
     </nav>
     </pre>
 
+<section class="scrollable">
+  <div class="age-stats-container">
+    <div class="position-filter">
+        <label for="position-select-age-card">Select Position:</label>
+        <select id="position-select-age-card">
+            <option value="">All Positions</option>
+            {% for stat in position_stats %}
+                <option value="{{ stat.position }}">{{ stat.position }}</option>
+            {% endfor %}
+        </select>
+  </div>
 
-    <section class="scrollable">
+        <div class="age-label">Average Player Age (<span id="position-name"></span>)</div>
+        <div class="age-value" id="avg-age"></div>
+        <div class="age-label">years</div>
 
-        <div class="chart-container" id="region-position-chart">
-            <h2 class="chart-title">Position Distribution by Region</h2>
-            <div class="position-filter">
-              <label for="regionSelect">Filter by Region:</label>
-              <select id="regionSelect">
-                <option value="all">All Regions</option>
-                <option value="top_by_position">Top Region per Position</option>
-                {% for region in region_results.region_distribution %}
-                  <option value="{{ region.region }}">{{ region.region }}</option>
-                {% endfor %}
-              </select>
+        <div class="age-stats-row">
+            <div class="age-stat-box">
+                <div class="age-label">Youngest</div>
+                <div class="age-stat-value" id="min-age"></div>
             </div>
+            <div class="age-stat-box">
+                <div class="age-label">Oldest</div>
+                <div class="age-stat-value" id="max-age"></div>
+            </div>
+        </div>
+
+        <div class="age-stats-row">
+            <div class="age-stat-box career-stat">
+                <div class="age-label">Avg Career Length</div>
+                <div class="age-stat-value" id="avg-career">--</div>
+                <div class="age-label">years</div>
+            </div>
+        </div>
+
+        <div class="age-stats-row">
+            <div class="age-stat-box player-count-stat">
+                <div class="age-label">Total Players</div>
+                <div class="age-stat-value" id="position-label">--</div>
+            </div>
+        </div>
+    
+</div>
+<!-- The single card to display the selected stats -->
+<div class="age-stats-container">
+
+  <!-- Filter for Position -->
+  <div class="position-filter">
+      <label for="position-select-attribute-card">Select Position:</label>
+      <select id="position-select-attribute-card">
+          <option value="">All Positions</option>
+          {% for stat in position_stats %}
+              <option value="{{ stat.position }}">{{ stat.position }}</option>
+          {% endfor %}
+      </select>
+  </div>
+
+  <!-- Filter for Attribute -->
+  <div class="position-filter">
+      <label for="attribute-select-card">Select Attribute:</label>
+      <select id="attribute-select-card">
+          <option value="">Select an Attribute</option>
+          {% for data in attribute_data %}
+              <option value="{{ data.attribute }}">{{ data.attribute }}</option>
+          {% endfor %}
+      </select>
+  </div>
+
+
+  <div class="attribute-name" id="attribute-name">Attribute Name</div>
+  
+  <div class="attribute-value"></div>
+
+
+      <div class="age-stats-row">
+          <div class="age-stat-box player-count-stat">
+              <div class="age-label"> Highest Value</div>
+              <div class="age-stat-value" id="max-attribute-value">--</div>
           </div>
-        
+      </div>
+
+      <div class="age-stats-row">
+          <div class="age-stat-box player-count-stat">
+              <div class="age-label">Lowest Value</div>
+              <div class="age-stat-value" id="min-attribute-value">--</div>
+          </div>
+      </div>
+
+      <div class="age-stats-row">
+          <div class="age-stat-box player-count-stat">
+              <div class="age-label">Average Value</div>
+              <div class="age-stat-value" id="avg-attribute-value">--</div>
+          </div>
+      </div>
+  </div>
+</div>
+</div>
+
+    
+
+    <table id="data-table" style="display: none;">
+        <thead>
+            <tr>
+                <th>Index</th>
+                <th>Full Name</th>
+                <th>Name</th>
+                <th>Nation</th>
+                <th>League</th>
+                <th>Club</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%for data in league_info%}
+                <tr>
+                    <td>{{ loop.index }}</td>  
+                    <td>{{data.full_name}}</td> 
+                    <td>{{data.name}}</td> 
+                    <td>{{data.nation_Nation}}</td>
+                    <td>{{ data.league_name }}</td> 
+                    <td>{{data.club_name}}</td>
+                </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+    </div>
 </section>
+<section class="scrollable">
+  <!-- Chart Container for Preferred Foot by Position -->
+  <div class="chart-container" id="preferred-foot-chart">
+      <!-- Filter for Position -->
+      <div class="position-filter">
+          <label for="positionSelect-foot">Filter by Position:</label>
+          <select id="positionSelect-foot">
+              <option value="all">All Positions</option>
+              {% for data in pos_attribute_data %}
+                  <option value="{{ data.position }}">{{ data.position }}</option>
+              {% endfor %}
+          </select>
+      </div>
+
+      <!-- Preferred Foot Chart Section -->
+      
+      <div id="preferred-foot-chart-container">
+          <h2 class="chart-title">Preferred Foot</h2>
+          <div id="preferred-foot-chart"></div>
+      </div>
+  </div>
+  <div class="chart-container" id="region-position-chart">
+    <h2 class="chart-title">Position Distribution by Region</h2>
+    <div class="position-filter">
+      <label for="regionSelect">Filter by Region:</label>
+      <select id="regionSelect">
+        <option value="all">All Regions</option>
+        <option value="top_by_position">Top Region per Position</option>
+        {% for region in region_results.region_distribution %}
+          <option value="{{ region.region }}">{{ region.region }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  </section>
 
 
     <section class="scrollable">
-            <!-- Chart Container for Preferred Foot by Position -->
-            <div class="chart-container" id="preferred-foot-chart">
-                <!-- Filter for Position -->
-                <div class="position-filter">
-                    <label for="positionSelect-foot">Filter by Position:</label>
-                    <select id="positionSelect-foot">
-                        <option value="all">All Positions</option>
-                        {% for data in pos_attribute_data %}
-                            <option value="{{ data.position }}">{{ data.position }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <!-- Preferred Foot Chart Section -->
-                
-                <div id="preferred-foot-chart-container">
-                    <h2 class="chart-title">Preferred Foot</h2>
-                    <div id="preferred-foot-chart"></div>
-                </div>
-            </div>
+            
 
 
 
@@ -164,141 +288,7 @@
 
             <div class="attribute-stats-container">
             
-                <!-- The single card to display the selected stats -->
-                <div class="age-stats-container">
-
-                    <!-- Filter for Position -->
-                    <div class="position-filter">
-                        <label for="position-select-attribute-card">Select Position:</label>
-                        <select id="position-select-attribute-card">
-                            <option value="">All Positions</option>
-                            {% for stat in position_stats %}
-                                <option value="{{ stat.position }}">{{ stat.position }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
                 
-                    <!-- Filter for Attribute -->
-                    <div class="position-filter">
-                        <label for="attribute-select-card">Select Attribute:</label>
-                        <select id="attribute-select-card">
-                            <option value="">Select an Attribute</option>
-                            {% for data in attribute_data %}
-                                <option value="{{ data.attribute }}">{{ data.attribute }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-
-                    <div class="attribute-name" id="attribute-name">Attribute Name</div>
-                    
-                    <div class="attribute-value"></div>
-
-
-                        <div class="age-stats-row">
-                            <div class="age-stat-box player-count-stat">
-                                <div class="age-label"> Highest Value</div>
-                                <div class="age-stat-value" id="max-attribute-value">--</div>
-                            </div>
-                        </div>
-
-                        <div class="age-stats-row">
-                            <div class="age-stat-box player-count-stat">
-                                <div class="age-label">Lowest Value</div>
-                                <div class="age-stat-value" id="min-attribute-value">--</div>
-                            </div>
-                        </div>
-
-                        <div class="age-stats-row">
-                            <div class="age-stat-box player-count-stat">
-                                <div class="age-label">Average Value</div>
-                                <div class="age-stat-value" id="avg-attribute-value">--</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-    </section>
-
-
-    <section class="scrollable">
-
-
-    <div class="age-stats-container">
-        
-
-        <div class="position-filter">
-            <label for="position-select-age-card">Select Position:</label>
-            <select id="position-select-age-card">
-                <option value="">All Positions</option>
-                {% for stat in position_stats %}
-                    <option value="{{ stat.position }}">{{ stat.position }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-            <div class="age-label">Average Player Age (<span id="position-name"></span>)</div>
-            <div class="age-value" id="avg-age"></div>
-            <div class="age-label">years</div>
-    
-            <div class="age-stats-row">
-                <div class="age-stat-box">
-                    <div class="age-label">Youngest</div>
-                    <div class="age-stat-value" id="min-age"></div>
-                </div>
-                <div class="age-stat-box">
-                    <div class="age-label">Oldest</div>
-                    <div class="age-stat-value" id="max-age"></div>
-                </div>
-            </div>
-    
-            <div class="age-stats-row">
-                <div class="age-stat-box career-stat">
-                    <div class="age-label">Avg Career Length</div>
-                    <div class="age-stat-value" id="avg-career">--</div>
-                    <div class="age-label">years</div>
-                </div>
-            </div>
-    
-            <div class="age-stats-row">
-                <div class="age-stat-box player-count-stat">
-                    <div class="age-label">Total Players</div>
-                    <div class="age-stat-value" id="position-label">--</div>
-                </div>
-            </div>
-        
-    </div>
-
-
-        <div class="heatmap-container">
-            <div id="position-age-heatmap"></div>
-        </div>
-
-        <table id="data-table" style="display: none;">
-            <thead>
-                <tr>
-                    <th>Index</th>
-                    <th>Full Name</th>
-                    <th>Name</th>
-                    <th>Nation</th>
-                    <th>League</th>
-                    <th>Club</th>
-                </tr>
-            </thead>
-            <tbody>
-                {%for data in league_info%}
-                    <tr>
-                        <td>{{ loop.index }}</td>  
-                        <td>{{data.full_name}}</td> 
-                        <td>{{data.name}}</td> 
-                        <td>{{data.nation_Nation}}</td>
-                        <td>{{ data.league_name }}</td> 
-                        <td>{{data.club_name}}</td>
-                    </tr>
-                {%endfor%}
-            </tbody>
-        </table>
     </section>
     <br>
     <section class="scrollable">
@@ -320,12 +310,12 @@
             </select>
         </div>
     </div>
-
-    
-
-    
     </section>
-
+    <section class="scrollable">
+      <div class="heatmap-container">
+        <div id="position-age-heatmap"></div>
+    </div>
+      </section
 
     <section class="scrollable">
         <div class="pyramid-chart-container">
@@ -359,7 +349,6 @@
 
 
 
-
     <div class="chart-container">
 
         <h2 class="chart-title">Average Attribute - Position Heat Map</h2>
@@ -373,7 +362,6 @@
 
         <div id="position-attribute-heatmap"></div>
       </div>
-    
 
     <section>
 
