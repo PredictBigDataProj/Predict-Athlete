@@ -105,9 +105,7 @@
                 <span></span>
             </label>
         </div>
-        <!-- <div class="logo">
-            <img src="/static/logo.png" alt="Profile">
-        </div> -->
+
         <div class="navbar-title">{{nav_name}}</div>
     </nav>
     </pre>
@@ -155,10 +153,8 @@
         </div>
     
 </div>
-<!-- The single card to display the selected stats -->
 <div class="age-stats-container">
 
-  <!-- Filter for Position -->
   <div class="position-filter">
       <label for="position-select-attribute-card">Select Position:</label>
       <select id="position-select-attribute-card">
@@ -169,7 +165,6 @@
       </select>
   </div>
 
-  <!-- Filter for Attribute -->
   <div class="position-filter">
       <label for="attribute-select-card">Select Attribute:</label>
       <select id="attribute-select-card">
@@ -239,9 +234,7 @@
     </div>
 </section>
 <section class="scrollable">
-  <!-- Chart Container for Preferred Foot by Position -->
   <div class="chart-container" id="preferred-foot-chart">
-      <!-- Filter for Position -->
       <div class="position-filter">
           <label for="positionSelect-foot">Filter by Position:</label>
           <select id="positionSelect-foot">
@@ -252,7 +245,6 @@
           </select>
       </div>
 
-      <!-- Preferred Foot Chart Section -->
       
       <div id="preferred-foot-chart-container">
           <h2 class="chart-title">Preferred Foot</h2>
@@ -272,23 +264,9 @@
       </select>
     </div>
   </div>
-
   </section>
-
-
     <section class="scrollable">
-            
-
-
-
-
-
-
-
-
             <div class="attribute-stats-container">
-            
-                
     </section>
     <br>
     <section class="scrollable">
@@ -296,7 +274,6 @@
         <h2 class="chart-title">Top 5 Player Nationalities</h2>
         <div id="nationality-chart"></div>
     </div>
-
     <div class="chart-container" id="player-position-chart">
         <h2 class="chart-title">Position Distibution by Nation</h2>
         <div class="position-filter">
@@ -616,11 +593,9 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      // Global player counts
       const leftFootedPlayers = {{ left_footed_players }};
       const rightFootedPlayers = {{ right_footed_players }};
   
-      // Data for each position
       const posData = [
         {% for data in pos_attribute_data %}
           {
@@ -631,12 +606,10 @@
         {% endfor %}
       ];
   
-      // Tooltip setup
       const tooltip = d3.select("body").append("div")
         .attr("class", "tooltip")
         .style("opacity", 0);
   
-      // Chart setup
       const margin = { top: 30, right: 30, bottom: 70, left: 120 };
       const width = 600;
       const height = 400;
@@ -839,7 +812,7 @@
         positionSelect.addEventListener("change", updateCard);
         attributeSelect.addEventListener("change", updateCard);
 
-        updateCard();  // Trigger on page load
+        updateCard();
     });
 </script>
 

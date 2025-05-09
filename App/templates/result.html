@@ -37,7 +37,6 @@
     ></script>
   </head>
   <body>
-    <!-- Hidden elements to store template variables for JavaScript -->
     <div
       id="input-data"
       data-input="{{ input_data | tojson }}"
@@ -69,9 +68,7 @@
           <span></span>
         </label>
       </div>
-      <!-- <div class="logo">
-        <img src="/static/logo.png" alt="Profile" />
-      </div> -->
+
       <div class="navbar-title">{{nav_name}}</div>
     </nav>
     {% with messages = get_flashed_messages(with_categories=true) %} {% if

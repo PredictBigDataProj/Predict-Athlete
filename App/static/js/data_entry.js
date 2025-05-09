@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
   var menu = el.querySelector(".more-menu");
   var visible = false;
 
-  //  Function to Show Menu
   function showMenu(e) {
     e.preventDefault();
     if (!visible) {
@@ -15,10 +14,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  //  Function to Hide Menu When Clicking Outside
   function hideMenu(e) {
     if (btn.contains(e.target) || menu.contains(e.target)) {
-      return; // Don't close if clicking inside the menu
+      return;
     }
     if (visible) {
       visible = false;
@@ -28,7 +26,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Ensure Click Works for Profile Link
   document.querySelector(".more-menu a").addEventListener("click", function () {
     console.log("Profile link clicked! Navigating...");
     document.querySelector(".more-menu").classList.remove("show-more-menu");
@@ -37,19 +34,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   btn.addEventListener("click", showMenu, false);
 
-  //  Function to Open Sidebar Menu
   function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
     document.getElementById("main-content").style.marginLeft = "250px";
   }
 
-  //  Function to Close Sidebar Menu
   function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
     document.getElementById("main-content").style.marginLeft = "0";
   }
 
-  // Function to Filter Reviews in Search Bar
   function filterReviews() {
     let input, filter, reviews, studentName, i, txtValue;
     input = document.getElementById("myInput");
@@ -72,7 +66,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  //  Function to Search for Students
   function searchStudents() {
     const query = document.getElementById("searchQuery").value;
 
@@ -109,12 +102,9 @@ document.addEventListener("DOMContentLoaded", function () {
       .catch((error) => console.error("Error fetching students:", error));
   }
 
-  //  Attach Filter Function to Input Field
   document.getElementById("myInput").addEventListener("keyup", filterReviews);
 });
 
-//for navbar
-// Sidenav Functions
 function openNav() {
   document.getElementById("mySidenav").style.width = "250px";
 }
@@ -123,9 +113,7 @@ function closeNav() {
   document.getElementById("mySidenav").style.width = "0";
 }
 
-// Document Ready Function
 document.addEventListener("DOMContentLoaded", function () {
-  // Define physical attributes
   const physicalAttrs = [
     "crossing",
     "finishing",
@@ -163,13 +151,11 @@ document.addEventListener("DOMContentLoaded", function () {
     "gk_reflexes",
   ];
 
-  // Get reasonable max from server (this value is passed from the template)
   const reasonableMax =
     parseInt(
       document.querySelector(".stats-container").dataset.reasonableMax
     ) || 2660;
 
-  // Function to update total
   function updatePhysicalTotal() {
     let total = 0;
     physicalAttrs.forEach((attr) => {
@@ -179,13 +165,11 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-    // Update display
     const totalElement = document.getElementById("physical-total");
     if (totalElement) {
       totalElement.textContent = total;
     }
 
-    // Show warning if exceeds reasonable max
     const warningElement = document.getElementById("validation-warning");
     if (warningElement) {
       if (total > reasonableMax) {
@@ -196,7 +180,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Add event listeners to all physical attribute sliders
   physicalAttrs.forEach((attr) => {
     const slider = document.getElementById(attr);
     const valueInput = document.getElementById(`${attr}_val`);
@@ -204,7 +187,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (slider) {
       slider.addEventListener("input", updatePhysicalTotal);
 
-      // Sync number input with slider
       if (valueInput) {
         valueInput.addEventListener("input", function () {
           slider.value = this.value;
@@ -214,10 +196,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Initial calculation
   updatePhysicalTotal();
 
-  // Add form validation
   const form = document.getElementById("data-entry-form");
   if (form) {
     form.addEventListener("submit", function (event) {
@@ -238,21 +218,18 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Stats expand/collapse functionality
   const expandBtn = document.getElementById("expand-stats");
   if (expandBtn) {
     expandBtn.addEventListener("click", function () {
       const statsCard = document.querySelector(".stats-card");
       const mainContent = document.querySelector(".main-content");
 
-      // Create overlay if it doesn't exist
       let overlay = document.querySelector(".stats-overlay");
       if (!overlay) {
         overlay = document.createElement("div");
         overlay.className = "stats-overlay";
         document.body.appendChild(overlay);
 
-        // Close expanded view when clicking overlay
         overlay.addEventListener("click", function () {
           statsCard.classList.remove("stats-expanded");
           overlay.style.display = "none";
@@ -260,7 +237,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       }
 
-      // Toggle expanded state
       if (statsCard.classList.contains("stats-expanded")) {
         statsCard.classList.remove("stats-expanded");
         overlay.style.display = "none";
@@ -273,12 +249,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Handle responsive behavior for stats card
   function adjustStatsCardPosition() {
     const statsContainer = document.querySelector(".stats-container");
     if (!statsContainer) return;
 
-    // On mobile (screen width less than 992px), remove sticky positioning
     if (window.innerWidth < 992) {
       statsContainer.style.position = "static";
     } else {
@@ -286,7 +260,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Run on page load and window resize
   adjustStatsCardPosition();
   window.addEventListener("resize", adjustStatsCardPosition);
 });

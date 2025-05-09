@@ -17,10 +17,8 @@ def get_player_by_position(position):
     
     for player in players:
         try:
-            # Convert the 'position_groups' string to a list
             positions = ast.literal_eval(player.position_groups)
             
-            # Check if the position exists in the player's positions
             if position in positions:
                 matching_players.append(player)
         except (ValueError, SyntaxError):
@@ -82,7 +80,6 @@ def get_physical_attribute_stats():
     """Calculate statistics for physical attributes in the dataset"""
     players = get_all_players()
     
-    # Define physical attributes
     physical_attrs = [
         "crossing",
     "finishing",
@@ -120,7 +117,6 @@ def get_physical_attribute_stats():
     "gk_reflexes",
     ]
     
-    # Initialize stats dictionary
     stats = {
         "max_total": 0,
         "min_total": float('inf'),
@@ -136,36 +132,29 @@ def get_physical_attribute_stats():
     if total_players == 0:
         return stats
     
-    # Calculate stats
     for player in players:
         physical_total = sum(getattr(player, attr, 0) or 0 for attr in physical_attrs)
         
-        # Update max total
         if physical_total > stats["max_total"]:
             stats["max_total"] = physical_total
             stats["max_player"] = player.name
         
-        # Update min total
         if physical_total < stats["min_total"]:
             stats["min_total"] = physical_total
             stats["min_player"] = player.name
         
-        # Update attribute-specific stats
         for attr in physical_attrs:
             value = getattr(player, attr, 0) or 0
             stats["max_by_attr"][attr] = max(stats["max_by_attr"][attr], value)
             stats["min_by_attr"][attr] = min(stats["min_by_attr"][attr], value)
             stats["avg_by_attr"][attr] += value
         
-        # Add this physical_total to calculate the true average later
         stats["avg_total"] += physical_total
     
-    # Calculate averages - FIXED VERSION
-    stats["avg_total"] /= total_players  # Calculate the true average of total points
+    stats["avg_total"] /= total_players
     for attr in physical_attrs:
         stats["avg_by_attr"][attr] /= total_players
     
-    # Add a reasonable leeway (10% above max)
     stats["reasonable_max"] = int(stats["max_total"] * 1.1)
     
     return stats

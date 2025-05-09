@@ -12,11 +12,7 @@ def jwt_authenticate(username, password):
   return None
 
 
-# def login(username, password):
-#   user = User.query.filter_by(username=username).first()
-#   if user and user.check_password(password):
-#     return create_access_token(identity=username)
-#   return None
+
 
 def login(username, password):
     user = User.query.filter_by(username=username).first()

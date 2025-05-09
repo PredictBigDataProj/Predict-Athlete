@@ -52,9 +52,6 @@
           <span></span>
         </label>
       </div>
-      <!-- <div class="logo">
-        <img src="/static/logo.png" alt="Profile" />
-      </div> -->
       <div class="navbar-title">Data Entry</div>
     </nav>
 
@@ -62,7 +59,6 @@
     <div class="main-content">
 
       <button type="button" class="submit-btn" onclick="loadTyrellData()">Load Tyrell Data</button>
-      <!-- <button type="button" class="submit-btn" onclick="loadIsaData()">Load Isa Data</button> -->
       <button type="button" class="submit-btn" onclick="loadTestPlayerData()">Load Mbappe Data</button>
 
       <div class="form-container">
@@ -76,7 +72,6 @@
                   <i class="fas fa-info-circle tooltip-icon" title="{{ attr | replace('_', ' ') }}-- The average is: {{stat.avg_stat}}" data-position="top"></i>
                 {%endif%}
               {%endfor%}
-              <!-- <i class="fas fa-info-circle tooltip-icon" title="Explanation for {{ attr | replace('_', ' ') }} The average is: {{at}}" data-position="top"></i> -->
               <div class="range-container">
                 <input type="range" id="{{attr}}" name="{{attr}}" {% if
                 attr=='age' %} min="17" max="50" {% set mid_value=(17 + 50) / 2
@@ -106,7 +101,6 @@
         </form>
       </div>
 
-      <!-- Right Column - Stats Display -->
       <div class="stats-container">
         <div class="stats-card">
           <div class="card-header">

@@ -16,16 +16,12 @@ def get_league_name_id(league_name_string):
 
     df['league_name_id'] = df['league_name'].apply(get_league_name_id)
 
-    #print(df[['league_name', 'league_name_id']])
 
 
 
 def calculate_best_league(attributes, country, career_length, preferred_foot, position):
     df = pd.read_csv('App/data/Final_project_finished_Continents.csv')
 
-    # print(f'{country}')
-    # print(f'{career_length}')
-    # print(f'{preferred_foot}')
 
     unique_leagues = df['league_name_id'].unique().tolist()
     league_scores = {}
@@ -38,13 +34,13 @@ def calculate_best_league(attributes, country, career_length, preferred_foot, po
             if league_df[attr].isnull().all():
                 continue
 
-            low_percentile = league_df[attr].quantile(0.05) #These are the low tier players, can adjust to suit
-            high_percentile = league_df[attr].quantile(0.95) #These would be the best of the best players, adjust to suit
+            low_percentile = league_df[attr].quantile(0.05) 
+            high_percentile = league_df[attr].quantile(0.95)
             avg = league_df[attr].mean()
-            p40 = league_df[attr].quantile(0.4) #I just picked 40th percentile but can be adjusted to suit
+            p40 = league_df[attr].quantile(0.4)
             p70 = league_df[attr].quantile(0.7)
             max_val = league_df[attr].max()
-            leeway = 2  #This is basically a constant so that in terms of the max valuje, we give a small amount of tolerance before we penalize for b eing above the max value
+            leeway = 2
             
             if attr == "age":
                 if player_value >= (.90 * avg) and player_value <= (1.10 * avg):
@@ -78,16 +74,6 @@ def calculate_best_league(attributes, country, career_length, preferred_foot, po
                 score[attr] = attr_score
 
 
-
-
-
-
-        # nation_count = nation_df['nation_Nation'].value_counts()
-        # region_count = nation_df['nation_region'].value_counts()
-
-        # max_nation_name = nation_count.idxmax()
-        # max_nation_num = nation_count.max()
-
         nation_count = league_df['nation_Nation'].value_counts()
         print(nation_count)
 
@@ -99,10 +85,6 @@ def calculate_best_league(attributes, country, career_length, preferred_foot, po
             max_nation_name = None  # or some fallback/default behavior
             max_nation_num = 0
 
-        # max_nation_name = nation_count.idxmax()
-        # max_nation_num = nation_count.max()
-        
-        #print(f'We are in this league: {league} with these nations: {nation_count}')
 
         left_df = league_df[league_df['preferred_foot_Left'] == 1]
         right_df = league_df[league_df['preferred_foot_Right'] == 1]
@@ -133,20 +115,16 @@ def calculate_best_league(attributes, country, career_length, preferred_foot, po
         score['nation'] = country_score
 
         total_score = sum(score.values())
-       # print(f'Total score is: {total_score} for {league}')
         league_scores[league] = total_score
 
     best_league = max(league_scores, key=league_scores.get)
     best_score = league_scores[best_league]
 
-   # print(f"The best league fit is: {best_league} with a score of {best_score}")
 
     sorted_leagues = sorted(league_scores.items(), key=lambda x: x[1], reverse=True)
 
     top_3_leagues = sorted_leagues[:3]
 
-    # print("Top 3 league fits:")
-    # for league, score in top_3_leagues:
-    #     print(f"{league}: {score}")
+
 
     return top_3_leagues

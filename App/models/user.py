@@ -2,7 +2,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import UserMixin
 from App.database import db
 
-#Just testing that commits work
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -49,10 +48,9 @@ class User(db.Model):
     weight_kg = db.Column(db.Integer)
     age = db.Column(db.Integer)
 
-    # Add fields for storing prediction results
     most_likely_position = db.Column(db.String(50))
     top_probability = db.Column(db.Float)
-    predictions = db.Column(db.JSON)  # To store all position probabilities as a JSON list
+    predictions = db.Column(db.JSON)
 
 
     
@@ -61,7 +59,6 @@ class User(db.Model):
         self.username = username
         self.set_password(password)
 
-        # Store user attributes
         if input_data:
             for key, value in input_data.items():
                 setattr(self, key, value)
