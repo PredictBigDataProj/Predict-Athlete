@@ -7,7 +7,7 @@
 | ------------------------------- | ----------------------------------------------------------------------------------------- |
 | pip install -r requirements.txt | Initialises all requirements based on the requirements.txt file in the project directory. |
 | flask init                      | Initilises database                                                                       |
-| flask run                       | Runs server                                                                               |
+| flask run                       | Runs development server                                                                               |
 # Setup Requirements
 Before running the project ensure the following:
 * **Python Version Requirement**: Please ensure that **Python 3.9.10** is installed. This specific version was used during the development of the Flask application, and we cannot guarantee its compatibility or proper functioning with other Python versions.
