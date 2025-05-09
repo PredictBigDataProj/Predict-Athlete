@@ -10,14 +10,15 @@ from datetime import timedelta
 from App.database import init_db
 from App.config import load_config
 
-
 from App.controllers import (
     setup_jwt,
     add_auth_context,
     setup_flask_login,
+    load_models
 )
 
 from App.views import views, setup_admin
+
 
 
 
@@ -42,5 +43,16 @@ def create_app(overrides={}):
     def custom_unauthorized_response(error):
         return render_template('401.html', error=error), 401
     app.app_context().push()
-    return app
 
+
+    @app.before_first_request
+    def load_models_once():
+        if not hasattr(app, 'models_loaded'):
+            models_dict, selected_features_dict, pca_dict, scaler = load_models()
+            app.config['MODELS_DICT'] = models_dict
+            app.config['SELECTED_FEATURES_DICT'] = selected_features_dict
+            app.config['PCA_DICT'] = pca_dict
+            app.config['SCALER'] = scaler
+            app.models_loaded = True 
+            print("Models loaded successfully.")
+    return app

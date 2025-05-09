@@ -17,11 +17,11 @@ def load_config(app, overrides):
     app.config["JWT_COOKIE_CSRF_PROTECT"] = False
     app.config['FLASK_ADMIN_SWATCH'] = 'darkly'
 
-    models_dict, selected_features_dict, pca_dict, scaler = load_models()
+    # models_dict, selected_features_dict, pca_dict, scaler = load_models()
 
-    app.config['MODELS_DICT'] = models_dict
-    app.config['SELECTED_FEATURES_DICT'] = selected_features_dict
-    app.config['PCA_DICT'] = pca_dict
-    app.config['SCALER'] = scaler
+    # app.config['MODELS_DICT'] = models_dict
+    # app.config['SELECTED_FEATURES_DICT'] = selected_features_dict
+    # app.config['PCA_DICT'] = pca_dict
+    # app.config['SCALER'] = scaler
     for key in overrides:
         app.config[key] = overrides[key]
