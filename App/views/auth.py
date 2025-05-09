@@ -36,27 +36,15 @@ def login_action():
   message="Bad username or password"
   user = login(data['username'], data['password'])
   if user:
-    # user_type = type(user)
-    # print("User type:", user_type)
     login_user(user)
-    #flash ("mesggae", "success")
-    return redirect("/Home")  # Redirect to student dashboard
+    return redirect("/Home")
     
-    # if (user.user_type == "staff"):
-    #   return redirect("/getMainPage")  # Redirect to student dashboard
-    # elif (user.user_type == "student"):
-    #   return redirect("/StudentHome")  # Redirect to staff dashboard
-    # elif (user.user_type == "admin"):
-    #   return redirect("/admin")
   return render_template('login.html', message=message)
 
 
 @auth_views.route('/logout', methods=['GET'])
 def logout_action():
   logout_user()
-  # data = request.form
-  # user = login(data['username'], data['password'])
-  #return 'logged out!'
   return redirect("/")
 
 
@@ -88,7 +76,6 @@ def user_login_api():
 
 
 @auth_views.route('/api/identify', methods=['GET'])
-# @jwt_required()
 def identify_user_action():
   return jsonify({
       'message':

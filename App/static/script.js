@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
     var menu = el.querySelector('.more-menu');
     var visible = false;
 
-    //  Function to Show Menu
     function showMenu(e) {
         e.preventDefault();
         if (!visible) {
@@ -15,10 +14,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    //  Function to Hide Menu When Clicking Outside
     function hideMenu(e) {
         if (btn.contains(e.target) || menu.contains(e.target)) {
-            return; // Don't close if clicking inside the menu
+            return;
         }
         if (visible) {
             visible = false;
@@ -28,7 +26,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Ensure Click Works for Profile Link
     document.querySelector(".more-menu a").addEventListener("click", function () {
         console.log("Profile link clicked! Navigating...");
         document.querySelector('.more-menu').classList.remove('show-more-menu');
@@ -37,19 +34,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     btn.addEventListener('click', showMenu, false);
 
-    //  Function to Open Sidebar Menu
     function openNav() {
         document.getElementById("mySidenav").style.width = "250px";
         document.getElementById("main-content").style.marginLeft = "250px";
     }
 
-    //  Function to Close Sidebar Menu
     function closeNav() {
         document.getElementById("mySidenav").style.width = "0";
         document.getElementById("main-content").style.marginLeft = "0";
     }
 
-    // Function to Filter Reviews in Search Bar
     function filterReviews() {
         let input, filter, reviews, studentName, i, txtValue;
         input = document.getElementById("myInput");
@@ -70,7 +64,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    //  Function to Search for Students
     function searchStudents() {
         const query = document.getElementById("searchQuery").value;
 
@@ -109,7 +102,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("myInput").addEventListener("keyup", filterReviews);
 });
 
-//for navbar
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
     document.getElementById("main-content").style.marginLeft = "250px";
@@ -129,7 +121,7 @@ function searchStudents() {
         const studentList = document.getElementById("student-list");
         const noStudentsMsg = document.getElementById("no-students");
 
-        studentList.innerHTML = ""; // Clear existing students
+        studentList.innerHTML = "";
 
         if (data.students.length > 0) {
             noStudentsMsg.style.display = "none";

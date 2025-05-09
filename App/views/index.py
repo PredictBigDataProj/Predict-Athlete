@@ -12,7 +12,6 @@ from App.controllers import (
 
 index_views = Blueprint('index_views', __name__, template_folder='../templates')
 
-# df = pd.read_csv('App/data/Single_Record_test.csv')
 
 @index_views.route('/', methods=['GET'])
 def index_page():

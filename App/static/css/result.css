@@ -377,12 +377,10 @@ h3 {
     padding: 16px;
 }
 
-/*For hamburger Menu*/
 .slide {
     margin-top: 13px;
 }
 
-/* From Uiverse.io by Cevorob */
 .burger {
     position: relative;
     width: 40px;
@@ -402,7 +400,6 @@ h3 {
     height: 4px;
     width: 100%;
     background: #fffaff;
-    /* Changed to match navbar text color */
     border-radius: 9px;
     opacity: 1;
     left: 0;
@@ -444,7 +441,6 @@ h3 {
     left: 5px;
 }
 
-/* Button Styling */
 #open-modal-btn {
     display: block;
     width: 300px;
@@ -458,7 +454,6 @@ h3 {
     cursor: pointer;
     transition: background 0.3s ease;
     margin: 2rem auto;
-    /* Center the button with auto margins */
     text-align: center;
 }
 
@@ -466,7 +461,6 @@ h3 {
     background: #175675;
 }
 
-/* SweetAlert2 Custom Styles */
 .swal-form {
     text-align: left;
     padding: 10px;
@@ -497,7 +491,6 @@ h3 {
     margin-right: 5px;
 }
 
-/* League Results Styling */
 .league-results {
     background-color: white;
     border-radius: 12px;
@@ -548,7 +541,6 @@ h3 {
     font-weight: 500;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
     .league-item {
         flex-direction: column;

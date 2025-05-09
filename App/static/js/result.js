@@ -1,29 +1,17 @@
-// Main initialization function
 document.addEventListener("DOMContentLoaded", initializeApp);
 
-// Global variables
 let mostLikelyPosition;
 
-/**
- * Initialize the application
- */
 function initializeApp() {
-  // Initialize data from HTML
   initializeDataFromDOM();
 
-  // Set up UI event listeners
   setupEventListeners();
 
-  // Handle flash messages
   setupFlashMessages();
 
-  // Start animations
   animateRecommendation();
 }
 
-/**
- * Initialize data from DOM elements
- */
 function initializeDataFromDOM() {
   const positionElement = document.getElementById("most-likely-position");
 
@@ -32,23 +20,14 @@ function initializeDataFromDOM() {
   }
 }
 
-/**
- * Set up all event listeners
- */
 function setupEventListeners() {
-  // Menu functionality
   setupMenuListeners();
 
-  // Search functionality
   setupSearchListeners();
 
-  // League fit modal functionality
   setupLeagueFitListeners();
 }
 
-/**
- * Set up menu-related event listeners
- */
 function setupMenuListeners() {
   const moreEl = document.querySelector(".more");
   if (!moreEl) return;
@@ -90,9 +69,6 @@ function setupMenuListeners() {
   }
 }
 
-/**
- * Set up search functionality
- */
 function setupSearchListeners() {
   const searchInput = document.getElementById("myInput");
   if (searchInput) {
@@ -100,9 +76,7 @@ function setupSearchListeners() {
   }
 }
 
-/**
- * Set up league fit modal listeners
- */
+
 function setupLeagueFitListeners() {
   const openModalBtn = document.getElementById("open-modal-btn");
 
@@ -111,11 +85,7 @@ function setupLeagueFitListeners() {
   }
 }
 
-/**
- * Show the SweetAlert2 modal for league fit
- */
 function showLeagueFitModal() {
-  // Get the country options from the datalist
   const countryList = document.getElementById("country-list");
   let countryOptions = "";
 
@@ -175,7 +145,7 @@ function showLeagueFitModal() {
       return {
         country: country,
         preferredFoot: preferredFoot,
-        careerLength: 0, // Hidden field, using default value
+        careerLength: 0,
       };
     },
   }).then((result) => {
@@ -186,9 +156,7 @@ function showLeagueFitModal() {
   });
 }
 
-/**
- * Handle league fit form submission
- */
+
 function handleLeagueFitSubmit(formData) {
   const leagueFitResult = document.getElementById("league-fit-result");
 
@@ -197,12 +165,11 @@ function handleLeagueFitSubmit(formData) {
   const requestData = {
     attributes: inputData,
     country: formData.country,
-    career_length: 0, // Using default value
+    career_length: 0,
     preferred_foot: formData.preferredFoot,
     position: mostLikelyPosition,
   };
 
-  // Show loading state
   Swal.fire({
     title: "Finding best leagues...",
     allowOutsideClick: false,
@@ -214,9 +181,6 @@ function handleLeagueFitSubmit(formData) {
   fetchLeagueFit(requestData, leagueFitResult);
 }
 
-/**
- * Fetch league fit data from server
- */
 function fetchLeagueFit(requestData, resultElement) {
   fetch("/best-fit", {
     method: "POST",
@@ -230,13 +194,10 @@ function fetchLeagueFit(requestData, resultElement) {
       return response.json();
     })
     .then((data) => {
-      // Close loading dialog
       Swal.close();
 
-      // Display results
       displayLeagueFitResults(data, resultElement);
 
-      // Show success message
       Swal.fire({
         title: "Success!",
         text: "We found your best league matches!",
@@ -248,10 +209,8 @@ function fetchLeagueFit(requestData, resultElement) {
     .catch((error) => {
       console.error("Error fetching league fit data:", error);
 
-      // Close loading dialog
       Swal.close();
 
-      // Show error message
       Swal.fire({
         title: "Error!",
         text: "Failed to fetch league data. Please try again.",
@@ -263,9 +222,6 @@ function fetchLeagueFit(requestData, resultElement) {
     });
 }
 
-/**
- * Display league fit results
- */
 function displayLeagueFitResults(data, resultElement) {
   if (!data.top_leagues || !data.top_leagues.length) {
     resultElement.innerHTML = "<p>No league recommendations available.</p>";
@@ -298,9 +254,6 @@ function displayLeagueFitResults(data, resultElement) {
   resultElement.innerHTML = resultHTML;
 }
 
-/**
- * Set up flash messages
- */
 function setupFlashMessages() {
   const flashMessages = document.querySelectorAll(".flash-message");
   if (!flashMessages.length) return;
@@ -313,9 +266,6 @@ function setupFlashMessages() {
   }, 3000);
 }
 
-/**
- * Filter reviews based on search input
- */
 function filterReviews() {
   const input = document.getElementById("myInput");
   if (!input) return;
@@ -337,16 +287,12 @@ function filterReviews() {
   }
 }
 
-/**
- * Animate recommendation elements
- */
 function animateRecommendation() {
   if (typeof anime === "undefined") {
     console.error("anime.js is not loaded!");
     return;
   }
 
-  // Animate position card
   animateElement(".position-card", {
     initialStyles: { opacity: "0", transform: "translateY(20px)" },
     animation: {
@@ -358,7 +304,6 @@ function animateRecommendation() {
     },
   });
 
-  // Animate position name
   animateElement(".position-name", {
     initialStyles: { opacity: "0", transform: "scale(0.8)" },
     animation: {
@@ -370,7 +315,6 @@ function animateRecommendation() {
     },
   });
 
-  // Animate compatibility fill
   const compatibilityFill = document.querySelector(".compatibility-fill");
   if (compatibilityFill) {
     const percentage = parseInt(
@@ -387,7 +331,6 @@ function animateRecommendation() {
     });
   }
 
-  // Animate compatibility text
   animateElement(".compatibility-text", {
     initialStyles: { opacity: "0", transform: "translateY(10px)" },
     animation: {
@@ -399,35 +342,25 @@ function animateRecommendation() {
     },
   });
 
-  // Animate position items
   animatePositionItems();
 
-  // Animate player items
   animatePlayerItems();
 }
 
-/**
- * Helper function to animate an element
- */
 function animateElement(selector, config) {
   const element = document.querySelector(selector);
   if (!element) return;
 
-  // Apply initial styles
   if (config.initialStyles) {
     Object.assign(element.style, config.initialStyles);
   }
 
-  // Apply animation
   anime({
     targets: selector,
     ...config.animation,
   });
 }
 
-/**
- * Animate position items with color-coded bars
- */
 function animatePositionItems() {
   const positionItems = document.querySelectorAll(".position-item");
   if (!positionItems.length) return;
@@ -435,17 +368,14 @@ function animatePositionItems() {
   positionItems.forEach((item, index) => {
     const percentage = parseFloat(item.getAttribute("data-percentage") || "0");
 
-    // Hide very low probabilities
     if (percentage < 1) {
       item.classList.add("very-low-probability");
       return;
     }
 
-    // Set initial styles
     item.style.opacity = "0";
     item.style.transform = "translateX(-20px)";
 
-    // Animate the item
     anime({
       targets: item,
       opacity: [0, 1],
@@ -455,7 +385,6 @@ function animatePositionItems() {
       delay: 2000 + index * 100,
     });
 
-    // Create and animate the bar fill
     const bar = item.querySelector(".position-bar");
     if (bar) {
       createColoredBarFill(bar, percentage);
@@ -463,14 +392,10 @@ function animatePositionItems() {
   });
 }
 
-/**
- * Create a colored bar fill based on percentage
- */
 function createColoredBarFill(barElement, percentage) {
   const barFill = document.createElement("div");
   barFill.className = "position-bar-fill";
 
-  // Add appropriate color class based on percentage
   if (percentage >= 60) {
     barFill.classList.add("probability-high");
   } else if (percentage >= 30) {
@@ -481,7 +406,6 @@ function createColoredBarFill(barElement, percentage) {
 
   barElement.appendChild(barFill);
 
-  // Animate the bar fill
   anime({
     targets: barFill,
     width: percentage + "%",
@@ -491,9 +415,6 @@ function createColoredBarFill(barElement, percentage) {
   });
 }
 
-/**
- * Animate player items
- */
 function animatePlayerItems() {
   const playerItems = document.querySelectorAll(".player-item");
   if (!playerItems.length) return;
@@ -513,9 +434,6 @@ function animatePlayerItems() {
   });
 }
 
-/**
- * Open navigation sidebar
- */
 function openNav() {
   const sidenav = document.getElementById("mySidenav");
   const mainContent = document.getElementById("main-content");
@@ -524,9 +442,6 @@ function openNav() {
   if (mainContent) mainContent.style.marginLeft = "250px";
 }
 
-/**
- * Close navigation sidebar
- */
 function closeNav() {
   const sidenav = document.getElementById("mySidenav");
   const mainContent = document.getElementById("main-content");
