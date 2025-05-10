@@ -112,15 +112,15 @@
 
 <section class="scrollable">
   <div class="age-stats-container">
-    <div class="position-filter">
-        <label for="position-select-age-card">Select Position:</label>
-        <select id="position-select-age-card">
-            <option value="">All Positions</option>
-            {% for stat in position_stats %}
-                <option value="{{ stat.position }}">{{ stat.position }}</option>
-            {% endfor %}
-        </select>
-  </div>
+        <div class="position-filter">
+            <label for="position-select-age-card">Select Position:</label>
+            <select id="position-select-age-card">
+                <option value="">All Positions</option>
+                {% for stat in position_stats %}
+                    <option value="{{ stat.position }}">{{ stat.position }}</option>
+                {% endfor %}
+            </select>
+        </div>
 
         <div class="age-label">Average Player Age (<span id="position-name"></span>)</div>
         <div class="age-value" id="avg-age"></div>
@@ -150,9 +150,10 @@
                 <div class="age-label">Total Players</div>
                 <div class="age-stat-value" id="position-label">--</div>
             </div>
-        </div>
-    
-</div>
+        </div>  
+  </div>
+
+
 <div class="age-stats-container">
 
   <div class="position-filter">
@@ -233,6 +234,10 @@
     </table>
     </div>
 </section>
+
+<br>
+<br>
+
 <section class="scrollable">
   <div class="chart-container" id="preferred-foot-chart">
       <div class="position-filter">
@@ -265,10 +270,17 @@
     </div>
   </div>
   </section>
+
+  <br>
+<br>
+
     <section class="scrollable">
             <div class="attribute-stats-container">
     </section>
+
     <br>
+    <br>
+
     <section class="scrollable">
     <div class="bar-chart-container">
         <h2 class="chart-title">Top 5 Player Nationalities</h2>
@@ -288,11 +300,18 @@
         </div>
     </div>
     </section>
+
+    <br>
+<br>
+
     <section class="scrollable">
       <div class="heatmap-container">
         <div id="position-age-heatmap"></div>
     </div>
-      </section
+  </section>
+
+  <br>
+<br>
 
     <section class="scrollable">
         <div class="pyramid-chart-container">
@@ -310,6 +329,12 @@
         </div>
     </div>
     </section>
+
+    <br>
+<br>
+
+<section class="scrollable">
+
     <div id="heatmap-data" style="display: none;">
         {% for stat in position_stats %}
             <div class="position-data" 
@@ -340,6 +365,9 @@
         <div id="position-attribute-heatmap"></div>
       </div>
 
+    </section>
+    <br>
+    <br>
     <section>
 
         <div class="data-container" style="display: none;">
@@ -362,7 +390,8 @@
     </section>
 
 
-    
+    <br>
+<br>
 
 
     <script>

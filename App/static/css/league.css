@@ -16,6 +16,17 @@
     padding: 20px;
     margin: 20px auto;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;  /* Ensure it doesn't overflow */
+    max-width: 800px;  /* Restrict max width */
+    box-sizing: border-box; /* Include padding in width calculations */
+    height: min-content;
+    max-height: 82vh;
+
+    overflow: hidden; /* ensures no content spills outside */
+    overflow-y: auto;
+    overflow-x: auto;
+
+    
 }
 
 .bar-chart-container {
@@ -70,10 +81,19 @@
     border-radius: 10px;
     padding: 20px;
     margin: 20px auto;
-    width: 300px;
+    height: min-content;
+    max-height: 82vh;
+    /* width: 300px; */
+    width: 100%;  /* Make it responsive */
+    max-width: 300px;  /* Set max width */
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden; /* ensures no content spills outside */
+    box-sizing: border-box;  /* Include padding in width calculations */
+    overflow-y: auto;
+
+    
 }
 
 .age-stats-container:hover {
@@ -81,7 +101,7 @@
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-.age-value {
+/* .age-value {
     font-size: 48px;
     font-weight: bold;
     margin: 10px 0;
@@ -91,6 +111,15 @@
 .age-label {
     font-size: 18px;
     margin-bottom: 5px;
+} */
+
+.age-label,
+.age-stat-value {
+    font-size: 18px;
+    margin-bottom: 5px;
+    word-wrap: break-word;  /* Break long words */
+    overflow-wrap: break-word;  /* Another way to break long words */
+    word-break: break-word;  /* Ensure text breaks within the container */
 }
 
 .age-stats-row {
@@ -99,18 +128,38 @@
     margin-top: 15px;
     padding-top: 15px;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
+    flex-wrap: wrap;  /* Allow wrapping on smaller screens */
 }
 
-.age-stat-box {
+/* .age-stat-box {
     text-align: center;
     padding: 5px 10px;
-}
+    flex: 1 1 30%;  
+    box-sizing: border-box;
+} */
 
-.age-stat-value {
+.age-stat-box {
+    flex: 1 1 45%; /* Adjust width of stat boxes */
+    min-width: 100px;
+    /* background-color: #333; */
+    padding: 10px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+/* .age-stat-value {
     font-size: 24px;
     font-weight: bold;
     color: #FFFAFF;
     margin: 5px 0;
+} */
+
+.age-value {
+    font-size: 2.5rem;  /* Use rem for scalability */
+    font-weight: bold;
+    margin: 10px 0;
+    color: #FFFAFF;
 }
 
 #position-age-heatmap {
@@ -227,20 +276,35 @@
     .pyramid-chart-container,
     .heatmap-container,
     .bar-chart-container {
-        width: 95%;
+        width: 100%;
+        max-width: none;
     }
 
     .age-stats-container {
-        width: 90%;
-        max-width: 300px;
+        /* width: 90%;
+        max-width: 300px; */
+        width: 100%;  /* Make container take full width */
+        max-width: none;  /* Allow it to grow */
     }
 
     .chart-title {
-        font-size: 16px;
+        /* font-size: 16px; */
+        font-size: 1.4rem;  /* Scale font size */
     }
 
     .age-value {
-        font-size: 36px;
+        /* font-size: 36px; */
+        font-size: 3rem;  /* Scale font size */
+    }
+
+    .age-stats-row {
+        flex-direction: column;  /* Stack items vertically on smaller screens */
+        text-align: center;
+    }
+
+    .age-stat-box {
+        flex: 1 1 100%;  /* Allow boxes to take full width */
+        margin: 10px 0;
     }
 }
 
