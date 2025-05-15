@@ -1,0 +1,260 @@
+/* General Styling */
+body {
+  font-family: "Roboto", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f6fa;
+  transition: margin-left 0.5s;
+  padding-top: 90px;
+}
+
+a {
+  text-decoration: none;
+  color: #3d446b;
+}
+
+/* Navbar */
+.navbar {
+  background-color: #25283d;
+  color: #f4f6fa;
+  display: flex;
+  justify-content: left;
+  align-items: left;
+  padding: 20px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-title {
+  padding-left: 15px;
+  padding-top: 10px;
+  font-size: 30px;
+  font-weight: bold;
+  font-family: "Times New Roman", Times, serif;
+}
+
+/* Sidenav Styles */
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1001;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 20px;
+  color: #f1f1f1;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+  cursor: pointer;
+}
+
+#main-content {
+  margin-top: 80px;
+  transition: margin-left 0.5s;
+  padding: 16px;
+}
+
+/* Reviews Section */
+.reviews-container {
+  width: 50%;
+  margin: 20px auto;
+}
+
+h3 {
+  color: #474f86;
+  font-size: 24px;
+  margin-top: 100px;
+}
+
+.hero-section {
+  background-color: #e5e9f4;
+  padding: 60px 0;
+  margin: 20px auto;
+  width: 80%;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.hero-content {
+  width: 80%;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.hero-section h1 {
+  font-size: 42px;
+  color: #3d446b;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.hero-section p {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #474f86;
+  margin-bottom: 30px;
+  max-width: 600px;
+}
+
+/* How we got started section */
+.some-info {
+  background-color: #e5e9f4;
+  padding: 50px 0;
+  margin: 40px auto;
+  width: 80%;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.some-info h2 {
+  color: #3d446b;
+  font-size: 32px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.some-info p {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #474f86;
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 0 20px;
+}
+
+@media (max-width: 768px) {
+  .some-info {
+    width: 90%;
+    padding: 30px 0;
+  }
+  
+  .some-info h2 {
+    font-size: 28px;
+  }
+  
+  .some-info p {
+    font-size: 16px;
+  }
+}
+
+/* Hide scrollbar for Webkit browsers */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/*For hamburger Menu*/
+.slide {
+  margin-top: 13px;
+}
+.burger {
+  position: relative;
+  width: 40px;
+  height: 30px;
+  background: transparent;
+  cursor: pointer;
+  display: block;
+  padding-right: 5px;
+}
+
+.burger input {
+  display: none;
+}
+
+.burger span {
+  display: block;
+  position: absolute;
+  height: 4px;
+  width: 100%;
+  background: #fffaff;
+  border-radius: 9px;
+  opacity: 1;
+  left: 0;
+  transform: rotate(0deg);
+  transition: 0.25s ease-in-out;
+}
+
+.burger span:nth-of-type(1) {
+  top: 0px;
+  transform-origin: left center;
+}
+
+.burger span:nth-of-type(2) {
+  top: 50%;
+  transform: translateY(-50%);
+  transform-origin: left center;
+}
+
+.burger span:nth-of-type(3) {
+  top: 100%;
+  transform-origin: left center;
+  transform: translateY(-100%);
+}
+
+/* Flash Messages */
+.flash-messages {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  z-index: 1000;
+}
+
+.flash-message {
+  padding: 12px 18px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: bold;
+  font-family: Arial, sans-serif;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* Success Messages */
+.flash-message.success {
+  background-color: #7087c1;
+  color: white;
+}
+
+/* Error Messages */
+.flash-message.error {
+  background-color: #5d6fb3;
+  color: white;
+}
+
+/* Warning Messages */
+.flash-message.warning {
+  background-color: #525fa3;
+  color: white;
+}
+
+/* Info Messages */
+.flash-message.info {
+  background-color: #474f86;
+  color: white;
+}

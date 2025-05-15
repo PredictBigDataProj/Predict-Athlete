@@ -23,230 +23,12 @@
     ></script>
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/home_page.css') }}"
+    />
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-    <style>
-      /* General Styling */
-      body {
-        font-family: "Roboto", sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f4f6fa;
-        transition: margin-left 0.5s;
-        padding-top: 90px;
-      }
-
-      a {
-        text-decoration: none;
-        color: #3d446b;
-      }
-
-      /* Navbar */
-      .navbar {
-        background-color: #25283d;
-        color: #f4f6fa;
-        display: flex;
-        justify-content: left;
-        align-items: left;
-        padding: 20px;
-        position: fixed;
-        width: 100%;
-        top: 0;
-        z-index: 1000;
-      }
-
-      .navbar-title {
-        padding-left: 15px;
-        padding-top: 10px;
-        font-size: 30px;
-        font-weight: bold;
-        font-family: "Times New Roman", Times, serif;
-      }
-
-      /* Sidenav Styles */
-      .sidenav {
-        height: 100%;
-        width: 0;
-        position: fixed;
-        z-index: 1001;
-        top: 0;
-        left: 0;
-        background-color: #111;
-        overflow-x: hidden;
-        transition: 0.5s;
-        padding-top: 60px;
-      }
-
-      .sidenav a {
-        padding: 8px 8px 8px 32px;
-        text-decoration: none;
-        font-size: 20px;
-        color: #f1f1f1;
-        display: block;
-        transition: 0.3s;
-      }
-
-      .sidenav a:hover {
-        color: #f1f1f1;
-      }
-
-      .sidenav .closebtn {
-        position: absolute;
-        top: 0;
-        right: 25px;
-        font-size: 36px;
-        margin-left: 50px;
-        cursor: pointer;
-      }
-
-      #main-content {
-        margin-top: 80px;
-        transition: margin-left 0.5s;
-        padding: 16px;
-      }
-
-      /* Reviews Section */
-      .reviews-container {
-        width: 50%;
-        margin: 20px auto;
-      }
-
-      h3 {
-        color: #474f86;
-        font-size: 24px;
-        margin-top: 100px;
-      }
-
-      .hero-section {
-        background-color: #e5e9f4;
-        padding: 60px 0;
-        margin: 20px auto;
-        width: 80%;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      }
-
-      .hero-content {
-        width: 80%;
-        margin: 0 auto;
-        text-align: left;
-      }
-
-      .hero-section h1 {
-        font-size: 42px;
-        color: #3d446b;
-        margin-bottom: 20px;
-        font-weight: 600;
-      }
-
-      .hero-section p {
-        font-size: 18px;
-        line-height: 1.6;
-        color: #474f86;
-        margin-bottom: 30px;
-        max-width: 600px;
-      }
-
-      /* Hide scrollbar for Webkit browsers */
-      ::-webkit-scrollbar {
-        display: none;
-      }
-
-      /*For hamburger Menu*/
-      .slide {
-        margin-top: 13px;
-      }
-      .burger {
-        position: relative;
-        width: 40px;
-        height: 30px;
-        background: transparent;
-        cursor: pointer;
-        display: block;
-        padding-right: 5px;
-      }
-
-      .burger input {
-        display: none;
-      }
-
-      .burger span {
-        display: block;
-        position: absolute;
-        height: 4px;
-        width: 100%;
-        background: #fffaff;
-        border-radius: 9px;
-        opacity: 1;
-        left: 0;
-        transform: rotate(0deg);
-        transition: 0.25s ease-in-out;
-      }
-
-      .burger span:nth-of-type(1) {
-        top: 0px;
-        transform-origin: left center;
-      }
-
-      .burger span:nth-of-type(2) {
-        top: 50%;
-        transform: translateY(-50%);
-        transform-origin: left center;
-      }
-
-      .burger span:nth-of-type(3) {
-        top: 100%;
-        transform-origin: left center;
-        transform: translateY(-100%);
-      }
-
-      /* Flash Messages */
-      .flash-messages {
-        position: fixed;
-        top: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 60%;
-        z-index: 1000;
-      }
-
-      .flash-message {
-        padding: 12px 18px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-        text-align: center;
-        font-weight: bold;
-        font-family: Arial, sans-serif;
-        opacity: 1;
-        transition: opacity 0.5s ease-in-out;
-      }
-
-      /* Success Messages */
-      .flash-message.success {
-        background-color: #7087c1;
-        color: white;
-      }
-
-      /* Error Messages */
-      .flash-message.error {
-        background-color: #5d6fb3;
-        color: white;
-      }
-
-      /* Warning Messages */
-      .flash-message.warning {
-        background-color: #525fa3;
-        color: white;
-      }
-
-      /* Info Messages */
-      .flash-message.info {
-        background-color: #474f86;
-        color: white;
-      }
-    </style>
   </head>
   <body>
     <!-- Sidenav -->
@@ -257,7 +39,6 @@
       <a href="/Home">Home</a>
       <a href="/data_entry">Data Entry</a>
       <a href="/drills">Drills</a>
-
     </div>
 
     <!-- Navbar -->
@@ -271,9 +52,6 @@
           <span></span>
         </label>
       </div>
-      <!-- <div class="logo">
-        <img src="/static/logo.png" alt="Profile" />
-      </div> -->
       <div class="navbar-title">Home Page</div>
     </nav>
 
@@ -289,13 +67,55 @@
       <div class="hero-content">
         <h1>Football Player Prediction App</h1>
         <p>
-          Our Application uses advanced machine learning algorithms to predict the best position for a football player based on their statistics. 
-          This can be used by coaches, scouts and players to make informed decisions and improve their performance.
+          Our Application uses advanced machine learning algorithms to predict
+          the best position for a football player based on their statistics.
+          This can be used by coaches, scouts and players to make informed
+          decisions and improve their performance.
         </p>
       </div>
-      <div class="hero-content">
-
-
+    </section>
+    <section class="our-team">
+      <h2>Our Team</h2>
+      <div class="team-members">
+        <div class="team-member left" id="team-member-left">
+          <div class="member-card">
+            <div class="member-image">
+              <img src="static/images/team1.jpg" alt="Tyrell Lewis" />
+            </div>
+            <div class="member-info">
+              <h3>Tyrell Lewis</h3>
+              <p class="member-title">Co-Founder of Predict-Athlete</p>
+              <p>You can write something if you want.</p>
+              <div class="member-links">
+                <a href="https://github.com/Tyrell-Lewis">GitHub</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="team-member right" id="team-member-right">
+          <div class="member-card">
+            <div class="member-image">
+              <img src="static/images/team2.jpg" alt="Isa Abdul-Hamid" />
+            </div>
+            <div class="member-info">
+              <h3>Isa Abdul-Hamid</h3>
+              <p class="member-title">Co-Founder of Predict-Athlete</p>
+              <p>You can write something if you want.</p>
+              <div class="member-links">
+                <a href="https://github.com/IAbdulHamid13">GitHub</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="some-info">
+      <h2>How we got started</h2>
+      <p>
+        At first this was just a university project to create a model, now we're
+        building a full application on top of the model to help coaches, scouts,
+        players and whoever else can benefit from the model.
+      </p>
     </section>
     <div class="reviews-container">
       <h3>Dive into League Analytics</h3>
@@ -740,6 +560,136 @@
             setTimeout(() => (msg.style.display = "none"), 500);
           });
         }, 3000);
+      });
+    </script>
+    <style>
+      .our-team {
+        padding: 60px 0;
+        background-color: #f4f6fa;
+        overflow-x: hidden;
+      }
+
+      .our-team h2 {
+        text-align: center;
+        color: #3d446b;
+        font-size: 36px;
+        margin-bottom: 40px;
+      }
+
+      .team-members {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        position: relative;
+      }
+
+      .team-member {
+        margin-bottom: 60px;
+        position: relative;
+        width: 45%;
+      }
+
+      .team-member.left {
+        margin-right: auto;
+        transform: translateX(-100%);
+        opacity: 0;
+      }
+
+      .team-member.right {
+        margin-left: auto;
+        transform: translateX(100%);
+        opacity: 0;
+      }
+
+      .member-card {
+        display: flex;
+        background-color: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .member-image {
+        flex: 0 0 200px;
+        background-color: #e5e9f4;
+      }
+
+      .member-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .member-info {
+        padding: 25px;
+        flex: 1;
+      }
+
+      .member-info h3 {
+        color: #25283d;
+        font-size: 24px;
+        margin: 0 0 5px 0;
+      }
+
+      .member-title {
+        color: #474f86;
+        font-size: 16px;
+        margin: 0 0 15px 0;
+        font-style: italic;
+      }
+
+      .member-links {
+        margin-top: 20px;
+      }
+
+      .member-links a {
+        display: inline-block;
+        margin-right: 15px;
+        color: #474f86;
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+
+      .member-links a:hover {
+        color: #25283d;
+      }
+
+      @media (max-width: 768px) {
+        .team-member {
+          width: 90%;
+        }
+
+        .member-card {
+          flex-direction: column;
+        }
+
+        .member-image {
+          flex: 0 0 200px;
+        }
+      }
+    </style>
+    <!--This is the animejs library for animations-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        anime({
+          targets: "#team-member-left",
+          translateX: ["-100%", "0%"],
+          opacity: [0, 1],
+          easing: "easeOutExpo",
+          duration: 1200,
+          delay: 300,
+        });
+
+        anime({
+          targets: "#team-member-right",
+          translateX: ["100%", "0%"],
+          opacity: [0, 1],
+          easing: "easeOutExpo",
+          duration: 1200,
+          delay: 600,
+        });
       });
     </script>
   </body>
