@@ -1,0 +1,48 @@
+{% extends "newLayout.html" %}
+{% block title %}Create Drills Page{% endblock %}
+{% block page %}Create Drills{% endblock %}
+
+
+
+{{ super() }}
+
+
+{%block content%}
+    <p>Put form for create drills here</p>
+
+    <form action="/createDrill" method="post">
+        <input type="text" name="drill-name" placeholder="Drill Name" required>
+
+        <label for="drill-difficulties">Select your country:</label>
+        <input list="drill-difficulties-list" id="drill-difficulties" name="drill-difficulty" placeholder="Select Difficulty" required>
+          <datalist id="drill-difficulties-list" style="display: none">
+            <option value="easy"></option>
+            <option value="medium"></option>
+            <option value="hard"></option>
+
+          </datalist>
+
+
+        <label for="drill-categories">Select your country:</label>
+          <input list="drill-categories-list" id="drill-categories" name="drill-category" placeholder="Start typing your category" required>
+          <datalist id="drill-categories-list" style="display: none">
+            <option value="Passing"></option>
+            <option value="Shooting"></option>
+            <option value="Defending"></option>
+            <option value="Goalkeeping"></option>
+            <option value="Set-Pieces"></option>
+          </datalist>
+
+        <textarea name="drill-details" placeholder="Enter description..." style="resize: both; min-height: 200px;" required></textarea>
+        <button type="submit">Submit</button>
+    </form>
+
+    {% if message %}
+    <div class="message-container">
+        <div class="message">
+            <p>{{ message }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+{%endblock%}

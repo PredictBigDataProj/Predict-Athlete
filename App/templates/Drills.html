@@ -22,7 +22,7 @@
                                 <a href="#" class="more-menu-btn" role="menuitem">Favourites</a>
                             </li>
                             <li class="more-menu-item" role="presentation">
-                                <a href="#" class="more-menu-btn" role="menuitem">Create</a>
+                                <a href="/createDrillPage" class="more-menu-btn" role="menuitem">Create</a>
                             </li>
                             <li class="more-menu-item" role="presentation">
                                 <a href="#" class="more-menu-btn" role="menuitem">My List</a>
@@ -41,11 +41,11 @@
 
 {%block content%}
 
-        {%for x in range (1,3)%}
+        {%for drill in drills%}
                 <div class="drill-card">
                         <!-- Video and Image-->
 
-                        <h3 class="drill-title">Drill Name Placeholder</h3>
+                        <h3 class="drill-title">{{drill.name}} </h3>
                         <div class="drill-media">
                                 <!-- For soem of them, switch to a image instead of video. Only do videop for open source videos which we are allowed to use. Mainly here for future use where we allow users to upload their own videos. maybe.-->
                                 <video controls width="100%" poster="/static/drill-poster.jpg">
@@ -57,7 +57,7 @@
                         <!-- Card Info -->
                         <div class="drill-content">
                                 <p class="drill-description">
-                                        Drill Information goes here
+                                        {{drill.details}}
                                 </p>
                 
                                 <div class="drill-stats">
@@ -71,7 +71,7 @@
                 
                                 <div class="drill-difficulty">
                                         <strong>Difficulty: (Change to a star rating maybe works better and allows for filtering)</strong>
-                                        <span class="difficulty easy">Easy</span> <!-- You can style this with color codes -->
+                                        <span class="difficulty {{drill.difficulty}}">{{drill.difficulty}} </span> <!-- You can style this with color codes -->
                                 </div>
                         </div>
                 </div>
