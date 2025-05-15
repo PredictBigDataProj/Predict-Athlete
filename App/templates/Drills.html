@@ -1,5 +1,79 @@
 {% extends "newLayout.html" %}
+{% block title %}Drills Page{% endblock %}
+{% block page %}Come up with a name{% endblock %}
+
+{%block navbar_tabs%}
+
+        <!-- Profile Options -->
+        <div class="container">
+                <div class="more">
+                    <div class="profile-pic more-btn">
+                        <!-- <img src="#" alt="Profile"> -->
+                        <p>Click me</p>
+                    </div>
+                    
+                    <div class="more-menu">
+                        <div class="more-menu-caret">
+                            <div class="more-menu-caret-outer"></div>
+                            <div class="more-menu-caret-inner"></div>
+                        </div>
+                        <ul class="more-menu-items" tabindex="-1" role="menu" aria-labelledby="more-btn" aria-hidden="true">
+                            <li class="more-menu-item" role="presentation">
+                                <a href="#" class="more-menu-btn" role="menuitem">Favourites</a>
+                            </li>
+                            <li class="more-menu-item" role="presentation">
+                                <a href="#" class="more-menu-btn" role="menuitem">Create</a>
+                            </li>
+                            <li class="more-menu-item" role="presentation">
+                                <a href="#" class="more-menu-btn" role="menuitem">My List</a>
+                            </li>
+                            <li class="more-menu-item" role="presentation">
+                                <a href="#" class="more-menu-btn" role="menuitem">Just filler names</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+{%endblock%}
+
+{{ super() }}
 
 {%block content%}
 
+        {%for x in range (1,3)%}
+                <div class="drill-card">
+                        <!-- Video and Image-->
+
+                        <h3 class="drill-title">Drill Name Placeholder</h3>
+                        <div class="drill-media">
+                                <!-- For soem of them, switch to a image instead of video. Only do videop for open source videos which we are allowed to use. Mainly here for future use where we allow users to upload their own videos. maybe.-->
+                                <video controls width="100%" poster="/static/drill-poster.jpg">
+                                <source src="/static/drill-video.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                                </video>
+                        </div>
+                
+                        <!-- Card Info -->
+                        <div class="drill-content">
+                                <p class="drill-description">
+                                        Drill Information goes here
+                                </p>
+                
+                                <div class="drill-stats">
+                                        <strong>Stats workd on section (make this better)</strong>
+                                        <ul>
+                                                <li>Agility</li>
+                                                <li>Sprint Speed</li>
+                                                <li>Balance</li>
+                                        </ul>
+                                </div>
+                
+                                <div class="drill-difficulty">
+                                        <strong>Difficulty: (Change to a star rating maybe works better and allows for filtering)</strong>
+                                        <span class="difficulty easy">Easy</span> <!-- You can style this with color codes -->
+                                </div>
+                        </div>
+                </div>
+        {%endfor%}
 {%endblock%}

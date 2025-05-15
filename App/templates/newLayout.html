@@ -5,23 +5,24 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{% block title%}{%endblock%}</title>
 
-        <link
+        <!-- <link
         href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
         rel="stylesheet"
-        />
-        <link
+        /> -->
+        <!-- <link
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
         rel="stylesheet"
-        />
-        <link rel="stylesheet" href="styles.css" />
-        <link
+        /> -->
+        <!-- <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"
-        />
-        <script
+        /> -->
+        <!-- <script
         src="https://kit.fontawesome.com/a076d05399.js"
         crossorigin="anonymous"
-        ></script>
+        ></script> -->
+
+        
         <!-- put links for css and other libraries here!!! -->
         <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
         <!-- Leaflet JS -->
@@ -61,13 +62,20 @@
                 height: 60px;
                 z-index: 1000;
             }
-
             .navbar-title {
                 padding-left: 15px;
                 padding-top: 10px;
                 font-size: 30px;
                 font-weight: bold;
-                font-family: "Times New Roman", Times, serif;
+                font-family: "Times New Roman", Times, sans-serif;
+            }
+
+            .navbar-tabs {
+                font-size: 30px;
+                font-weight: bold;
+                font-family: "Times New Roman", Times, sans-serif;
+                padding-left: 50px;
+                padding-top: 10px;
             }
 
             .profile-pic img {
@@ -130,7 +138,7 @@
             .container {
                 position: fixed;
                 top: 6%; /* adjust the distance from top */
-                left: 96%; /* adjusted to have at the right! */
+                left: 93%; /* adjusted to have at the right! */
                 margin-right: -50%;
                 transform: translate(-50%, -50%);
                 text-align: center;
@@ -169,6 +177,7 @@
                 top: 100%;
                 z-index: 900;
                 width: 100px;
+                min-width: min-content;
                 float: left;
                 padding: 10px 0;
                 margin-top: 9px;
@@ -309,6 +318,107 @@
                 transform: translateY(-100%);
             }
 
+
+            /* .custom-card {
+                background-color: #ffffff;
+                border-radius: 10px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                padding: 1.5rem;
+                margin: 1rem 0;
+                transition: box-shadow 0.3s ease;
+                max-width: 400px;
+            }
+
+            .custom-card:hover {
+                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            }
+
+            .custom-card-header h3 {
+                margin: 0 0 1rem 0;
+                font-size: 1.5rem;
+                color: #333;
+            }
+
+            .custom-card-body {
+                font-size: 1rem;
+                color: #555;
+            }
+
+            .custom-card-footer {
+                
+            }
+
+            .custom-card-footer a {
+                text-decoration: none;
+                color: #1976d2;
+                font-weight: bold;
+            }
+
+            .custom-card-footer a:hover {
+                text-decoration: underline;
+            } */
+
+            .drill-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            max-width: 400px;
+            margin: 20px auto;
+            }
+
+            .drill-card:hover {
+            transform: scale(1.02);
+            }
+
+            .drill-media {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            }
+
+            .drill-content {
+            padding: 15px;
+            }
+
+            .drill-title {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            }
+
+            .drill-description {
+            font-size: 1rem;
+            color: #444;
+            }
+
+            .drill-stats ul {
+            padding-left: 20px;
+            margin: 5px 0;
+            }
+
+            .difficulty {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            }
+
+            .difficulty.easy {
+            background-color: #d4edda;
+            color: #155724;
+            }
+
+            .difficulty.medium {
+            background-color: #fff3cd;
+            color: #856404;
+            }
+
+            .difficulty.hard {
+            background-color: #f8d7da;
+            color: #721c24;
+            }
+
             /* Put the css rules for phone screens here!!! */
             @media (max-width: 480px){
 
@@ -355,6 +465,9 @@
             <img src="/static/logo.png" alt="Profile" />
             </div> -->
             <div class="navbar-title">{% block page %}{% endblock %}</div>
+
+            <div class="navbar-tabs"> {%block navbar_tabs%} {%endblock%} </div>
+
         </nav>
 
 
@@ -409,7 +522,7 @@
                     document
                     .querySelector(".more-menu")
                     .classList.remove("show-more-menu");
-                    window.location.href = "/staff-profile";
+                    window.location.href = "#";
                 });
         
                 btn.addEventListener("click", showMenu, false);
