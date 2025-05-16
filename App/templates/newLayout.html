@@ -358,67 +358,6 @@
                 text-decoration: underline;
             } */
 
-            .drill-card {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            overflow: hidden;
-            transition: transform 0.3s ease;
-            max-width: 400px;
-            margin: 20px auto;
-            }
-
-            .drill-card:hover {
-            transform: scale(1.02);
-            }
-
-            .drill-media {
-            width: 100%;
-            height: auto;
-            overflow: hidden;
-            }
-
-            .drill-content {
-            padding: 15px;
-            }
-
-            .drill-title {
-            font-size: 1.4rem;
-            margin-bottom: 10px;
-            }
-
-            .drill-description {
-            font-size: 1rem;
-            color: #444;
-            }
-
-            .drill-stats ul {
-            padding-left: 20px;
-            margin: 5px 0;
-            }
-
-            .difficulty {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-weight: bold;
-            }
-
-            .difficulty.Easy {
-            background-color: #d4edda;
-            color: #155724;
-            }
-
-            .difficulty.Medium {
-            background-color: #fff3cd;
-            color: #856404;
-            }
-
-            .difficulty.Hard {
-            background-color: #f8d7da;
-            color: #721c24;
-            }
-
             /* Put the css rules for phone screens here!!! */
             @media (max-width: 480px){
 
@@ -434,7 +373,7 @@
             }
 
         </style>
-
+        {% block style %}{% endblock %}
     </head>
 
     <body>

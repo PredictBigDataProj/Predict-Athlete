@@ -2,6 +2,96 @@
 {% block title %}Drills Page{% endblock %}
 {% block page %}Come up with a name{% endblock %}
 
+{% block style %}
+
+<style>
+        .drill-card-container {
+        display: grid;
+        /* grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); */
+        grid-template-columns: repeat(3, 1fr); /*Change the 3 to match however many columns you want */
+        gap: 1.5rem; /* space between cards */
+        padding: 2rem;
+        }
+
+        .drill-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease;
+        max-width: 400px;
+        margin: 20px auto;
+        display: flex;
+        flex-direction: column;
+        }
+
+        .drill-card:hover {
+        transform: scale(1.02);
+        }
+
+        .drill-media {
+        width: 100%;
+        height: auto;
+        overflow: hidden;
+        }
+
+        .drill-content {
+        padding: 15px;
+        }
+
+        .drill-title {
+        font-size: 1.4rem;
+        margin-bottom: 10px;
+        }
+
+        .drill-description {
+        font-size: 1rem;
+        color: #444;
+        }
+
+        .drill-stats ul {
+        padding-left: 20px;
+        margin: 5px 0;
+        }
+
+        .difficulty {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-weight: bold;
+        }
+
+        .difficulty.Easy {
+        background-color: #d4edda;
+        color: #155724;
+        }
+
+        .difficulty.Medium {
+        background-color: #fff3cd;
+        color: #856404;
+        }
+
+        .difficulty.Hard {
+        background-color: #f8d7da;
+        color: #721c24;
+        }
+
+        /* Make it responsive */
+        @media (max-width: 1024px) {
+        .drill-card-container {
+        grid-template-columns: repeat(2, 1fr);
+        }
+        }
+
+        @media (max-width: 600px) {
+        .drill-card-container {
+        grid-template-columns: 1fr;
+        }
+        }
+</style>
+
+{%endblock%}
+
 {%block navbar_tabs%}
 
         <!-- Profile Options -->
@@ -41,6 +131,7 @@
 
 {%block content%}
 
+<div class="drill-card-container">
         {%for drill in drills%}
                 <div class="drill-card">
                         <!-- Video and Image-->
@@ -76,4 +167,5 @@
                         </div>
                 </div>
         {%endfor%}
+</div>
 {%endblock%}
