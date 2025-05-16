@@ -1,0 +1,84 @@
+{% extends "newLayout.html" %}
+{% block title %}Create Drills Page{% endblock %}
+{% block page %}Create Drills{% endblock %}
+
+
+
+{{ super() }}
+
+{% block style %}
+<style>
+  /* Styles only for the Create Drills page */
+  form {
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+  }
+
+  input, textarea {
+    display: block;
+    width: 96%;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .message-container {
+    margin-top: 1rem;
+    background-color: #cc060698;
+    border-left: 5px solid #e82603;
+    padding: 1rem;
+  }
+</style>
+{% endblock %}
+
+
+{%block content%}
+    
+
+    {% if message %}
+    <div class="message-container">
+        <div class="message">
+            <p>{{ message }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <form action="/createDrill" method="post">
+
+        <label for="drill-name-input" >Enter Drill Name:</label>
+        <input type="text" id="drill-name-input"  name="drill-name" placeholder="Type Drill Name Here..." required>
+
+        <label for="drill-difficulties">Select Difficulty:</label>
+        <input list="drill-difficulties-list" id="drill-difficulties" name="drill-difficulty" placeholder="Select Difficulty..." required>
+          <datalist id="drill-difficulties-list">
+            <option value="Easy"></option>
+            <option value="Medium"></option>
+            <option value="Hard"></option>
+
+          </datalist>
+
+
+        <label for="drill-categories">Select Category:</label>
+          <input list="drill-categories-list" id="drill-categories" name="drill-category" placeholder="Start typing your category..." required>
+          <datalist id="drill-categories-list" style="display: none">
+            <option value="Passing"></option>
+            <option value="Shooting"></option>
+            <option value="Defending"></option>
+            <option value="Goalkeeping"></option>
+            <option value="Set-Pieces"></option>
+          </datalist>
+
+        <label for="text-area-input" >Drill Details:</label>
+        <textarea id="text-area-input" name="drill-details" placeholder="Enter description..." style="resize: vertical; min-height: 200px;" required></textarea>
+        
+        <p>Not here right now, but will have an option to attatch videos</p>
+        
+        <button type="submit">Submit</button>
+    </form>
+
+
+{%endblock%}
+

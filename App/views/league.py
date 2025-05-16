@@ -339,20 +339,20 @@ def get_league_page(league_id, country):
             "attributes": {},
         }
 
-        if abs(count_left - count_right) < 5 or abs(count_left - count_right) < (
-            0.10 * pos_total
-        ):
-            print(
-                f"Not really a better chance if you are left footed or right footed as a {pos} in {league_id}"
-            )
-        else:
+        # if abs(count_left - count_right) < 5 or abs(count_left - count_right) < (
+        #     0.10 * pos_total
+        # ):
+        #     print(
+        #         f"Not really a better chance if you are left footed or right footed as a {pos} in {league_id}"
+        #     )
+        # else:
 
-            if count_left > count_right:
-                print(f"Better chance if you are left footed as a {pos} in {league_id}")
-            else:
-                print(
-                    f"Better chance if you are right footed as a {pos} in {league_id}"
-                )
+        #     if count_left > count_right:
+        #         print(f"Better chance if you are left footed as a {pos} in {league_id}")
+        #     else:
+        #         print(
+        #             f"Better chance if you are right footed as a {pos} in {league_id}"
+        #         )
         if pos not in attr_max:
             attr_max[pos] = {}
             attr_min[pos] = {}

@@ -2,9 +2,99 @@
 {% block title %}Drills Page{% endblock %}
 {% block page %}Come up with a name{% endblock %}
 
+{% block style %}
+
+<style>
+        .drill-card-container {
+        display: grid;
+        /* grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); */
+        grid-template-columns: repeat(3, 1fr); /*Change the 3 to match however many columns you want */
+        gap: 1.5rem; 
+        padding: 2rem;
+        }
+
+        .drill-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease;
+        max-width: 400px;
+        margin: 20px auto;
+        display: flex;
+        flex-direction: column;
+        }
+
+        .drill-card:hover {
+        transform: scale(1.02);
+        }
+
+        .drill-media {
+        width: 100%;
+        height: auto;
+        overflow: hidden;
+        }
+
+        .drill-content {
+        padding: 15px;
+        }
+
+        .drill-title {
+        font-size: 1.4rem;
+        margin-bottom: 10px;
+        }
+
+        .drill-description {
+        font-size: 1rem;
+        color: #444;
+        }
+
+        .drill-stats ul {
+        padding-left: 20px;
+        margin: 5px 0;
+        }
+
+        .difficulty {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-weight: bold;
+        }
+
+        .difficulty.Easy {
+        background-color: #d4edda;
+        color: #155724;
+        }
+
+        .difficulty.Medium {
+        background-color: #fff3cd;
+        color: #856404;
+        }
+
+        .difficulty.Hard {
+        background-color: #f8d7da;
+        color: #721c24;
+        }
+
+        
+        @media (max-width: 1024px) {
+        .drill-card-container {
+        grid-template-columns: repeat(2, 1fr);
+        }
+        }
+
+        @media (max-width: 600px) {
+        .drill-card-container {
+        grid-template-columns: 1fr;
+        }
+        }
+</style>
+
+{%endblock%}
+
 {%block navbar_tabs%}
 
-        <!-- Profile Options -->
+        <!-- Profile Options (Change this back to profile options which is available on everypage)-->
         <div class="container">
                 <div class="more">
                     <div class="profile-pic more-btn">
@@ -22,7 +112,7 @@
                                 <a href="#" class="more-menu-btn" role="menuitem">Favourites</a>
                             </li>
                             <li class="more-menu-item" role="presentation">
-                                <a href="#" class="more-menu-btn" role="menuitem">Create</a>
+                                <a href="/createDrillPage" class="more-menu-btn" role="menuitem">Create</a>
                             </li>
                             <li class="more-menu-item" role="presentation">
                                 <a href="#" class="more-menu-btn" role="menuitem">My List</a>
@@ -41,11 +131,14 @@
 
 {%block content%}
 
-        {%for x in range (1,3)%}
+<div class="drill-card-container">
+        {%if drills%}
+        {%for drill in drills%}
+        
                 <div class="drill-card">
                         <!-- Video and Image-->
 
-                        <h3 class="drill-title">Drill Name Placeholder</h3>
+                        <h3 class="drill-title">{{drill.name}} </h3>
                         <div class="drill-media">
                                 <!-- For soem of them, switch to a image instead of video. Only do videop for open source videos which we are allowed to use. Mainly here for future use where we allow users to upload their own videos. maybe.-->
                                 <video controls width="100%" poster="/static/drill-poster.jpg">
@@ -57,7 +150,7 @@
                         <!-- Card Info -->
                         <div class="drill-content">
                                 <p class="drill-description">
-                                        Drill Information goes here
+                                        {{drill.details}}
                                 </p>
                 
                                 <div class="drill-stats">
@@ -71,9 +164,14 @@
                 
                                 <div class="drill-difficulty">
                                         <strong>Difficulty: (Change to a star rating maybe works better and allows for filtering)</strong>
-                                        <span class="difficulty easy">Easy</span> <!-- You can style this with color codes -->
+                                        <span class="difficulty {{drill.difficulty}}">{{drill.difficulty}} </span> <!-- You can style this with color codes -->
                                 </div>
                         </div>
                 </div>
         {%endfor%}
+        
+        {%else%}
+                <p>No drills</p>
+        {%endif%}
+</div>
 {%endblock%}
