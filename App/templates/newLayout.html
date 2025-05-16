@@ -404,17 +404,17 @@
             font-weight: bold;
             }
 
-            .difficulty.easy {
+            .difficulty.Easy {
             background-color: #d4edda;
             color: #155724;
             }
 
-            .difficulty.medium {
+            .difficulty.Medium {
             background-color: #fff3cd;
             color: #856404;
             }
 
-            .difficulty.hard {
+            .difficulty.Hard {
             background-color: #f8d7da;
             color: #721c24;
             }
@@ -627,5 +627,43 @@
             }, 3000);
             });
         </script>
+
+        <script>
+            const difficultyInput = document.getElementById('drill-difficulties');
+            const difficultyOptions = ["Easy", "Medium", "Hard"];
+        
+            difficultyInput.addEventListener('change', function () {
+            const userInput = this.value.toLowerCase();
+            const match = difficultyOptions.find(opt => opt.toLowerCase().startsWith(userInput));
+        
+            if (match) {
+                this.value = match;
+            } else {
+                alert('Please select a valid difficulty.');
+                this.value = '';
+            }
+            });
+        </script>
+        <script>
+            
+            const categoryInput = document.getElementById('drill-categories');
+            const categoryOptions = ["Passing", "Shooting", "Defending", "Goalkeeping", "Set-Pieces"];
+        
+            categoryInput.addEventListener('change', function () {
+            const userInput = this.value.toLowerCase();
+            const match = categoryOptions.find(opt => opt.toLowerCase().startsWith(userInput));
+        
+            if (match) {
+                this.value = match; 
+            } else {
+                alert('Please select a valid category.');
+                this.value = '';
+            }
+            });
+        </script>
+
+        
     </body>
+
+
 </html>
