@@ -151,11 +151,11 @@ h3 {
     width: 90%;
     padding: 30px 0;
   }
-  
+
   .some-info h2 {
     font-size: 28px;
   }
-  
+
   .some-info p {
     font-size: 16px;
   }
@@ -170,6 +170,7 @@ h3 {
 .slide {
   margin-top: 13px;
 }
+
 .burger {
   position: relative;
   width: 40px;
@@ -257,4 +258,275 @@ h3 {
 .flash-message.info {
   background-color: #474f86;
   color: white;
+}
+
+.our-team {
+  padding: 60px 0;
+  background-color: #f4f6fa;
+  overflow-x: hidden;
+}
+
+.our-team h2 {
+  text-align: center;
+  color: #3d446b;
+  font-size: 36px;
+  margin-bottom: 40px;
+}
+
+.team-members {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+}
+
+.team-member {
+  margin-bottom: 60px;
+  position: relative;
+  width: 45%;
+}
+
+.team-member.left {
+  margin-right: auto;
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.team-member.right {
+  margin-left: auto;
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.member-card {
+  display: flex;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.member-image {
+  flex: 0 0 200px;
+  background-color: #e5e9f4;
+}
+
+.member-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.member-info {
+  padding: 25px;
+  flex: 1;
+}
+
+.member-info h3 {
+  color: #25283d;
+  font-size: 24px;
+  margin: 0 0 5px 0;
+}
+
+.member-title {
+  color: #474f86;
+  font-size: 16px;
+  margin: 0 0 15px 0;
+  font-style: italic;
+}
+
+.member-links {
+  margin-top: 20px;
+}
+
+.member-links a {
+  display: inline-block;
+  margin-right: 15px;
+  color: #474f86;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.member-links a:hover {
+  color: #25283d;
+}
+
+@media (max-width: 768px) {
+  .team-member {
+    width: 90%;
+  }
+
+  .member-card {
+    flex-direction: column;
+  }
+
+  .member-image {
+    flex: 0 0 200px;
+  }
+}
+
+/* Features Section */
+.features-section {
+  padding: 60px 0;
+  background-color: #fff;
+  text-align: center;
+}
+
+.features-section h2 {
+  color: #3d446b;
+  font-size: 36px;
+  margin-bottom: 40px;
+}
+
+.features-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  flex: 1;
+  min-width: 250px;
+  max-width: 350px;
+  margin: 20px;
+  padding: 30px;
+  background-color: #f4f6fa;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+}
+
+.feature-icon {
+  font-size: 40px;
+  color: #474f86;
+  margin-bottom: 20px;
+}
+
+.feature-card h3 {
+  color: #25283d;
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+.feature-card p {
+  color: #474f86;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.how-it-works {
+  padding: 60px 0;
+  background-color: #e5e9f4;
+  text-align: center;
+}
+
+.how-it-works h2 {
+  color: #3d446b;
+  font-size: 36px;
+  margin-bottom: 40px;
+}
+
+.steps-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.step {
+  flex: 1;
+  min-width: 250px;
+  max-width: 350px;
+  margin: 20px;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.step-number {
+  width: 50px;
+  height: 50px;
+  background-color: #474f86;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0 auto 20px;
+}
+
+.step h3 {
+  color: #25283d;
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+.step p {
+  color: #474f86;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+
+  .feature-card,
+  .step,
+  .testimonial {
+    min-width: 100%;
+    margin: 20px 0;
+  }
+}
+
+.cta-section {
+  background-color: #25283d;
+  color: #fff;
+  padding: 80px 0;
+  text-align: center;
+  margin-top: 60px;
+}
+
+.cta-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.cta-section h2 {
+  font-size: 36px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.cta-section p {
+  font-size: 18px;
+  margin-bottom: 30px;
+  color: #e5e9f4;
+}
+
+.cta-button {
+  display: inline-block;
+  background-color: #474f86;
+  color: #fff;
+  padding: 15px 30px;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: #3d446b;
+  transform: scale(1.05);
 }
