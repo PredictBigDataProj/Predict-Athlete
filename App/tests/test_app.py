@@ -10,7 +10,7 @@ from App.controllers import (
     login,
     get_user,
     get_user_by_username,
-    update_user
+    update_user_username
 )
 
 
