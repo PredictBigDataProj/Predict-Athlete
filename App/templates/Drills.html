@@ -142,7 +142,7 @@
                                 <div class="drill-favourite">
                                         
                                         <div>
-                                                {%if drill.favouriteStatus == True%}
+                                                {%if drill is in current_user.favouriteDrills%}
                                                         <a href="/addFavourites/{{drill.ID}}">You already favourited this</a>
                                                 {%else%}
                                                         <a href="/addFavourites/{{drill.ID}}">Change me to a favourite icon</a>

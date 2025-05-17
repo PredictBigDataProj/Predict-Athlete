@@ -420,14 +420,26 @@
                             <div class="more-menu-caret-outer"></div>
                             <div class="more-menu-caret-inner"></div>
                         </div>
-                        <ul class="more-menu-items" tabindex="-1" role="menu" aria-labelledby="more-btn" aria-hidden="true">
-                            <li class="more-menu-item" role="presentation">
-                                <a href="/staff-profile" class="more-menu-btn" role="menuitem">Profile</a>
-                            </li>
-                            <li class="more-menu-item" role="presentation">
-                                <a href="/logout" class="more-menu-btn" role="menuitem">Logout</a>
-                            </li>
-                        </ul>
+                        {%if current_user.is_authenticated%}
+                            <ul class="more-menu-items" tabindex="-1" role="menu" aria-labelledby="more-btn" aria-hidden="true">
+                                <li class="more-menu-item" role="presentation">
+                                    <a href="/staff-profile" class="more-menu-btn" role="menuitem">Profile</a>
+                                </li>
+                                <li class="more-menu-item" role="presentation">
+                                    <a href="/logout" class="more-menu-btn" role="menuitem">Logout</a>
+                                </li>
+                            </ul>
+
+                        {%else%}
+                            <ul class="more-menu-items" tabindex="-1" role="menu" aria-labelledby="more-btn" aria-hidden="true">
+                                <li class="more-menu-item" role="presentation">
+                                    <a href="/signup" class="more-menu-btn" role="menuitem">Sign Up</a>
+                                </li>
+                                <li class="more-menu-item" role="presentation">
+                                    <a href="/login" class="more-menu-btn" role="menuitem">Log In</a>
+                                </li>
+                            </ul>
+                        {%endif%}
                     </div>
                 </div>
             </div>

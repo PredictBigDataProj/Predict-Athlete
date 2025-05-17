@@ -10,7 +10,7 @@ from flask import (
     current_app,
 )
 from flask_jwt_extended import jwt_required, current_user as jwt_current_user
-from flask_login import login_required, current_user
+from flask_login import login_required, login_user, current_user, logout_user
 import numpy as np
 import pandas as pd
 import ast
@@ -383,10 +383,10 @@ def create_user_action():
     return redirect(url_for("user_views.get_user_page"))
 
 
-@user_views.route("/api/users", methods=["GET"])
-def get_users_action():
-    users = get_all_users_json()
-    return jsonify(users)
+# @user_views.route("/api/users", methods=["GET"])
+# def get_users_action():
+#     users = get_all_users_json()
+#     return jsonify(users)
 
 
 @user_views.route("/api/users", methods=["POST"])

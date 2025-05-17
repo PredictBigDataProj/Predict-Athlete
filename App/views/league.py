@@ -9,7 +9,7 @@ from flask import (
     url_for,
 )
 from flask_jwt_extended import jwt_required, current_user as jwt_current_user
-from flask_login import login_required, current_user
+from flask_login import login_required, login_user, current_user, logout_user
 import numpy as np
 import pandas as pd
 import ast

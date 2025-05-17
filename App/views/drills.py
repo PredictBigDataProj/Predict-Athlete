@@ -1,5 +1,6 @@
 from flask import Blueprint, redirect, render_template, request, send_from_directory, jsonify
 from App.controllers import create_user, initialize
+from flask_login import login_required, login_user, current_user, logout_user
 import textwrap
 import pandas as pd
 
@@ -10,7 +11,7 @@ from App.controllers import (
     jwt_required,
     get_all_players, 
     create_drill, get_all_drills, get_drill_by_name,
-    get_regular_by_username
+    get_regular_by_username, get_regular_by_id
 )
 
 drills_views = Blueprint('drills_views', __name__, template_folder='../templates')
@@ -50,7 +51,7 @@ def createDrill():
 
 
 
-    regular = get_regular_by_username('bob')
+    regular = get_regular_by_id(current_user.ID)
     # status = 
     create_drill(regular, name, details, difficulty, category)
     # print(f'This is the status: {status}')

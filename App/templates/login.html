@@ -183,23 +183,38 @@
 
 <div class="loginpage">
 
-<div class="login-card">
-    <div class="login-header">
-        <h2>Log In</h2>
+    
+
+    <div class="login-card">
+        <div class="login-header">
+            <h2>Log In</h2>
+        </div>
+        <!-- Login form -->
+        <!-- <form class="login-form" action="/login" href="/login" method="POST">
+            <p>Username</p>
+            <input name="username" id="username" type="text" placeholder="Username">
+            <p> Password</p>
+            <input name="password" id="password" type="password" placeholder="Password">
+            <input type="submit" class="btn" style="background-color: #3E92CC;text-align: center;padding:0;" value="Login">
+            
+        </form> -->
+
+
+        <form method="POST" action="/login" class="login-form">
+            {{ form.hidden_tag() }}
+            <p>Username</p>
+            {{ form.username(size=32, placeholder="Username") }}
+            
+            <p>Password</p>
+            {{ form.password(size=32, placeholder="Password") }}
+            
+            {{ form.submit(class="btn", style="background-color: #3E92CC; text-align: center;padding:0;") }}
+        </form>
+
+        <div style="color: black; margin: 25px; text-align: center;" class="signup_link" >
+            Not a user? <a style="color: black; text-decoration: underline;" href="/signup" class="signup-link">Sign Up</a>
+        </div>
     </div>
-    <!-- Login form -->
-  <form class="login-form" action="/login" href="/login" method="POST">
-      <p>Username</p>
-      <input name="username" id="username" type="text" placeholder="Username">
-      <p> Password</p>
-      <input name="password" id="password" type="password" placeholder="Password">
-      <input type="submit" class="btn" style="background-color: #3E92CC;text-align: center;padding:0;" value="Login">
-      
-  </form>
-  <div style="color: black; margin: 25px; text-align: center;" class="signup_link" >
-    Not a user? <a style="color: black; text-decoration: underline;" href="/signup" class="signup-link">Sign Up</a>
-  </div>
-</div>
 </div>
 
 
