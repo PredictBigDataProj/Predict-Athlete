@@ -7,7 +7,11 @@ from flask_login import login_required, login_user, current_user, logout_user
 
 from .index import index_views
 from App.models import User
-from App.controllers import (create_user, jwt_authenticate, login)
+from App.controllers import (
+  create_user, jwt_authenticate, login,
+  get_regular_by_username, create_regular
+
+)
 
 auth_views = Blueprint('auth_views', __name__, template_folder='../templates')
 '''
@@ -15,14 +19,14 @@ Page/Action Routes
 '''
 
 
-@auth_views.route('/users', methods=['GET'])
-def get_user_page():
-  users = get_all_users()
-  return render_template('users.html', users=users)
+# @auth_views.route('/users', methods=['GET'])
+# def get_user_page():
+#   users = get_all_users()
+#   return render_template('users.html', users=users)
 
 
 @auth_views.route('/identify', methods=['GET'])
-# @login_required
+@login_required
 def identify_page():
   return jsonify({
       'message':
@@ -30,49 +34,112 @@ def identify_page():
   })
 
 
+# @auth_views.route('/login', methods=['POST'])
+# def login_action():
+#   data = request.form
+#   message="Bad username or password"
+#   user = login(data['username'], data['password'])
+#   if user:
+#     login_user(user)
+#     return redirect("/Home")
+    
+#   return render_template('login.html', message=message)
+
+
+# @auth_views.route('/logout', methods=['GET'])
+# def logout_action():
+#   logout_user()
+#   return redirect("/")
+
+@auth_views.route('/login', methods=['GET'])
+def login_page():
+  return render_template('login.html')
+
 @auth_views.route('/login', methods=['POST'])
 def login_action():
   data = request.form
   message="Bad username or password"
+  
   user = login(data['username'], data['password'])
   if user:
+    user_type = type(user)
+    print("User type:", user_type)
     login_user(user)
-    return redirect("/Home")
-    
+    if (user.user_type == "regular"):
+      return redirect("/Home")  # Redirect to student dashboard
+    # elif (user.user_type == "student"):
+    #   return redirect("/StudentHome")  # Redirect to staff dashboard
+    # elif (user.user_type == "admin"):
+    #   return redirect("/admin")
   return render_template('login.html', message=message)
 
 
 @auth_views.route('/logout', methods=['GET'])
+@login_required
 def logout_action():
   logout_user()
-  return redirect("/")
+  return redirect("/Home")
 
+
+
+
+@auth_views.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        firstname = request.form['firstname']
+        lastname = request.form['lastname']
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+
+        temp_user = get_regular_by_username(username)
+
+        if temp_user:
+          return render_template('SignUp.html', message="Username is already taken!")
+
+        if password != confirm_password:
+            return render_template('SignUp.html', message="Passwords do not match!")
+
+        # Save user to the database
+        create_regular(
+            firstname=firstname, lastname=lastname, username=username,
+            email=email, password=password
+        )
+
+        regular = get_regular_by_username(username)
+ 
+        login_user(regular)
+
+        return redirect("/Home") # Redirect to login after signup
+
+    return render_template('SignUp.html')
 
 '''
 API Routes
 '''
 
 
-@auth_views.route('/api/users', methods=['GET'])
-def get_users_action():
-  users = get_all_users_json()
-  return jsonify(users)
+# @auth_views.route('/api/users', methods=['GET'])
+# def get_users_action():
+#   users = get_all_users_json()
+#   return jsonify(users)
 
 
-@auth_views.route('/api/users', methods=['POST'])
-def create_user_endpoint():
-  data = request.json
-  create_user(data['username'], data['password'])
-  return jsonify({'message': f"user {data['username']} created"})
+# @auth_views.route('/api/users', methods=['POST'])
+# def create_user_endpoint():
+#   data = request.json
+#   create_user(data['username'], data['password'])
+#   return jsonify({'message': f"user {data['username']} created"})
 
 
-@auth_views.route('/api/login', methods=['POST'])
-def user_login_api():
-  data = request.json
-  token = jwt_authenticate(data['username'], data['password'])
-  if not token:
-    return jsonify(message='bad username or password given'), 401
-  return jsonify(access_token=token)
+# @auth_views.route('/api/login', methods=['POST'])
+# def user_login_api():
+#   data = request.json
+#   token = jwt_authenticate(data['username'], data['password'])
+#   if not token:
+#     return jsonify(message='bad username or password given'), 401
+#   return jsonify(access_token=token)
 
 
 @auth_views.route('/api/identify', methods=['GET'])

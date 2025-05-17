@@ -6,7 +6,8 @@ from .auth import auth_views
 from .admin import setup_admin
 from .league import league_views
 from .drills import drills_views
+from .favourites import favourites_views
 
 
-views = [user_views, index_views, auth_views, league_views, drills_views] 
+views = [user_views, index_views, auth_views, league_views, drills_views, favourites_views] 
 # blueprints must be added to this list

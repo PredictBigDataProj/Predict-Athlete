@@ -4,3 +4,4 @@ from .initialize import *
 from .player import *
 from .league import *
 from .drill import *
+from .regular import *

@@ -6,14 +6,16 @@ from sqlalchemy.exc import SQLAlchemyError
 
 
 
-def create_drill(name, details, difficulty, category): #stats_Affected
+
+def create_drill(regular, name, details, difficulty, category): #stats_Affected
     if difficulty is None:
         return False
         
 
     # stats_Affected = ast.literal_eval(review.liked_by_staff or '[]')
 
-    newDrill = Drill(name=name,
+    newDrill = Drill(regular=regular, 
+                        name=name,
                         details=details,
                         difficulty=difficulty,
                         category=category)
@@ -49,3 +51,13 @@ def get_drill_by_name(name):
     except Exception as e:
         print(f"[drill.get_staff_by_username] Error occurred while fetching drill by name {name}: ", str(e))
         return None
+
+
+def get_drill(id):
+  try:
+    drill = Drill.query.filter_by(ID=id).first()
+    return drill if drill else None
+  except SQLAlchemyError as e:
+    print(f"[DB ERROR] get_drill: {e}")
+    return None
+

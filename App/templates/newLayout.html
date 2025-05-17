@@ -385,6 +385,7 @@
             <a href="/Home">Home</a>
             <a href="/data_entry">Data Entry</a>
             <a href="/drills">Drills</a>
+            <a href="/favourites">Favourites</a>
     
         </div>
 
@@ -406,6 +407,30 @@
             <div class="navbar-title">{% block page %}{% endblock %}</div>
 
             <div class="navbar-tabs"> {%block navbar_tabs%} {%endblock%} </div>
+
+            <!-- Profile Options -->
+            <div class="container">
+                <div class="more">
+                    <div class="profile-pic more-btn">
+                        <img src="{{current_user.profile_pic}}" alt="Profile">
+                    </div>
+                    
+                    <div class="more-menu">
+                        <div class="more-menu-caret">
+                            <div class="more-menu-caret-outer"></div>
+                            <div class="more-menu-caret-inner"></div>
+                        </div>
+                        <ul class="more-menu-items" tabindex="-1" role="menu" aria-labelledby="more-btn" aria-hidden="true">
+                            <li class="more-menu-item" role="presentation">
+                                <a href="/staff-profile" class="more-menu-btn" role="menuitem">Profile</a>
+                            </li>
+                            <li class="more-menu-item" role="presentation">
+                                <a href="/logout" class="more-menu-btn" role="menuitem">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
         </nav>
 

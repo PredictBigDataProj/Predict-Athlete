@@ -1,0 +1,19 @@
+{% extends "newLayout.html" %}
+{% block title %}Favourites Page{% endblock %}
+{% block page %}Come up with a name{% endblock %}
+
+{% block style %}
+
+{%endblock%}
+
+{%block navbar_tabs%}
+
+{%endblock%}
+
+{{ super() }}
+
+{%block content%}
+    {%for favourite in favourites%}
+        <p>{{favourite.name}}</p>
+    {%endfor%}
+{%endblock%}

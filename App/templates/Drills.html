@@ -93,36 +93,8 @@
 {%endblock%}
 
 {%block navbar_tabs%}
-
-        <!-- Profile Options (Change this back to profile options which is available on everypage)-->
-        <div class="container">
-                <div class="more">
-                    <div class="profile-pic more-btn">
-                        <!-- <img src="#" alt="Profile"> -->
-                        <p>Click me</p>
-                    </div>
-                    
-                    <div class="more-menu">
-                        <div class="more-menu-caret">
-                            <div class="more-menu-caret-outer"></div>
-                            <div class="more-menu-caret-inner"></div>
-                        </div>
-                        <ul class="more-menu-items" tabindex="-1" role="menu" aria-labelledby="more-btn" aria-hidden="true">
-                            <li class="more-menu-item" role="presentation">
-                                <a href="#" class="more-menu-btn" role="menuitem">Favourites</a>
-                            </li>
-                            <li class="more-menu-item" role="presentation">
-                                <a href="/createDrillPage" class="more-menu-btn" role="menuitem">Create</a>
-                            </li>
-                            <li class="more-menu-item" role="presentation">
-                                <a href="#" class="more-menu-btn" role="menuitem">My List</a>
-                            </li>
-                            <li class="more-menu-item" role="presentation">
-                                <a href="#" class="more-menu-btn" role="menuitem">Just filler names</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+            <div>
+                <a href="/createDrillPage">Create Drill</a>
             </div>
 
 {%endblock%}
@@ -165,6 +137,18 @@
                                 <div class="drill-difficulty">
                                         <strong>Difficulty: (Change to a star rating maybe works better and allows for filtering)</strong>
                                         <span class="difficulty {{drill.difficulty}}">{{drill.difficulty}} </span> <!-- You can style this with color codes -->
+                                </div>
+
+                                <div class="drill-favourite">
+                                        
+                                        <div>
+                                                {%if drill.favouriteStatus == True%}
+                                                        <a href="/addFavourites/{{drill.ID}}">You already favourited this</a>
+                                                {%else%}
+                                                        <a href="/addFavourites/{{drill.ID}}">Change me to a favourite icon</a>
+                                                {%endif%}
+                                                
+                                        </div>
                                 </div>
                         </div>
                 </div>

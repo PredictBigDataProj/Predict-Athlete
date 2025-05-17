@@ -9,7 +9,8 @@ from App.controllers import (
     get_all_users_json,
     jwt_required,
     get_all_players, 
-    create_drill, get_all_drills, get_drill_by_name
+    create_drill, get_all_drills, get_drill_by_name,
+    get_regular_by_username
 )
 
 drills_views = Blueprint('drills_views', __name__, template_folder='../templates')
@@ -30,6 +31,8 @@ def create_drill_page():
 @drills_views.route('/createDrill', methods=['POST'])
 def createDrill():
 
+
+
     data = request.form
 
     name = data['drill-name']
@@ -47,8 +50,9 @@ def createDrill():
 
 
 
+    regular = get_regular_by_username('bob')
     # status = 
-    create_drill(name, details, difficulty, category)
+    create_drill(regular, name, details, difficulty, category)
     # print(f'This is the status: {status}')
     print("Made it past the dupe name")
     return redirect("/drills")

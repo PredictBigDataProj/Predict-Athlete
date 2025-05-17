@@ -2,8 +2,10 @@ import click, pytest, sys
 import joblib
 import os
 import pandas as pd
+from flask import current_app
 from flask import Flask
 from flask.cli import with_appcontext, AppGroup
+import subprocess
 
 from App.database import db, get_migrate
 from App.models import User

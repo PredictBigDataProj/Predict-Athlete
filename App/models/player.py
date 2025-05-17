@@ -4,7 +4,7 @@ from App.database import db
 class Player(db.Model):
 
 
-    id = db.Column(db.Integer, primary_key=True)
+    ID = db.Column(db.Integer, primary_key=True)
     player_id = db.Column(db.Integer, unique=True, nullable=False)
     name = db.Column(db.String(1000))
     full_name = db.Column(db.String(1000))
