@@ -56,14 +56,14 @@ def empty_db():
     db.drop_all()
 
 
-def test_authenticate():
-    user = create_user("bob", "bobpass")
+def test_authenticate(): 
+    user = create_user("bob", "bob", "john", "bobpass", "bob@mail")
     assert login("bob", "bobpass") != None
 
 class UsersIntegrationTests(unittest.TestCase):
 
     def test_create_user(self):
-        user = create_user("rick", "bobpass")
+        user = create_user("rick", "rick", "john", "bobpass", "bob@mail")
         assert user.username == "rick"
 
     # def test_get_all_users_json(self):
@@ -72,7 +72,7 @@ class UsersIntegrationTests(unittest.TestCase):
 
     # Tests data changes in the database
     def test_update_user(self):
-        update_user(1, "ronnie")
+        update_user_username(1, "ronnie")
         user = get_user(1)
         assert user.username == "ronnie"
         
