@@ -12,6 +12,7 @@ class Drill(db.Model):
     stats_Affected = db.Column(db.String, default='')
     dateCreated = db.Column(db.DateTime, server_default=func.now())
     createdByRegularID = db.Column(db.Integer, db.ForeignKey('regular.ID', name='fk_drill_regular'))
+    favouriteStatus = db.Column(db.Boolean, default=False)
 
 
 

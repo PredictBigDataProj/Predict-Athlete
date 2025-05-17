@@ -6,6 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 
 
+
 def create_drill(regular, name, details, difficulty, category): #stats_Affected
     if difficulty is None:
         return False
@@ -60,11 +61,3 @@ def get_drill(id):
     print(f"[DB ERROR] get_drill: {e}")
     return None
 
-
-def get_drills(regularID):
-  try:
-    drills = Drill.query.filter_by(regularID=regularID).all()
-    return drills
-  except SQLAlchemyError as e:
-    print(f"[DB ERROR] get_drills: {e}")
-    return []

@@ -387,7 +387,7 @@ def get_user_attr():
             predictions=[
                 (pos, round(prob * 100, 2)) for pos, prob in sorted_predictions
             ],
-            similar_players=similar_players[["full_name", "similarity_score"]].to_dict(
+            similar_players=similar_players[["full_name", "name", "similarity_score"]].to_dict(
                 orient="records"
             ),
         )

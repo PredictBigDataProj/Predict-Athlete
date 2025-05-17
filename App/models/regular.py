@@ -1,12 +1,21 @@
 from App.database import db
 from .user import User
 
-
+favourite_drills = db.Table('favourite_drills',
+    db.Column('regular_id', db.Integer, db.ForeignKey('regular.ID'), primary_key=True),
+    db.Column('drill_id', db.Integer, db.ForeignKey('drill.ID'), primary_key=True)
+)
 
 class Regular(User):
   __tablename__ = 'regular'
   ID = db.Column(db.Integer, db.ForeignKey('user.ID', name='fk_regular_user'), primary_key=True)
-  favouriteDrills = db.relationship('Drill', backref='regularFavouriteDrills', lazy='joined')
+  drills = db.relationship('Drill', backref='regularDrils', lazy='joined')
+  favouriteDrills = db.relationship('Drill', secondary=favourite_drills, backref='favourited_by',lazy='joined')
+
+  # regular.favouriteDrills: list of drills the regular favourited
+  # drill.favourited_by: list of regulars who favourited the drill
+  # This is how you access the favourite drills if anyone isnt sure.
+
   profile_pic = db.Column(db.Text, nullable=True)
 
   crossing = db.Column(db.Integer)
@@ -63,6 +72,7 @@ class Regular(User):
                      email=email,
                      password=password)
     self.favouriteDrills = []
+    self.drills =[]
     self.profile_pic = "https://st3.depositphotos.com/4111759/13425/v/600/depositphotos_134255634-stock-illustration-avatar-icon-male-profile-gray.jpg"
 
   
@@ -76,7 +86,8 @@ class Regular(User):
         "firstname":self.firstname,
         "lastname":self.lastname,
         "email":self.email,
-        "favouriteDrills": [drill.to_json() for drill in self.favouriteDrills]
+        "favouriteDrills": [drill.to_json() for drill in self.favouriteDrills],
+        "Drills": [drill.to_json() for drill in self.drills]
     }
 
   def __repr__(self):

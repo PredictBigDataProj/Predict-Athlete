@@ -2,6 +2,7 @@ from App.models import Regular, Drill
 from App.database import db 
 import os
 from werkzeug.utils import secure_filename
+from sqlalchemy.exc import SQLAlchemyError
 
 
 from .drill import (
@@ -95,3 +96,60 @@ def regular_create_drill(regular, name, details, difficulty, category):
     except Exception as e:
         print("[regular.regular_create_drill] Error occurred while creating drill:", str(e))
         return False
+
+
+
+def add_favourite_drill(regular_id, drill_id,):
+    try:
+
+        regular = get_regular_by_id(regular_id)
+        drill = get_drill(drill_id)
+
+        
+
+        if regular:
+            if drill:
+                if drill in regular.favouriteDrills:
+                    regular.favouriteDrills.remove(drill)
+                    drill.favouriteStatus = False
+                    db.session.commit()
+                    return drill
+                else:
+                    regular.favouriteDrills.append(drill)
+                    drill.favouriteStatus = True
+                    db.session.commit()
+                    return drill
+            else:
+                return None
+        else:
+            return None
+
+
+        # if new_comment:
+        #     existing_review = Review.query.get(reviewID)
+
+        #     if existing_review:
+        #         existing_review.comments.append(new_comment)
+        #         db.session.add(new_comment)
+        #         db.session.commit()
+        #         return new_comment
+        #     else:
+        #         return None
+        # else:
+        #     return None
+    except SQLAlchemyError as e:
+        print(f"[DB ERROR] add_favourite_drill: {e}")
+        db.session.rollback()
+        return None
+
+
+def get_favourite_drills(regularID):
+  try:
+    regular = Regular.query.filter_by(ID=regularID).first()
+    if regular:
+        return regular.favouriteDrills
+    else:
+        None
+  except SQLAlchemyError as e:
+    print(f"[DB ERROR] get_favourite_drills: {e}")
+    return []
