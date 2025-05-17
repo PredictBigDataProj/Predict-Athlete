@@ -144,27 +144,6 @@ def get_data_entry_page():
     )
 
 
-@user_views.route("/signup", methods=["GET", "POST"])
-def signup():
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-        confirm_password = request.form["confirm_password"]
-
-        temp_user = get_user_by_username(username)
-
-        if temp_user:
-            return render_template("SignUp.html", message="Username is already taken!")
-
-        if password != confirm_password:
-            return render_template("SignUp.html", message="Passwords do not match!")
-
-        create_user(username=username, password=password)
-
-        return redirect("/Home")
-
-    return render_template("SignUp.html")
-
 
 @user_views.route("/data_entry", methods=["POST"])
 def get_user_attr():
