@@ -1,4 +1,5 @@
 from .user import create_user
+from .regular import create_regular
 import joblib 
 import os
 from App.database import db
@@ -13,7 +14,8 @@ from App.default_config import DATA_PATH
 def initialize():
     db.drop_all()
     db.create_all()
-    create_user('bob', 'bobpass')
+    # create_user('bob', 'bobpass')
+    create_regular('bob', 'bob', 'john', 'bob@mail', 'bobpass')
     import_csv_player('App/data/Final_project_finished_Continents.csv')
 
 

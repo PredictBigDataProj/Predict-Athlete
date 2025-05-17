@@ -3,8 +3,7 @@ services:
 - type: web
   name: flask-postgres-api
   env: python
-  repo: https://github.com/uwidcit/flaskmvc.git
-  #repo: https://github.com/PredictBigDataProj/Predict-Athlete.git check to see if this neededs to be changed to point to this url instead.
+  repo: https://github.com/PredictBigDataProj/Predict-Athlete.git
   plan: free
   branch: main
   healthCheckPath: /healthcheck
@@ -27,7 +26,9 @@ services:
   - key: POSTGRES_DB
     fromDatabase:
       name: flask-postgres-api-db
-      property: database 
+      property: database
+  - key: SQLALCHEMY_DATABASE_URI
+    value: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_URL)/$(POSTGRES_DB)
 
 envVarGroups:
 - name: flask-postgres-api-settings
