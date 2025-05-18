@@ -252,18 +252,67 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  function adjustStatsCardPosition() {
-    const statsContainer = document.querySelector(".stats-container");
-    if (!statsContainer) return;
-
-    if (window.innerWidth < 992) {
-      statsContainer.style.position = "static";
+  // Add toggle stats button for mobile
+  function setupMobileStatsToggle() {
+    const mainContent = document.querySelector('.main-content');
+    const statsContainer = document.querySelector('.stats-container');
+    
+    if (!mainContent || !statsContainer) return;
+    
+    // Create toggle button
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'toggle-stats-btn';
+    toggleBtn.innerHTML = '<i class="fas fa-chart-bar"></i> Show Stats';
+    toggleBtn.setAttribute('type', 'button');
+    
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'mobile-stats-overlay';
+    document.body.appendChild(overlay);
+    
+    // Insert button after form container
+    const formContainer = document.querySelector('.form-container');
+    if (formContainer) {
+      formContainer.insertAdjacentElement('afterend', toggleBtn);
     } else {
-      statsContainer.style.position = "sticky";
+      mainContent.insertBefore(toggleBtn, statsContainer);
     }
+    
+    // Toggle functionality
+    toggleBtn.addEventListener('click', function() {
+      statsContainer.classList.add('mobile-visible');
+      overlay.style.display = 'block';
+      
+      // Add close button to stats card
+      const closeBtn = document.createElement('button');
+      closeBtn.className = 'close-stats-btn';
+      closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+      closeBtn.style.position = 'absolute';
+      closeBtn.style.top = '10px';
+      closeBtn.style.right = '10px';
+      closeBtn.style.background = 'none';
+      closeBtn.style.border = 'none';
+      closeBtn.style.color = 'white';
+      closeBtn.style.fontSize = '20px';
+      closeBtn.style.cursor = 'pointer';
+      
+      const cardHeader = statsContainer.querySelector('.card-header');
+      if (cardHeader && !cardHeader.querySelector('.close-stats-btn')) {
+        cardHeader.appendChild(closeBtn);
+      }
+      
+      // Close functionality
+      function closeStats() {
+        statsContainer.classList.remove('mobile-visible');
+        overlay.style.display = 'none';
+      }
+      
+      closeBtn.addEventListener('click', closeStats);
+      overlay.addEventListener('click', closeStats);
+    });
   }
-
-  adjustStatsCardPosition();
+  
+  setupMobileStatsToggle();
   window.addEventListener("resize", adjustStatsCardPosition);
 });
 
