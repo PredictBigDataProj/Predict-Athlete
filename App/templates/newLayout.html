@@ -385,7 +385,6 @@
             <a href="/Home">Home</a>
             <a href="/data_entry">Data Entry</a>
             <a href="/drills">Drills</a>
-            <a href="/favourites">Favourites</a>
             <a href="/camera">Camera</a>
             <a href="/video">Video</a>
             
@@ -415,7 +414,11 @@
             <div class="container">
                 <div class="more">
                     <div class="profile-pic more-btn">
+                        {%if current_user.is_authenticated%}
                         <img src="{{current_user.profile_pic}}" alt="Profile">
+                        {%else%}
+                        <img src=" https://st3.depositphotos.com/4111759/13425/v/600/depositphotos_134255634-stock-illustration-avatar-icon-male-profile-gray.jpg" alt="Profile">
+                        {%endif%}
                     </div>
                     
                     <div class="more-menu">
@@ -426,7 +429,10 @@
                         {%if current_user.is_authenticated%}
                             <ul class="more-menu-items" tabindex="-1" role="menu" aria-labelledby="more-btn" aria-hidden="true">
                                 <li class="more-menu-item" role="presentation">
-                                    <a href="/staff-profile" class="more-menu-btn" role="menuitem">Profile</a>
+                                    <a href="/profile" class="more-menu-btn" role="menuitem">Profile</a>
+                                </li>
+                                <li class="more-menu-item" role="presentation">
+                                    <a href="/favourites" class="more-menu-btn" role="menuitem">Favourite Drills</a>
                                 </li>
                                 <li class="more-menu-item" role="presentation">
                                     <a href="/logout" class="more-menu-btn" role="menuitem">Logout</a>

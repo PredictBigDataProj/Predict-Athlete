@@ -8,7 +8,8 @@
         .drill-card-container {
         display: grid;
         /* grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); */
-        grid-template-columns: repeat(3, 1fr); /*Change the 3 to match however many columns you want */
+        /* grid-template-columns: repeat(3, 1fr);  */
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 1.5rem; 
         padding: 2rem;
         }
@@ -19,29 +20,49 @@
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         overflow: hidden;
         transition: transform 0.3s ease;
-        max-width: 400px;
-        margin: 20px auto;
+        /* max-width: 400px;
+        margin: 20px auto; */
+        width: 100%;
         display: flex;
         flex-direction: column;
         }
 
         .drill-card:hover {
         transform: scale(1.02);
+        transform: translateY(-5px);
+        box-shadow: 0 30px 30px rgba(0,0,0,0.25);
         }
 
         .drill-media {
-        width: 100%;
+        /* width: 100%;
         height: auto;
+        overflow: hidden; */
+        position: relative;
+        padding-top: 56.25%; /* 16:9 Aspect Ratio */
         overflow: hidden;
+        }
+
+        .drill-media video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
         }
 
         .drill-content {
         padding: 15px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
         }
 
         .drill-title {
         font-size: 1.4rem;
-        margin-bottom: 10px;
+        font-weight: bold;
+        margin: 10px 0;
         }
 
         .drill-description {
@@ -76,6 +97,58 @@
         color: #721c24;
         }
 
+        .drill-create-btn:hover {
+                background-color: #3f3939;
+        }
+
+        .drill-create-btn {
+        background-color: #390303;
+        color: white;
+        padding: 14px 25px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 0.9rem;
+        transition: background 0.3s ease;
+        }
+
+        .drill-modal {
+        display: none; /* Hidden by default */
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        background-color: rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-content {
+        background-color: #fff;
+        margin: 5% auto;
+        padding: 2rem;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 600px;
+        position: relative;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .close-modal {
+        color: #aaa;
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        }
+
+        .close-modal:hover {
+        color: #000;
+        }
+
         
         @media (max-width: 1024px) {
         .drill-card-container {
@@ -93,8 +166,8 @@
 {%endblock%}
 
 {%block navbar_tabs%}
-            <div>
-                <a href="/createDrillPage">Create Drill</a>
+            <div style="margin-left: auto;">
+                <a href="/createDrillPage" class="drill-create-btn"> + Create Drill</a>
             </div>
 
 {%endblock%}
@@ -110,7 +183,7 @@
                 <div class="drill-card">
                         <!-- Video and Image-->
 
-                        <h3 class="drill-title">{{drill.name}} </h3>
+                        
                         <div class="drill-media">
                                 <!-- For soem of them, switch to a image instead of video. Only do videop for open source videos which we are allowed to use. Mainly here for future use where we allow users to upload their own videos. maybe.-->
                                 <video controls width="100%" poster="/static/drill-poster.jpg">
@@ -121,11 +194,10 @@
                 
                         <!-- Card Info -->
                         <div class="drill-content">
-                                <p class="drill-description">
-                                        {{drill.details}}
-                                </p>
+                                <h3 class="drill-title">Drill Name: {{drill.name}} </h3> 
+                                <p class="drill-description">Description: {{drill.details}}</p>
                 
-                                <div class="drill-stats">
+                                <!-- <div class="drill-stats">
                                         <strong>Stats workd on section (make this better)</strong>
                                         <ul>
                                                 <li>Agility</li>
@@ -136,8 +208,8 @@
                 
                                 <div class="drill-difficulty">
                                         <strong>Difficulty: (Change to a star rating maybe works better and allows for filtering)</strong>
-                                        <span class="difficulty {{drill.difficulty}}">{{drill.difficulty}} </span> <!-- You can style this with color codes -->
-                                </div>
+                                        <span class="difficulty {{drill.difficulty}}">{{drill.difficulty}} </span> 
+                                </div> -->
 
                                 <div class="drill-favourite">
                                         
@@ -150,12 +222,92 @@
                                                 
                                         </div>
                                 </div>
+                                <button class="open-modal-btn" data-modal-id="modal-{{ drill.ID }}">View More</button>
                         </div>
                 </div>
+
+
+
+                <div class="drill-modal" id="modal-{{ drill.ID }}">
+                        <div class="modal-content">
+                          <span class="close-modal">&times;</span>
+                          <h2>{{ drill.name }}</h2>
+                          <p>{{ drill.details }}</p>
+                      
+                          <h4>Stats worked on:</h4>
+                          <ul>
+                              <li>Agility</li>
+                              <li>Sprint Speed</li>
+                              <li>Balance</li>
+                          </ul>
+                      
+                          <h4>Difficulty:</h4>
+                          <span class="difficulty {{ drill.difficulty }}">{{ drill.difficulty }}</span>
+                        </div>
+                      </div>
+
         {%endfor%}
+
+        
         
         {%else%}
                 <p>No drills</p>
         {%endif%}
 </div>
+{%endblock%}
+
+
+{%block script%}
+<script>
+        document.querySelectorAll('.open-modal-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const modalId = this.dataset.modalId;
+                document.getElementById(modalId).style.display = 'block';
+            });
+        });
+        
+        document.querySelectorAll('.close-modal').forEach(span => {
+            span.addEventListener('click', function() {
+                this.closest('.drill-modal').style.display = 'none';
+            });
+        });
+        
+        window.onclick = function(event) {
+            if (event.target.classList.contains('drill-modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+        </script>
+
+        <script>
+                document.querySelectorAll('.drill-media video').forEach(video => {
+
+                        let manuallyPlaying = false;
+
+                        video.addEventListener('mouseenter', () => {
+                                if (!manuallyPlaying) {
+                                        video.muted = true;
+                                        video.play();
+                                }
+                        });
+                
+                        video.addEventListener('mouseleave', () => {
+                                if (!manuallyPlaying) {
+                                        video.pause();
+                                        video.currentTime = 0;
+                                }
+                        });
+
+                        video.addEventListener('click', () => {
+                                manuallyPlaying = true;
+                                video.muted = false;
+                                video.controls = true; 
+                        });
+
+                        video.addEventListener('ended', () => {
+                                manuallyPlaying = false;
+                        });
+
+                });
+        </script>
 {%endblock%}
