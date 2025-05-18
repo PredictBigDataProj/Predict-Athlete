@@ -137,9 +137,9 @@ def generate_frames():
                         cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
 
         cv2.putText(frame, f"Attempts: {total_attempts}", (10, 30),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
         cv2.putText(frame, f"Goals: {goals_scored}", (10, 60),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
 
         for i in range(1, len(ball_positions)):
             cv2.line(frame, ball_positions[i-1], ball_positions[i], (255, 0, 0), 2)
