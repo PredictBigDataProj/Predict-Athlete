@@ -105,15 +105,19 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("myInput").addEventListener("keyup", filterReviews);
 });
 
-function openNav() {
-  document.getElementById("mySidenav").style.width = "250px";
-}
-
-function closeNav() {
-  document.getElementById("mySidenav").style.width = "0";
-}
-
 document.addEventListener("DOMContentLoaded", function () {
+
+  // Sidenav functionality
+  window.openNav = function () {
+    document.getElementById("mySidenav").style.width = "250px";
+  };
+
+  window.closeNav = function () {
+    document.getElementById("mySidenav").style.width = "0";
+  };
+
+
+
   const physicalAttrs = [
     "crossing",
     "finishing",
@@ -153,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const reasonableMax =
     parseInt(
-      document.querySelector(".stats-container").dataset.reasonableMax
+      document.querySelector(".stats-container")?.dataset.reasonableMax
     ) || 2660;
 
   function updatePhysicalTotal() {
@@ -222,7 +226,6 @@ document.addEventListener("DOMContentLoaded", function () {
   if (expandBtn) {
     expandBtn.addEventListener("click", function () {
       const statsCard = document.querySelector(".stats-card");
-      const mainContent = document.querySelector(".main-content");
 
       let overlay = document.querySelector(".stats-overlay");
       if (!overlay) {
@@ -263,3 +266,67 @@ document.addEventListener("DOMContentLoaded", function () {
   adjustStatsCardPosition();
   window.addEventListener("resize", adjustStatsCardPosition);
 });
+
+// Moved openNav and closeNav functions outside to avoid duplication
+function openNav() {
+  document.getElementById("mySidenav").style.width = "250px";
+}
+
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+}
+
+// Sample player data function - kept as it's used by the Load Mbappe Data button
+function loadTestPlayerData() {
+  const SampleData = {
+    height_cm: 182,
+    weight_kg: 75,
+    crossing: 78,
+    finishing: 94,
+    heading_accuracy: 73,
+    short_passing: 86,
+    volleys: 84,
+    dribbling: 93,
+    curve: 80,
+    fk_accuracy: 69,
+    long_passing: 71,
+    ball_control: 92,
+    acceleration: 97,
+    sprint_speed: 97,
+    agility: 93,
+    reactions: 93,
+    balance: 82,
+    shot_power: 90,
+    jumping: 88,
+    stamina: 88,
+    strength: 77,
+    long_shots: 83,
+    aggression: 64,
+    interceptions: 38,
+    positioning: 93,
+    vision: 83,
+    penalties: 84,
+    composure: 88,
+    defensive_awareness: 26,
+    standing_tackle: 34,
+    sliding_tackle: 32,
+    gk_diving: 13,
+    gk_handling: 5,
+    gk_kicking: 7,
+    gk_positioning: 11,
+    gk_reflexes: 6,
+    age: 26,
+  };
+
+  for (const attr in SampleData) {
+    const rangeInput = document.getElementById(attr);
+    const numberInput = document.getElementById(attr + "_val");
+    if (rangeInput && numberInput) {
+      rangeInput.value = SampleData[attr];
+      numberInput.value = SampleData[attr];
+    }
+  }
+
+  // Trigger update of physical total after loading data
+  document.dispatchEvent(new Event("DOMContentLoaded"));
+}
