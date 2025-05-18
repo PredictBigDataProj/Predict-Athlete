@@ -28,3 +28,7 @@ requests
 locust
 flask-wtf
 email_validator
+opencv-python 
+ultralytics
+torch 
+torchvision

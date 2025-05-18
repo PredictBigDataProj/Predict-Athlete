@@ -7,6 +7,8 @@ WORKDIR /app
 # Install system dependencies required for mysqlclient
 RUN apt-get update && apt-get install -y default-libmysqlclient-dev gcc pkg-config && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y libgl1
+
 # Copy the current directory contents into the container at /app
 COPY . /app
 

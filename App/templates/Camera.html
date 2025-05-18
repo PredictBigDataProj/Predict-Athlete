@@ -1,0 +1,113 @@
+{% extends "newLayout.html" %}
+{% block title %}Camera Page{% endblock %}
+{% block page %}Come up with a name{% endblock %}
+
+{% block style %}
+
+{%endblock%}
+
+
+{%block navbar_tabs%}
+
+{%endblock%}
+
+{{ super() }}
+
+{%block content%}
+    <h1>Live Camera Feed</h1>
+
+    <p>Will hide for all regular users right now, just testing it with the image detection stuff, check out he video page.</p>
+    
+    <video id="video" width="640" height="480" autoplay playsinline></video>
+
+    <br>
+    <select id="cameraSelect"></select>
+
+    <br><br>
+    <button id="startBtn">Start Camera</button>
+    <button id="stopBtn" disabled>Stop Camera</button>
+
+  
+    <script>
+        const video = document.getElementById('video');
+        const cameraSelect = document.getElementById('cameraSelect');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+    
+        let currentStream;
+    
+        function gotDevices(deviceInfos) {
+            cameraSelect.innerHTML = '';
+            const videoDevices = deviceInfos.filter(device => device.kind === 'videoinput');
+    
+            videoDevices.forEach((device, index) => {
+                const option = document.createElement('option');
+                option.value = device.deviceId;
+                option.text = device.label || `Camera ${index + 1}`;
+                cameraSelect.appendChild(option);
+            });
+        }
+    
+        function stopStream() {
+            if (currentStream) {
+                currentStream.getTracks().forEach(track => track.stop());
+                currentStream = null;
+            }
+            video.srcObject = null;
+            stopBtn.disabled = true;
+            startBtn.disabled = false;
+        }
+    
+        function startStream(deviceId) {
+            stopStream(); // stop any existing stream
+    
+            const constraints = {
+                video: deviceId ? { deviceId: { exact: deviceId } } : true
+            };
+    
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then(stream => {
+                    currentStream = stream;
+                    video.srcObject = stream;
+                    stopBtn.disabled = false;
+                    startBtn.disabled = true;
+                })
+                .catch(err => {
+                    console.error("Error accessing camera:", err);
+                    alert("Could not start the selected camera.");
+                });
+        }
+    
+        async function getPermissions() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                // Temporarily use the stream to unlock permissions
+                stream.getTracks().forEach(track => track.stop());
+    
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                gotDevices(devices);
+            } catch (err) {
+                console.error('Permission denied:', err);
+                alert('Camera access is required.');
+            }
+        }
+    
+        cameraSelect.onchange = () => {
+            startStream(cameraSelect.value);
+        };
+    
+        startBtn.onclick = () => {
+            startStream(cameraSelect.value);
+        };
+    
+        stopBtn.onclick = () => {
+            stopStream();
+        };
+    
+        // On page load
+        getPermissions();
+    </script>
+
+
+
+{%endblock%}

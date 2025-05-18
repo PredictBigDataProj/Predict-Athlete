@@ -1,11 +1,14 @@
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, Response
 from flask_login import LoginManager, current_user
 from flask_uploads import DOCUMENTS, IMAGES, TEXT, UploadSet, configure_uploads
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
 from datetime import timedelta
+
+import cv2
+from ultralytics import YOLO  # or import your specific model
 
 from App.database import init_db
 # from App.config import load_config
@@ -26,8 +29,8 @@ from App.views import views, setup_admin
 
 
 def add_views(app):
-    for view in views:
-        app.register_blueprint(view)
+  for view in views:
+      app.register_blueprint(view)
 
 def configure_app(app, config, overrides):
   for key, value in config.items():
@@ -37,28 +40,28 @@ def configure_app(app, config, overrides):
       app.config[key] = config[key]
 
 def create_app(config_overrides={}):
-    app = Flask(__name__, static_url_path='/static')
-    configure_app(app, config, config_overrides)
+  app = Flask(__name__, static_url_path='/static')
+  configure_app(app, config, config_overrides)
 
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['TEMPLATES_AUTO_RELOAD'] = True
-    app.config['SEVER_NAME'] = '0.0.0.0'
-    app.config['PREFERRED_URL_SCHEME'] = 'https'
-    app.config['UPLOADED_PHOTOS_DEST'] = "App/uploads"
-    app.config['UPLOAD_FOLDER'] = 'uploads'
-    # app.config['SESSION_TYPE'] = 'filesystem'
-    # app.config['SESSION_PERMANENT'] = False
-    # app.config['SESSION_USE_SIGNER'] = True
-    # app.config['SESSION_FILE_DIR'] = './flask_session_data'
-    # Session(app)
-    CORS(app)
-    photos = UploadSet('photos', TEXT + DOCUMENTS + IMAGES)
-    configure_uploads(app, photos)
-    add_views(app)
-    init_db(app)
-    setup_jwt(app)
-    setup_flask_login(app)
-    app.app_context().push()
+  app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+  app.config['TEMPLATES_AUTO_RELOAD'] = True
+  app.config['SEVER_NAME'] = '0.0.0.0'
+  app.config['PREFERRED_URL_SCHEME'] = 'https'
+  app.config['UPLOADED_PHOTOS_DEST'] = "App/uploads"
+  app.config['UPLOAD_FOLDER'] = 'uploads'
+  # app.config['SESSION_TYPE'] = 'filesystem'
+  # app.config['SESSION_PERMANENT'] = False
+  # app.config['SESSION_USE_SIGNER'] = True
+  # app.config['SESSION_FILE_DIR'] = './flask_session_data'
+  # Session(app)
+  CORS(app)
+  photos = UploadSet('photos', TEXT + DOCUMENTS + IMAGES)
+  configure_uploads(app, photos)
+  add_views(app)
+  init_db(app)
+  setup_jwt(app)
+  setup_flask_login(app)
+  app.app_context().push()
 
     # load_config(app, overrides)
     # CORS(app)
@@ -77,14 +80,16 @@ def create_app(config_overrides={}):
     # app.app_context().push()
 
 
-    @app.before_first_request
-    def load_models_once():
-        if not hasattr(app, 'models_loaded'):
-            models_dict, selected_features_dict, pca_dict, scaler = load_models()
-            app.config['MODELS_DICT'] = models_dict
-            app.config['SELECTED_FEATURES_DICT'] = selected_features_dict
-            app.config['PCA_DICT'] = pca_dict
-            app.config['SCALER'] = scaler
-            app.models_loaded = True 
-            print("Models loaded successfully.")
-    return app
+  @app.before_first_request
+  def load_models_once():
+    if not hasattr(app, 'models_loaded'):
+      models_dict, selected_features_dict, pca_dict, scaler = load_models()
+      image_model = YOLO('yolov8n.pt') 
+      app.config['MODELS_DICT'] = models_dict
+      app.config['SELECTED_FEATURES_DICT'] = selected_features_dict
+      app.config['PCA_DICT'] = pca_dict
+      app.config['SCALER'] = scaler
+      app.config['IMAGE_MODEL'] = image_model
+      app.models_loaded = True 
+      print("Models loaded successfully.")
+  return app

@@ -1,0 +1,43 @@
+{% extends "newLayout.html" %}
+{% block title %}Video Page{% endblock %}
+{% block page %}Come up with a name{% endblock %}
+
+{% block style %}
+
+{%endblock%}
+
+
+{%block navbar_tabs%}
+
+{%endblock%}
+
+{{ super() }}
+
+{%block content%}
+ 
+
+    
+    <h1>Ball Detection & Goal Counting</h1>
+    <p>Keeps track of attempts and goals scored in top right, just a video loop rioght now to test the model. But it works which is the good part.</p>
+    
+  <div class="controls" style="margin-top: 20px;">
+    <button class="btn btn-success" onclick="startFeed()">Start Feed</button>
+    <button class="btn btn-danger" onclick="stopFeed()">Stop Feed</button>
+  </div>
+
+
+    <img id="videoStream" src="/video_feed" width="960" height="540" />
+
+{%endblock%}
+
+{% block script %}
+<script>
+  function startFeed() {
+    document.getElementById('videoStream').src = "/video_feed";
+  }
+
+  function stopFeed() {
+    document.getElementById('videoStream').src = "";
+  }
+</script>
+{% endblock %}
