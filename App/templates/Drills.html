@@ -115,7 +115,7 @@
         .drill-modal {
         display: none; /* Hidden by default */
         position: fixed;
-        z-index: 9999;
+        z-index: 10005;
         left: 0;
         top: 0;
         width: 100%;
@@ -160,6 +160,27 @@
         .drill-card-container {
         grid-template-columns: 1fr;
         }
+
+        }
+
+        @media (max-width: 480px){
+                .drill-create-btn {
+       
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+
+        }
+        }
+
+        @media (max-width: 360px){
+                .drill-create-btn {
+       
+        padding: 8px 18px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+
+        }
         }
 </style>
 
@@ -169,6 +190,7 @@
             <div style="margin-left: auto;">
                 <a href="/createDrillPage" class="drill-create-btn"> + Create Drill</a>
             </div>
+
 
 {%endblock%}
 
