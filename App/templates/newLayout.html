@@ -32,7 +32,7 @@
             body {
                 font-family: "Roboto", sans-serif;
                 margin: 0;
-                padding: 0;
+                padding: 5;
                 background-color: #7c90a0;
                 transition: margin-left 0.5s;
             }
@@ -69,6 +69,7 @@
             .navbar-title {
                 padding-left: 15px;
                 padding-top: 10px;
+                color: yellow;
                 font-size: 30px;
                 font-weight: bold;
                 font-family: "Times New Roman", Times, sans-serif;
@@ -80,6 +81,10 @@
                 font-family: "Times New Roman", Times, sans-serif;
                 padding-left: 50px;
                 padding-top: 10px;
+                display: flex;
+                justify-content: left;
+                align-items: left;
+                
             }
 
             .profile-pic img {
@@ -322,57 +327,88 @@
                 transform: translateY(-100%);
             }
 
+            @media (orientation: landscape) {
+                        .profile-pic img {
+                        margin-top: 50px;
+                        margin-right: 50px;
+                        width: 40px !important;
+                        height: 40px !important;
+                        border-radius: 50%;
+                    }
+                }
 
-            /* .custom-card {
-                background-color: #ffffff;
-                border-radius: 10px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-                padding: 1.5rem;
-                margin: 1rem 0;
-                transition: box-shadow 0.3s ease;
-                max-width: 400px;
-            }
-
-            .custom-card:hover {
-                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-            }
-
-            .custom-card-header h3 {
-                margin: 0 0 1rem 0;
-                font-size: 1.5rem;
-                color: #333;
-            }
-
-            .custom-card-body {
-                font-size: 1rem;
-                color: #555;
-            }
-
-            .custom-card-footer {
-                
-            }
-
-            .custom-card-footer a {
-                text-decoration: none;
-                color: #1976d2;
-                font-weight: bold;
-            }
-
-            .custom-card-footer a:hover {
-                text-decoration: underline;
-            } */
 
             /* Put the css rules for phone screens here!!! */
             @media (max-width: 480px){
 
-                /* css stylings go here */
+                @media (orientation: landscape) {
+                        .profile-pic img {
+                        margin-top: 50px;
+                        width: 40px !important;
+                        height: 40px !important;
+                        border-radius: 50%;
+                    }
+                }
+
+            .navbar-title {
+                padding-left: 15px !important;
+                padding-top: 10px !important;
+                color: red;
+                font-size: 25px !important;
+                font-weight: bold;
+                font-family: "Times New Roman", Times, sans-serif;
+            }
+
+            .navbar-tabs {
+                font-size: 30px;
+                font-weight: bold;
+                font-family: "Times New Roman", Times, sans-serif;
+                padding-left: 50px;
+                padding-top: 10px;
+            }
+
+            .profile-pic img {
+                width: 4px !important;
+                height: 4px !important;
+                border-radius: 50%;
+            }
 
             }
 
 
             /* Put the css rules for tablet screens here!!! */
             @media (max-width: 768px){
-                /* css stylings go here */
+                @media (orientation: landscape) {
+                        .profile-pic img {
+                        margin-top: 50px;
+                        width: 40px !important;
+                        height: 40px !important;
+                        border-radius: 50%;
+                    }
+                }
+                
+                .navbar-title {
+                padding-left: 15px;
+                padding-top: 10px;
+                color: blue;
+                font-size: 25px !important;
+                font-weight: bold;
+                font-family: "Times New Roman", Times, sans-serif;
+            }
+
+            .navbar-tabs {
+                font-size: 30px;
+                font-weight: bold;
+                font-family: "Times New Roman", Times, sans-serif;
+                padding-left: 50px;
+                padding-top: 10px;
+            }
+
+            .profile-pic img {
+                width: 40px !important;
+                height: 40px !important;
+                border-radius: 50%;
+            }
                 
             }
 
@@ -412,7 +448,7 @@
             </div> -->
             <div class="navbar-title">{% block page %}{% endblock %}</div>
 
-            <div class="navbar-tabs"> {%block navbar_tabs%} {%endblock%} </div>
+            <div class="navbar-tabs"> {%block navbar_tabs%} {%endblock%} 
 
             <!-- Profile Options -->
             <div class="container">
@@ -456,6 +492,7 @@
                     </div>
                 </div>
             </div>
+        </div>
 
         </nav>
 
