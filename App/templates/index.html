@@ -1,3 +1,251 @@
+{% extends "newLayout.html" %}
+{% block title %}Predict-Athlete | Football Position Prediction{% endblock %}
+{% block page %}Come up with a name{% endblock %}
+
+{% block style %}
+
+<meta
+name="description"
+content="Predict-Athlete uses machine learning to determine the best football position for players based on their statistics."
+/>
+
+<link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"
+    />
+    <!-- Replace this outdated script -->
+    <!-- <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script> -->
+    <!-- With this CDN link which is more reliable -->
+    <!-- <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
+      crossorigin="anonymous"
+    ></script> -->
+    <!-- Leaflet CSS -->
+    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" /> -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/home_page.css') }}"
+    />
+    <!-- Leaflet JS -->
+    <!-- <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script> -->
+    <!-- Anime.js library for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="{{ url_for('static', filename='js/home_page.js') }}"></script>
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/favicon.ico') }}"
+      type="image/x-icon"
+    />
+
+
+    <style>
+      /* Just copied over the navbar here so i made sure it overlaps the leaflet map controls */
+      .navbar {
+          background-color: #25283d;
+          color: #fffaff;
+          display: flex;
+          justify-content: left;
+          align-items: left;
+          padding: 20px;
+          position: fixed;
+          width: 100%;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 60px;
+          z-index: 10000;
+      }
+
+      /* Sidenav Styles */
+      .sidenav {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 10001;
+        top: 0;
+        left: 0;
+        background-color: #111;
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+      }
+
+      .leaflet-control-zoom {
+        z-index: 500; 
+      }
+    </style>
+
+
+{%endblock%}
+
+
+{%block navbar_tabs%}
+
+{%endblock%}
+
+{{ super() }}
+
+{%block content%}
+
+<section class="hero-section">
+  <div class="hero-content">
+    <h1>Football Player Prediction App</h1>
+    <p>
+      Our Application uses advanced machine learning algorithms to predict
+      the best position for a football player based on their statistics.
+      This can be used by coaches, scouts and players to make informed
+      decisions and improve their performance.
+    </p>
+  </div>
+</section>
+
+<section class="our-team">
+  <h2>Our Team</h2>
+  <div class="team-members">
+    <div class="team-member left" id="team-member-left">
+      <div class="member-card">
+        <div class="member-image">
+          <img src="static/images/team1.jpg" alt="Tyrell Lewis" />
+        </div>
+        <div class="member-info">
+          <h3>Tyrell Lewis</h3>
+          <p class="member-title">Co-Founder of Predict-Athlete</p>
+          <p>You can write something if you want.</p>
+          <div class="member-links">
+            <a href="https://github.com/Tyrell-Lewis">GitHub</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="team-member right" id="team-member-right">
+      <div class="member-card">
+        <div class="member-image">
+          <img src="static/images/team2.jpg" alt="Isa Abdul-Hamid" />
+        </div>
+        <div class="member-info">
+          <h3>Isa Abdul-Hamid</h3>
+          <p class="member-title">Co-Founder of Predict-Athlete</p>
+          <p>You can write something if you want.</p>
+          <div class="member-links">
+            <a href="https://github.com/IAbdulHamid13">GitHub</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="some-info">
+  <h2>How we got started</h2>
+  <p>
+    At first this was just a university project to create a model, now we're
+    building a full application on top of the model to help coaches, scouts,
+    players and whoever else can benefit from the model.
+  </p>
+</section>
+
+<section class="features-section">
+  <h2>Key Features</h2>
+  <div class="features-container">
+    <div class="feature-card">
+      <div class="feature-icon">
+        <i class="fas fa-chart-line"></i>
+      </div>
+      <h3>Advanced Analytics</h3>
+      <p>
+        Our machine learning models analyse player statistics to provide
+        accurate position predictions.
+      </p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <i class="fas fa-dumbbell"></i>
+      </div>
+      <h3>Personalised Drills</h3>
+      <p>
+        Get customised training drills based on your predicted position to
+        improve your skills.
+      </p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">
+        <i class="fas fa-globe"></i>
+      </div>
+      <h3>League Insights</h3>
+      <p>
+        Explore football leagues around the world and discover player trends
+        across different regions.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="reviews-container">
+  <h3>Dive into League Analytics</h3>
+  <div id="reviewsList" style="margin-top: 30px">
+    <div id="map" style="height: 500px; width: 100%"></div>
+  </div>
+</section>
+
+<section class="how-it-works">
+  <h2>How It Works</h2>
+  <div class="steps-container">
+    <div class="step">
+      <div class="step-number">1</div>
+      <h3>Enter Your Stats</h3>
+      <p>
+        Input your football statistics through our easy-to-use data entry
+        form.
+      </p>
+    </div>
+    <div class="step">
+      <div class="step-number">2</div>
+      <h3>Get Your Prediction</h3>
+      <p>
+        Our model analyses the inputted data and predicts your best football
+        positions.
+      </p>
+    </div>
+    <div class="step">
+      <div class="step-number">3</div>
+      <h3>Improve Your Game</h3>
+      <p>Access drills to enhance your skills for that position.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="cta-content">
+    <h2>Ready to Find Your Best Position?</h2>
+    <p>Fill out our form now and find the best position for you</p>
+    <a href="/data_entry" class="cta-button">Get Started</a>
+  </div>
+</section>
+
+
+{%endblock%}
+
+{% block script %}
+
+{% endblock %}
+
+
+
+
+
+<!-- Changed over to extend thre layout, just left this here incase something later doesnt work and we need a reference.
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -20,25 +268,25 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"
     />
-    <!-- Replace this outdated script -->
+    Replace this outdated script
     <script
       src="https://kit.fontawesome.com/a076d05399.js"
       crossorigin="anonymous"
     ></script>
-    <!-- With this CDN link which is more reliable -->
+    With this CDN link which is more reliable
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
       crossorigin="anonymous"
     ></script>
-    <!-- Leaflet CSS -->
+    Leaflet CSS
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/home_page.css') }}"
     />
-    <!-- Leaflet JS -->
+    Leaflet JS
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <!--Anime.js library for animations-->
+    Anime.js library for animations
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script src="{{ url_for('static', filename='js/home_page.js') }}"></script>
     <link
@@ -46,10 +294,10 @@
       href="{{ url_for('static', filename='images/favicon.ico') }}"
       type="image/x-icon"
     />
-    <!-- At some point we probably should actually make a favicon, it'd be good for branding -->
+    At some point we probably should actually make a favicon, it'd be good for branding
   </head>
   <body>
-    <!-- Sidenav -->
+
     <div id="mySidenav" class="sidenav">
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"
         >&times;</a
@@ -61,9 +309,9 @@
       <a href="/video">Video</a>
     </div>
 
-    <!-- Navbar -->
+
     <nav class="navbar">
-      <!-- From Uiverse.io by Cevorob -->
+
       <div class="slide">
         <label class="burger" onclick="openNav()" for="burger">
           <input type="checkbox" id="burger" />
@@ -75,7 +323,7 @@
       <div class="navbar-title">Home Page</div>
     </nav>
 
-    <!-- Flash Messages - Improve formatting -->
+
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %}
     <div class="flash-messages">
@@ -220,4 +468,4 @@
       </div>
     </section>
   </body>
-</html>
+</html> -->
