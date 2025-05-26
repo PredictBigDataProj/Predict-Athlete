@@ -13,6 +13,7 @@ class Drill(db.Model):
     dateCreated = db.Column(db.DateTime, server_default=func.now())
     createdByRegularID = db.Column(db.Integer, db.ForeignKey('regular.ID', name='fk_drill_regular'))
     favouriteStatus = db.Column(db.Boolean, default=False)
+    #Change how the favourites work, global drills should not share favourted status. Look at e-commerce website for the new implementation. it works better and more modular.
 
 
 
