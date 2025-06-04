@@ -1,4 +1,4 @@
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/PredictBigDataProj/Predict-Athlete.git)
+ [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/PredictBigDataProj/Predict-Athlete.git)
 <a href="https://render.com/deploy?repo=https://github.com/PredictBigDataProj/Predict-Athlete">
   <img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy to Render">
 </a>
@@ -6,7 +6,7 @@
 # Project Scope and Purpose
 This project aims to assist aspiring footballers in identifying the most suitable playing position and league based on their physical and performance statistics. Using machine learning and statistical analysis, the system evaluates user-provided attributes and compares them against a dataset of professional players to deliver personalized insights.
 
-#Key Features
+# Key Features
 
 - Position Prediction Model: A supervised learning model predicts the most suitable position (e.g., striker, midfielder, defender) for a user based on attributes like speed, stamina, strength, passing accuracy, etc.
 - League-Specific Insights: Interactive graphs and visualizations provide an in-depth look into trends and average stats within various top leagues, helping users understand where they best fit.
