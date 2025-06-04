@@ -3,6 +3,15 @@
   <img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy to Render">
 </a>
 
+# Project Scope and Purpose
+This project aims to assist aspiring footballers in identifying the most suitable playing position and league based on their physical and performance statistics. Using machine learning and statistical analysis, the system evaluates user-provided attributes and compares them against a dataset of professional players to deliver personalized insights.
+
+#Key Features
+
+- Position Prediction Model: A supervised learning model predicts the most suitable position (e.g., striker, midfielder, defender) for a user based on attributes like speed, stamina, strength, passing accuracy, etc.
+- League-Specific Insights: Interactive graphs and visualizations provide an in-depth look into trends and average stats within various top leagues, helping users understand where they best fit.
+- League Suitability Estimator: Based on the user's position, nationality, and stats, the system recommends the most compatible football leagues, using comparative analysis across all professional players in that role.
+
 | Terminal Command                | Description                                                                               |
 | ------------------------------- | ----------------------------------------------------------------------------------------- |
 | pip install -r requirements.txt | Initialises all requirements based on the requirements.txt file in the project directory. |
