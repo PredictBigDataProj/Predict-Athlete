@@ -6,11 +6,11 @@ from flask_login import login_required, login_user, current_user, logout_user
 from .index import index_views
 from App.models import User
 
-from App.controllers import (
-  create_user, jwt_authenticate, login,
-  get_regular_by_username, create_regular, generate_frames
+# from App.controllers import (
+#   create_user, jwt_authenticate, login,
+#   get_regular_by_username, create_regular, generate_frames
 
-)
+# )
 
 
 #READ ME IM IMPROTANT

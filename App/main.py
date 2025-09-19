@@ -7,8 +7,8 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
 from datetime import timedelta
 
-import cv2
-from ultralytics import YOLO  # or import your specific model
+# import cv2
+# from ultralytics import YOLO  # or import your specific model
 
 from App.database import init_db
 # from App.config import load_config
@@ -84,12 +84,12 @@ def create_app(config_overrides={}):
   def load_models_once():
     if not hasattr(app, 'models_loaded'):
       models_dict, selected_features_dict, pca_dict, scaler = load_models()
-      image_model = YOLO('yolov8n.pt') 
+      # image_model = YOLO('yolov8n.pt') 
       app.config['MODELS_DICT'] = models_dict
       app.config['SELECTED_FEATURES_DICT'] = selected_features_dict
       app.config['PCA_DICT'] = pca_dict
       app.config['SCALER'] = scaler
-      app.config['IMAGE_MODEL'] = image_model
+      # app.config['IMAGE_MODEL'] = image_model
       app.models_loaded = True 
       print("Models loaded successfully.")
   return app
